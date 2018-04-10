@@ -10,6 +10,7 @@
 */
 class Model_God extends Model_Functions_Functions{
 
+
 	function __construct(){
 	}
 

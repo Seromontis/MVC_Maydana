@@ -5,10 +5,10 @@
 		"CREATED_DATA": "09/04/2018",
 		"CONTROLADOR": "Erro 404",
 		"LAST EDIT": "09/04/2018",
-		"VERSION":"0.0.2"
+		"VERSION":"0.0.1"
 	}
 */
-class Erro404 {
+class maydana {
 
 	function __construct(){
 	}
@@ -24,10 +24,13 @@ class Erro404 {
 		**/
 		$GOD = new Model_GOD;
 
+
+		$define = '';
 		$mustache = array(
-			'{{header}}' => $GOD->headerHTML()
+			'{{header}}' => $GOD->headerHTML(),
+			'{{define}}' => $define
 		);
 
-		echo $GOD->_visao($GOD->_layout('erro404', 'erro404'), $mustache);
+		echo $GOD->_visao($GOD->_layout('maydana', 'maydana'), $mustache);
 	}
 }

@@ -9,6 +9,12 @@
 
 class Model_Functions_Functions extends Model_Functions_Render {
 
+	public $url;
+
+	function __construct(){
+
+	}
+
 	/**
 	** @see Estrutura básica do controlador
 	** @param string - nome template
@@ -32,7 +38,7 @@ class Model_Functions_Functions extends Model_Functions_Render {
 
 		if(is_array($bigodim) and $bigodim !== null and $bigodim !== ''){
 
-			@$var = $this->comprimeHTML(str_replace(array_keys($bigodim), array_values($bigodim), $visao));
+			$var = $this->comprimeHTML(str_replace(array_keys($bigodim), array_values($bigodim), $visao));
 
 			return $var;
 		
@@ -55,5 +61,29 @@ class Model_Functions_Functions extends Model_Functions_Render {
 		$html = str_replace('> <', '><', $html);
 		
 		return str_replace('NAOENTER', PHP_EOL, $html);
+	}
+
+	function url(){
+
+		// COLOCAR A URL EM UM ARRAY PARA TER CONTROLE MVC
+		if(isset($_SERVER['REQUEST_URI']) and !empty($_SERVER['REQUEST_URI'])){
+
+			$url = $this->explodeUrl($_SERVER['REQUEST_URI']);
+
+			return $this->url = $url;
+		}
+	}
+
+	function explodeUrl($url){
+
+		$array = explode('/', $url);
+		$temp = array();
+
+		foreach ($array as $key => $value) {
+
+			$temp[$key] = preg_replace('/\?.*$|\!.*$|#.*$|\'.*$|\@.*$|\$.*$|&.*$|\*.*$|-.*$|\+.*$|\..*$/', '', $value);
+		}
+		
+		return $temp;
 	}
 }

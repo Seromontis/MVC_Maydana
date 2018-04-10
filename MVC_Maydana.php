@@ -5,7 +5,7 @@
 	"CREATED_DATA": "09/04/2018",
 	"NUCLEO": "MVC_Maydana",
 	"LAST EDIT": "09/04/2018",
-	"VERSION":"0.0.1"
+	"VERSION":"0.0.2"
 }
 */
 
@@ -28,6 +28,15 @@ class MVC_Maydana {
 
 			$url = $this->parseUrl($_SERVER['REQUEST_URI']);
 			$this->url = $url;
+		}
+
+		if($this->dependencias() !== true and $this->dependencias() !== ''){
+
+			/**
+			** Função verifica se as constantes OBRIGATÓRIAS estão definidas.
+			**/
+			$this->maydana();
+			exit;
 		}
 
 		if(empty($url[1])){
@@ -106,6 +115,26 @@ class MVC_Maydana {
 		}
 	}
 
+	private function maydana(){
+
+		$GOD = new Model_GOD;
+
+
+		$dependencias = '';
+		if($this->dependencias() !== true){
+
+			$dependencias = '<p>Você precisa definir '.$this->dependencias().' no arquivo settings.php </p>';
+		}
+
+		$mustache = array(
+			'{{header}}' => $GOD->headerHTML(),
+			'{{define}}' => $dependencias
+		);
+
+		echo $GOD->_visao($GOD->_layout('maydana', 'maydana'), $mustache);
+		exit;
+	}
+
 	private function error404(){
 
 		try{
@@ -125,7 +154,7 @@ class MVC_Maydana {
 	}
 	
 	// "QUEBRA" O URL PARA DEFINIR OQUE É CONTROLADOR, ACTION..
-	public function parseUrl($url){
+	private function parseUrl($url){
 
 		$array = explode('/', $url);
 		$temp = array();
@@ -136,6 +165,34 @@ class MVC_Maydana {
 		}
 		
 		return $temp;
+	}
+
+	private function dependencias(){
+
+		$defined = array();
+		$defined[]	= 'LAYOUT';
+		$defined[]	= 'EXTENSAO_VISAO';
+		$defined[]	= 'EXTENSAO_CONTROLADOR';
+		$defined[]	= 'SAVE_SESSIONS';
+		$defined[] 	= 'BANCO_DADOS';
+		$defined[] 	= 'DB_HOST';
+		$defined[] 	= 'DB_NAME';
+		$defined[] 	= 'DB_USER';
+		$defined[] 	= 'DB_PASS';
+		$defined[] 	= 'DB_PORT';
+
+		$var = '';
+		foreach($defined as $key => $value){
+		
+			if(!defined($value)){
+
+				$var .= '"'.$value.'", &nbsp;';
+			}
+
+		}
+
+		$var = trim($var, ', &nbsp;');
+		return $var;
 	}
 
 }
