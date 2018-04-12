@@ -51,3 +51,4 @@ class Model_Query_Conexao{
 		}
 	}
 }
+
