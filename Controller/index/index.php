@@ -11,6 +11,12 @@
 class Index {
 
 	function __construct(){
+
+		if(!isset($_SESSION['login']) and empty($_SESSION['login'])){
+
+			/* PRECISA ESTAR LOGADO PARA ENTRAR NO SISTEMA */
+			header('location: /conta');
+		}
 	}
 
 	function index(){
@@ -24,7 +30,7 @@ class Index {
 		**/
 		$GOD = new Model_GOD;
 
-		$conexao = $GOD->conexao();
+		//new de($GOD->getPessoa(2));
 
 		$mustache = array(
 			'{{header}}' => $GOD->headerHTML()

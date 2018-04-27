@@ -2,9 +2,11 @@
 
 -- DROP TABLE public.conta;
 
+-- DROP CREATE SEQUENCE conta_id_seq;
+
 CREATE TABLE public.conta
 (
-  id integer NOT NULL DEFAULT nextval('usuario_id_seq'::regclass),
+  id_conta integer NOT NULL DEFAULT nextval('conta_id_seq'::regclass),
   email character varying(150) NOT NULL,
   senha character varying(40) NOT NULL,
   status smallint NOT NULL DEFAULT 0, -- 0 = inativo...
@@ -15,7 +17,7 @@ CREATE TABLE public.conta
   hora_ultimo_login character varying(30),
   data_ultimo_login character varying(30),
   ip_ultimo_login character varying(30),
-  CONSTRAINT id_conta PRIMARY KEY (id)
+  CONSTRAINT id_conta PRIMARY KEY (id_conta)
 )
 WITH (
   OIDS=FALSE

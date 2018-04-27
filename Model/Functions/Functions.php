@@ -74,6 +74,44 @@ class Model_Functions_Functions extends Model_Functions_Render {
 		}
 	}
 
+	function _token(){
+
+		$token = $this->HASH(md5(sha1(uniqid(time()))));
+		$url = URL_SITE;
+
+		$dados = array();
+		if(isset($_SESSION['token']) and !empty($_SESSION['token'])){
+			unset($_SESSION['token']);
+		}
+
+		if(isset($_SESSION['url'])){
+			unset($_SESSION['url']);
+		}
+
+		$_SESSION['token'] = $token;
+		$_SESSION['url'] = $url;
+		$dados['token'] = $token;
+		$dados['url'] = $url;
+		
+		return $dados;
+	}
+	/**
+	** @see Cria o hash da senha, usando MD5 e SHA-1 + Salt
+	** @param string
+	** @return string
+	**/
+   function HASH($string){
+
+   		/**
+   		** @see NUNCA !!!!
+   		** @see NUNCA, JAMAIS, ALTERE O VALOR DA VARIÁVEL $salt
+   		**/
+   		$string = (string) $string;
+		$salt = '31256578196*&%@#*(!$!+_%$(_+!%anpadfbahidpqwm,ksdpoqww[pqwṕqw[';
+
+		return sha1(substr(md5($salt.$string), 5,25));
+	}
+
 	function explodeUrl($url){
 
 		$array = explode('/', $url);
@@ -85,5 +123,24 @@ class Model_Functions_Functions extends Model_Functions_Render {
 		}
 		
 		return $temp;
+	}
+	
+	function _hoje(){
+		return HOJE;
+	}
+
+	function _agora(){
+		return AGORA;
+	}
+
+	function _ip(){
+		return IP;
+	}
+
+	function basico($string){
+
+		$string = (string) $string;
+
+		return addslashes(strip_tags(trim($string)));
 	}
 }

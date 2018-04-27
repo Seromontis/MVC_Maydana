@@ -1,0 +1,21 @@
+<h1>Maydana System</h1>
+<h2>Criar Conta</h2>
+<div align="center">
+
+	<form action="/conta/criar" method="post">
+		<table>
+			<tr>
+				<th>E-mail</th>
+				<th><input type="text" name="email"><input type="hidden" name="token" value="{{token}}"><input type="hidden" name="url" value="{{url}}"></th>
+			</tr>
+			<tr>
+				<th>Senha</th>
+				<th><input type="text" name="senha"></th>
+			</tr>
+			<tr>
+				<th><button>Criar</button></th>
+				<th><button onclick="window.location.href='/conta/entrar'">Entrar</button></th>
+			</tr>
+		</table>
+	</form>
+</div>
