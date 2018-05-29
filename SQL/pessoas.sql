@@ -4,7 +4,6 @@
 
 CREATE TABLE public.pessoas
 (
-  id integer NOT NULL DEFAULT nextval('pessoas_id_seq'::regclass),
   id_conta integer,
   nome character varying(150), -- nome completo do cidadão
   sexo smallint, -- 1 = masculino...
@@ -17,7 +16,7 @@ CREATE TABLE public.pessoas
   whatsapp character varying(30),
   telefone character varying(30),
   celular character varying(30),
-  CONSTRAINT id_pessoa PRIMARY KEY (id)
+  id integer NOT NULL DEFAULT nextval('pessoas_id_seq'::regclass)
 )
 WITH (
   OIDS=FALSE
@@ -31,3 +30,4 @@ COMMENT ON COLUMN public.pessoas.sexo IS '1 = masculino
 COMMENT ON COLUMN public.pessoas.cid_codigo IS 'codigo da cidade';
 COMMENT ON COLUMN public.pessoas.est_codigo IS 'codigo do estado';
 COMMENT ON COLUMN public.pessoas.bai_codigo IS 'codigo do bairro';
+

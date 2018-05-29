@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Queryes SQL",
-	"LAST EDIT": "09/04/2018",
-	"VERSION":"0.0.1"
+	"LAST EDIT": "29/05/2018",
+	"VERSION":"0.0.2"
 }
 */
 class Model_Query_Query extends Model_Query_Conexao{
@@ -27,6 +27,8 @@ class Model_Query_Query extends Model_Query_Conexao{
 
 		if(is_array($dados) and !empty($dados) and count($dados) > 0){
 
+			$hoje = $this->_hoje();
+			$agora = $this->_agora();
 			$email = $this->basico($dados['email']);
 			$senha = $this->basico($dados['senha']);
 			$token = $this->basico($dados['token']);
@@ -44,34 +46,42 @@ class Model_Query_Query extends Model_Query_Conexao{
 				$sql = "INSERT INTO conta (
 							email,
 							senha,
-							token
+							token,
+							data_criacao,
+							hora_criacao
 						) VALUES (
 							:email,
 							:senha,
-							:token
+							:token,
+							:hoje,
+							:agora
 						)";
 				$sql = $PDO->prepare($sql);
 				$sql->bindParam(':email', $email);
 				$sql->bindParam(':senha', $senha);
 				$sql->bindParam(':token', $token);
+				$sql->bindParam(':hoje', $hoje);
+				$sql->bindParam(':agora', $agora);
 				$sql->execute();
-				new de($sql->errorInfo());
 				$temp = $sql->fetch(PDO::FETCH_ASSOC);
 				$sql = null;
 
-				if($temp){
-					new de('criado com sucesso');
+				if(!$temp){
+					return 1;
 				}else{
-					new de('falha ao criar');
+
+					return 2;
 				}
 
 			}else{
 
 				/* JÁ existe um registro com essa conta */
+				return 3;
 			}
 		}else{
 
 			/* VOCÊ ESTÁ NO LUGAR ERRADO*/
+			return 4;
 		}
 	}
 

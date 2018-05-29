@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"CONFIG": "Setting",
-	"LAST EDIT": "09/04/2018",
-	"VERSION":"0.0.1"
+	"LAST EDIT": "29/05/2018",
+	"VERSION":"0.0.2"
 }
 */
 
@@ -30,7 +30,7 @@ define('LAYOUT', 'layout');						// nome do layout (.html)
 
 define('VERSION_MVC', '0.0.1'); 				// Version MVC
 
-define('NOME_PROJETO', 'mvc_maydana');					// Nome Projeto
+define('NOME_PROJETO', 'mvc_maydana');			// Nome Projeto
 
 define('EXTENSAO_VISAO', '.html'); 				// Extenção das views
 
@@ -54,9 +54,9 @@ define('HASH_PASSWORD', '123');
 define('BANCO_DADOS', 'pgsql');
 define('DB_HOST', '127.0.0.1');				// Nome Host
 define('DB_PORT', '5432');					// port banco dados (pgsql)
-define('DB_NAME', 'mvc_maydana');			// Nome Banco
+define('DB_NAME', 'maydana');				// Nome Banco
 define('DB_USER', 'maydana');				// Usuário banco
-define('DB_PASS', '123456');				// Senha Usuário
+define('DB_PASS', 'senhaqualquer');				// Senha Usuário
 
 /*if(!is_dir(DIR.SAVE_SESSIONS)){
 	mkdir(DIR.SAVE_SESSIONS);
