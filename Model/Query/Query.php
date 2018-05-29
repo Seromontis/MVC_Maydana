@@ -5,7 +5,7 @@
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Queryes SQL",
 	"LAST EDIT": "29/05/2018",
-	"VERSION":"0.0.2"
+	"VERSION":"0.0.3"
 }
 */
 class Model_Query_Query extends Model_Query_Conexao{
@@ -82,6 +82,93 @@ class Model_Query_Query extends Model_Query_Conexao{
 
 			/* VOCÊ ESTÁ NO LUGAR ERRADO*/
 			return 4;
+		}
+	}
+
+	function login($dados){
+
+		if(is_array($dados) and !empty($dados) and count($dados) > 0){
+
+			$hoje = $this->_hoje();
+			$agora = $this->_agora();
+
+			$email = $this->basico($dados['email']);
+			$senha = $this->basico($dados['senha']);
+
+			$PDO = $this->conexao();
+
+			$sql = $PDO->prepare('SELECT acesso, id_conta FROM conta WHERE email = :email AND senha = :senha');
+			$sql->bindParam(':email', $email);
+			$sql->bindParam(':senha', $senha);
+			$sql->execute();
+			$temp = $sql->fetch(PDO::FETCH_ASSOC);
+			$sql = null;
+
+			if($temp){
+
+				$this->_timesnow($temp['id_conta'], 1);
+				/* LOGADO COM SUCESSO */
+				return 1;
+
+			}else{
+
+				/* SENHA ERRADA */
+				return 3;
+			}
+		}else{
+
+			/* VOCÊ ESTÁ NO LUGAR ERRADO*/
+			return 4;
+		}
+	}
+
+	function _timesnow($id_conta, $login = null){
+
+		/**
+		** @param (INT)
+		** @param (boolean)
+		** @see ESTA FUNÇÃO ATUALIZA OS DADOS NO BANCO, DATA, HORA E IP (last login)
+		** @see SE $login vier !== null, usuario está logando
+		**/
+
+		$hoje 	= (string) $this->_hoje();
+		$agora 	= $this->_agora();
+		$ip 	= $this->_ip();
+
+		/* USUARIO SAINDO (LOGOUT) - MUDA STATUS */
+		$status = 2;
+		if($login !== null){
+
+			/* USUARIO LOGANDO (LOGIN) - MUDA STATUS */
+			$status = 3;
+		}
+
+		$PDO = $this->conexao();
+		$sql = $PDO->prepare('
+			UPDATE conta SET 
+				status = :status, 
+				hora_ultimo_login = :hora_ultimo_login, 
+				data_ultimo_login = :data_ultimo_login, 
+				ip_ultimo_login	= :ip_ultimo_login 
+			WHERE id_conta = :id_conta
+		');
+		$sql->bindParam(':status', $status, PDO::PARAM_INT);
+		$sql->bindParam(':hora_ultimo_login', $hora, PDO::PARAM_STR);
+		$sql->bindParam(':data_ultimo_login', $hoje, PDO::PARAM_STR);
+		$sql->bindParam(':ip_ultimo_login', $ip, PDO::PARAM_STR);
+		$sql->bindParam(':id_conta', $id_conta, PDO::PARAM_INT);
+		$sql->execute();
+
+		$sql = null;
+		$PDO = null;
+	}
+
+	function _logout($dados){
+
+		if(is_array($dados) and !empty($dados) and count($dados) > 0){
+			
+		}else{
+
 		}
 	}
 

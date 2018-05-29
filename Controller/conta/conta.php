@@ -5,7 +5,7 @@
 		"CREATED_DATA": "26/04/2018",
 		"CONTROLADOR": "Index",
 		"LAST EDIT": "29/05/2018",
-		"VERSION":"0.0.3"
+		"VERSION":"0.0.4"
 	}
 */
 class Conta {
@@ -93,9 +93,48 @@ class Conta {
 	function entrar(){
 
 		$GOD = new Model_GOD;
+		/* GERA TOKEN */
+		$seguranca = $GOD->_token();
+		$url = URL_SITE;
+
+		/* SE EXISTER CONTA, SENHA E TOKEN VÁLIDO, ENTÃO FAÇA O CADASTRO */
+		if(isset($_POST['email']) and !empty($_POST['email']) and $_POST['url'] == $url){
+
+			$email = $GOD->basico($_POST['email']);
+			$senha = $GOD->basico($_POST['senha']);
+
+			/* COLOCA OS DADOS TRATATOS NUM ARRAY*/
+			$dados['email'] = $email;
+			$dados['senha'] = $senha;
+
+			/* COLOCA DOS DADOS NA FUNÇÃO PARA FAZER O LOGIN */
+			$login = $GOD->login($dados);
+
+			switch ($login) {
+				case 3:
+
+					/* SENHA ERRADA*/
+					echo 'E-mail ou senha incorreto!';
+					break;
+
+				case 4:
+
+					/* DADOS INVÁLIDOS */
+					echo 'Preencha os dados conforme solicitado';
+					break;
+				
+				default:
+
+					/* LOGADO COM SUCESSO */
+					echo 'Login successfully';
+					break;
+			}
+		}
 
 		$mustache = array(
-			'{{header}}' => $GOD->headerHTML()
+			'{{header}}' => $GOD->headerHTML(),
+			'{{token}}' => $seguranca['token'],
+			'{{url}}'	=> $seguranca['url']
 		);
 
 		echo $GOD->_visao($GOD->_layout('conta', 'entrar'), $mustache);
