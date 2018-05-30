@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Queryes SQL",
-	"LAST EDIT": "29/05/2018",
-	"VERSION":"0.0.3"
+	"LAST EDIT": "30/05/2018",
+	"VERSION":"0.0.4"
 }
 */
 class Model_Query_Query extends Model_Query_Conexao{
@@ -27,11 +27,12 @@ class Model_Query_Query extends Model_Query_Conexao{
 
 		if(is_array($dados) and !empty($dados) and count($dados) > 0){
 
-			$hoje = $this->_hoje();
-			$agora = $this->_agora();
-			$email = $this->basico($dados['email']);
-			$senha = $this->basico($dados['senha']);
-			$token = $this->basico($dados['token']);
+			$hoje 	= $this->_hoje();
+			$agora 	= $this->_agora();
+			$ip 	= $this->_ip();
+			$email 	= $this->basico($dados['email']);
+			$senha 	= $this->basico($dados['senha']);
+			$token 	= $this->basico($dados['token']);
 
 			$PDO = $this->conexao();
 
@@ -44,22 +45,25 @@ class Model_Query_Query extends Model_Query_Conexao{
 			if(!$temp){
 
 				$sql = "INSERT INTO conta (
-							email,
-							senha,
-							token,
-							data_criacao,
-							hora_criacao
-						) VALUES (
-							:email,
-							:senha,
-							:token,
-							:hoje,
-							:agora
-						)";
+					email,
+					senha,
+					token,
+					ip_criacao,
+					data_criacao,
+					hora_criacao
+				) VALUES (
+					:email,
+					:senha,
+					:token,
+					:ip,
+					:hoje,
+					:agora
+				)";
 				$sql = $PDO->prepare($sql);
 				$sql->bindParam(':email', $email);
 				$sql->bindParam(':senha', $senha);
 				$sql->bindParam(':token', $token);
+				$sql->bindParam(':ip', $ip);
 				$sql->bindParam(':hoje', $hoje);
 				$sql->bindParam(':agora', $agora);
 				$sql->execute();
@@ -122,6 +126,19 @@ class Model_Query_Query extends Model_Query_Conexao{
 		}
 	}
 
+	function logout($id_conta){
+
+		$return = 1;
+		if(!empty($id_conta) and is_numeric($id_conta)){
+			
+			$this->_timesnow($id_conta);
+			unset($_SESSION['login']);
+			$return = 2;
+		}
+
+		return $return;
+	}
+
 	function _timesnow($id_conta, $login = null){
 
 		/**
@@ -134,6 +151,7 @@ class Model_Query_Query extends Model_Query_Conexao{
 		$hoje 	= (string) $this->_hoje();
 		$agora 	= $this->_agora();
 		$ip 	= $this->_ip();
+		$id_conta = $this->basico($id_conta);
 
 		/* USUARIO SAINDO (LOGOUT) - MUDA STATUS */
 		$status = 2;
@@ -153,7 +171,7 @@ class Model_Query_Query extends Model_Query_Conexao{
 			WHERE id_conta = :id_conta
 		');
 		$sql->bindParam(':status', $status, PDO::PARAM_INT);
-		$sql->bindParam(':hora_ultimo_login', $hora, PDO::PARAM_STR);
+		$sql->bindParam(':hora_ultimo_login', $agora, PDO::PARAM_STR);
 		$sql->bindParam(':data_ultimo_login', $hoje, PDO::PARAM_STR);
 		$sql->bindParam(':ip_ultimo_login', $ip, PDO::PARAM_STR);
 		$sql->bindParam(':id_conta', $id_conta, PDO::PARAM_INT);
@@ -161,14 +179,10 @@ class Model_Query_Query extends Model_Query_Conexao{
 
 		$sql = null;
 		$PDO = null;
-	}
 
-	function _logout($dados){
+		if(!isset($_SESSION['login']) || empty($_SESSION['login'])){
 
-		if(is_array($dados) and !empty($dados) and count($dados) > 0){
-			
-		}else{
-
+			$_SESSION['login'] = $id_conta;
 		}
 	}
 
@@ -187,14 +201,13 @@ class Model_Query_Query extends Model_Query_Conexao{
 				p.cpf,
 				c.email,
 				c.senha
-			FROM pessoas AS p 
-
-			LEFT JOIN conta AS c ON p.conta_codigo = c.id
-			WHERE id_conta = :id_conta');
-			$sql->bindParam(':id_conta', $id_conta);
+			FROM conta AS c
+			LEFT JOIN pessoas AS p ON p.id_conta = c.id_conta
+			WHERE p.id_conta = :id_conta');
+			$sql->bindParam(':id_conta', $id_conta, PDO::PARAM_STR);
 			$sql->execute();
 
-			$temp = $sql->fetchAll(PDO::FETCH_ASSOC);
+			$temp = $sql->fetch(PDO::FETCH_ASSOC);
 
 			$sql = null;
 

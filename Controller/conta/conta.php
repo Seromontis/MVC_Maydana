@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "26/04/2018",
 		"CONTROLADOR": "Index",
-		"LAST EDIT": "29/05/2018",
-		"VERSION":"0.0.4"
+		"LAST EDIT": "30/05/2018",
+		"VERSION":"0.0.5"
 	}
 */
 class Conta {
@@ -138,5 +138,20 @@ class Conta {
 		);
 
 		echo $GOD->_visao($GOD->_layout('conta', 'entrar'), $mustache);
+	}
+
+	function sair(){
+
+		$GOD = new Model_GOD;
+
+		/* FALTA PASSAR UM TOKEN PARA SEGURANÇA.. */
+		if(isset($_GET['usr']) AND is_numeric($_GET['usr'])){
+
+			$return = $GOD->logout($_GET['usr']);
+
+			if($return == 2){
+				header('location: /');
+			}
+		}
 	}
 }

@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "09/04/2018",
 		"CONTROLADOR": "Index",
-		"LAST EDIT": "09/04/2018",
-		"VERSION":"0.0.2"
+		"LAST EDIT": "30/05/2018",
+		"VERSION":"0.0.3"
 	}
 */
 class Index {
@@ -28,12 +28,12 @@ class Index {
 		** @param = nome visão - STRING
 		** @param = nome bigode de gato {{exemplo}} - ARRAY ou STRING
 		**/
+
 		$GOD = new Model_GOD;
 
-		//new de($GOD->getPessoa(2));
-
 		$mustache = array(
-			'{{header}}' => $GOD->headerHTML()
+			'{{header}}' 	=> $GOD->headerHTML(),
+			'{{id_login}}' 	=> $_SESSION['login']
 		);
 
 		echo $GOD->_visao($GOD->_layout('index', 'index'), $mustache);
