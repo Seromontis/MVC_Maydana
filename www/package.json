@@ -1,0 +1,24 @@
+{
+  "name": "maydana",
+  "version": "1.0.0",
+  "description": "Compilador CSS e JavaScript",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matheus Maydana",
+  "license": "ISC",
+  "dependencies": {
+    "gulp-cli": "^2.0.1",
+    "gulp-install": "^1.1.0",
+    "gulp-rename": "^1.2.3",
+    "gulp-sourcemaps": "^2.6.4"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-notify": "^3.2.0",
+    "gulp-sass": "^4.0.1",
+    "gulp-uglify-es": "^1.0.4"
+  }
+}
