@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Layout",
-	"LAST EDIT": "09/04/2018",
-	"VERSION":"0.0.1"
+	"LAST EDIT": "01/06/2018",
+	"VERSION":"0.0.2"
 }
 */
 
@@ -60,7 +60,35 @@ class Model_Layout {
 
 			if(isset($this->st_view)){
 				$layout = $this->st_view;
-				return file_get_contents(DIR.'Layout/'.$layout.EXTENSAO_VISAO);
+
+				$cliente = '';
+				if(isset($_SESSION['login'])){
+
+					$GOD = new Model_GOD;
+					$PDO = $GOD->conexao();
+
+					$sql = $PDO->prepare('SELECT nome FROM conta WHERE id_conta = :id_conta');
+					$sql->bindParam(':id_conta', $_SESSION['login']);
+					$sql->execute();
+					$cliente = $sql->fetch(PDO::FETCH_ASSOC);
+					$sql = null;
+					$PDO = null;
+				}
+
+
+				$cliente = '';
+				if(isset($cliente['nome']) and !empty($cliente['nome'])){
+
+					$cliente = $cliente['nome'];
+				}
+
+				$mustache = array(
+					'{{cliente}}' => $cliente,
+					'{{static}}' => URL_STATIC
+				);
+
+				$layout = str_replace(array_keys($mustache), array_values($mustache), file_get_contents(DIR.'Layout/'.$layout.EXTENSAO_VISAO));
+				return $layout;
 				
 			}
 

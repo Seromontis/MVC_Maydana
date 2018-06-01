@@ -1,22 +1,16 @@
-<?
+<?php
 /*
 	{
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "09/04/2018",
 		"CONTROLADOR": "Index",
-		"LAST EDIT": "30/05/2018",
-		"VERSION":"0.0.3"
+		"LAST EDIT": "01/05/2018",
+		"VERSION":"0.0.4"
 	}
 */
 class Index {
 
 	function __construct(){
-
-		if(!isset($_SESSION['login']) and empty($_SESSION['login'])){
-
-			/* PRECISA ESTAR LOGADO PARA ENTRAR NO SISTEMA */
-			header('location: /conta');
-		}
 	}
 
 	function index(){
@@ -30,6 +24,8 @@ class Index {
 		**/
 
 		$GOD = new Model_GOD;
+		/* checkLogin é para páginas que precisam de login */
+		$GOD->checkLogin();
 
 		$mustache = array(
 			'{{header}}' 	=> $GOD->headerHTML(),

@@ -1,11 +1,11 @@
-<?
+<?php
 /*
 	{
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "26/04/2018",
 		"CONTROLADOR": "Index",
-		"LAST EDIT": "30/05/2018",
-		"VERSION":"0.0.5"
+		"LAST EDIT": "01/06/2018",
+		"VERSION":"0.0.6"
 	}
 */
 class Conta {
@@ -39,14 +39,16 @@ class Conta {
 		$url = URL_SITE;
 
 		/* SE EXISTER CONTA, SENHA E TOKEN VÁLIDO, ENTÃO FAÇA O CADASTRO */
-		if(isset($_POST['email'], $_POST['token']) and !empty($_POST['email']) and $_POST['url'] == $url){
+		if(isset($_POST['email'], $_POST['token']) and !empty($_POST['email']) and !empty($_POST['nome']) and $_POST['url'] == $url){
 
 			$email = $GOD->basico($_POST['email']);
+			$nome = $GOD->basico($_POST['nome']);
 			$senha = $GOD->basico($_POST['senha']);
 			$token = $GOD->basico($_POST['token']);
 
 			/* COLOCA OS DADOS TRATATOS NUM ARRAY*/
 			$dados['email'] = $email;
+			$dados['nome'] = $nome;
 			$dados['senha'] = $senha;
 			$dados['token'] = $token;
 

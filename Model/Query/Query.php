@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Queryes SQL",
-	"LAST EDIT": "30/05/2018",
-	"VERSION":"0.0.4"
+	"LAST EDIT": "01/06/2018",
+	"VERSION":"0.0.5"
 }
 */
 class Model_Query_Query extends Model_Query_Conexao{
@@ -31,13 +31,15 @@ class Model_Query_Query extends Model_Query_Conexao{
 			$agora 	= $this->_agora();
 			$ip 	= $this->_ip();
 			$email 	= $this->basico($dados['email']);
+			$nome 	= $this->basico($dados['nome']);
 			$senha 	= $this->basico($dados['senha']);
 			$token 	= $this->basico($dados['token']);
 
 			$PDO = $this->conexao();
 
-			$sql = $PDO->prepare('SELECT acesso FROM conta WHERE email = :email');
+			$sql = $PDO->prepare('SELECT acesso FROM conta WHERE email = :email or nome = :nome');
 			$sql->bindParam(':email', $email);
+			$sql->bindParam(':nome', $nome);
 			$sql->execute();
 			$temp = $sql->fetch(PDO::FETCH_ASSOC);
 			$sql = null;
@@ -45,6 +47,7 @@ class Model_Query_Query extends Model_Query_Conexao{
 			if(!$temp){
 
 				$sql = "INSERT INTO conta (
+					nome,
 					email,
 					senha,
 					token,
@@ -52,6 +55,7 @@ class Model_Query_Query extends Model_Query_Conexao{
 					data_criacao,
 					hora_criacao
 				) VALUES (
+					:nome,
 					:email,
 					:senha,
 					:token,
@@ -60,6 +64,7 @@ class Model_Query_Query extends Model_Query_Conexao{
 					:agora
 				)";
 				$sql = $PDO->prepare($sql);
+				$sql->bindParam(':nome', $nome);
 				$sql->bindParam(':email', $email);
 				$sql->bindParam(':senha', $senha);
 				$sql->bindParam(':token', $token);
@@ -231,5 +236,40 @@ class Model_Query_Query extends Model_Query_Conexao{
 			return 'erro isso não é array';
 			exit;
 		}
+	}
+
+
+	/* QUERY dados do site */
+	function siteContato($id_conta){
+
+		if(!empty($id_conta) and is_numeric($id_conta)){
+
+			$PDO = $this->conexao();
+
+			$sql = $PDO->prepare('SELECT
+				titulo,
+				subtitulo,
+				mensagem,
+				email,
+				telefone,
+				whatsapp,
+				celular,
+				instagram,
+				facebook,
+				site,
+				id_conta
+			FROM site_contato
+			WHERE id_conta = :id_conta');
+			$sql->bindParam(':id_conta', $id_conta, PDO::PARAM_INT);
+			$sql->execute();
+			$temp = $sql->fetch(PDO::FETCH_ASSOC);
+
+			$sql = null;
+			$PDO = null;
+
+			return $temp;
+		}
+
+		return false;
 	}
 }

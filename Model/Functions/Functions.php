@@ -3,8 +3,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Functions",
-	"LAST EDIT": "09/04/2018",
-	"VERSION":"0.0.1"
+	"LAST EDIT": "01/06/2018",
+	"VERSION":"0.0.2"
 */
 
 class Model_Functions_Functions extends Model_Functions_Render {
@@ -123,6 +123,33 @@ class Model_Functions_Functions extends Model_Functions_Render {
 		}
 		
 		return $temp;
+	}
+
+	function checkLogin(){
+
+		/* SE NÃO TIVER SESSAO LOGIN, CAI FORA */
+		if(!isset($_SESSION['login']) and empty($_SESSION['login'])){
+
+			/* PRECISA ESTAR LOGADO PARA ENTRAR NO SISTEMA */
+			header('location: /conta');
+		}
+
+		/* SE EXISTIR A SESSÃO, VERIFICA SE EXISTE O DADO NO DB, SE NÃO TIVER LIMPA A SESSION */
+		if(isset($_SESSION['login'])){
+
+			$PDO = $this->conexao();
+
+			$sql = $PDO->prepare('SELECT nome FROM conta WHERE id_conta = :id_conta');
+			$sql->bindParam(':id_conta', $_SESSION['login']);
+			$sql->execute();
+			$cliente = $sql->fetch(PDO::FETCH_ASSOC);
+			$sql = null;
+			$PDO = null;
+
+			if($cliente === false){
+				unset($_SESSION['login']);
+			}
+		}
 	}
 	
 	function _hoje(){

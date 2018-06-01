@@ -4,6 +4,10 @@
 	<form action="/conta/criar" method="post">
 		<table>
 			<tr>
+				<th>Nome</th>
+				<th><input type="text" name="nome"></th>
+			</tr>
+			<tr>
 				<th>E-mail</th>
 				<th><input type="text" name="email"><input type="hidden" name="token" value="{{token}}"><input type="hidden" name="url" value="{{url}}"></th>
 			</tr>
