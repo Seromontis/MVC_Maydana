@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Layout",
-	"LAST EDIT": "01/06/2018",
-	"VERSION":"0.0.2"
+	"LAST EDIT": "04/06/2018",
+	"VERSION":"0.0.3"
 }
 */
 
@@ -82,9 +82,16 @@ class Model_Layout {
 					$cliente = $cliente['nome'];
 				}
 
+				/* COLOCAR CACHE NOS ARQUIVOS STATICOS QUANDO NÃO ESTÁ EM PRODUÇÃO */
+				$cache = '';
+				if(PRODUCAO !== true){
+					$cache = '?cache='.random_int(10000, 99999);
+				}
+
 				$mustache = array(
 					'{{cliente}}' => $cliente,
-					'{{static}}' => URL_STATIC
+					'{{static}}' => URL_STATIC,
+					'{{cache}}' => $cache
 				);
 
 				$layout = str_replace(array_keys($mustache), array_values($mustache), file_get_contents(DIR.'Layout/'.$layout.EXTENSAO_VISAO));

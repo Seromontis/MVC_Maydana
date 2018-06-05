@@ -54,7 +54,7 @@ const gulp   = require('gulp'),
       sourcemaps = require('gulp-sourcemaps');
 
 const contate_site = [
-  'js/js/arquivo_qualquer.js',
+  'js/js/arquivoqualquer.js',
 ];
 
 /**

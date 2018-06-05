@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"CONFIG": "Setting",
-	"LAST EDIT": "01/06/2018",
-	"VERSION":"0.0.4"
+	"LAST EDIT": "04/06/2018",
+	"VERSION":"0.0.5"
 }
 */
 
@@ -24,6 +24,12 @@ define('DIRETORIO_PROJETO', '../MVC_Maydana');		// diretório
 /**
 ** CONFIGURAÇÕES
 **/
+
+/* TRUE ONLINE - FALSE DESENVOLVIMENTO */
+define('PRODUCAO', true);
+
+/* NOME CLIENTE */
+define('CLIENTE', 'Prosdocimo');
 
 define('URL_SITE', 'http://mvc_maydana.local/');
 

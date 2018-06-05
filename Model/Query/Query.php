@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Queryes SQL",
-	"LAST EDIT": "01/06/2018",
-	"VERSION":"0.0.5"
+	"LAST EDIT": "04/06/2018",
+	"VERSION":"0.0.6"
 }
 */
 class Model_Query_Query extends Model_Query_Conexao{
@@ -137,7 +137,7 @@ class Model_Query_Query extends Model_Query_Conexao{
 		if(!empty($id_conta) and is_numeric($id_conta)){
 			
 			$this->_timesnow($id_conta);
-			unset($_SESSION['login']);
+			unset($_SESSION[CLIENTE]);
 			$return = 2;
 		}
 
@@ -185,9 +185,9 @@ class Model_Query_Query extends Model_Query_Conexao{
 		$sql = null;
 		$PDO = null;
 
-		if(!isset($_SESSION['login']) || empty($_SESSION['login'])){
+		if(!isset($_SESSION[CLIENTE]['login']) || empty($_SESSION[CLIENTE]['login'])){
 
-			$_SESSION['login'] = $id_conta;
+			$_SESSION[CLIENTE]['login'] = $id_conta;
 		}
 	}
 
@@ -218,6 +218,7 @@ class Model_Query_Query extends Model_Query_Conexao{
 
 			if($temp > 0){
 
+				$this->initSession($temp);
 				return $temp;
 				exit;
 
