@@ -4,23 +4,27 @@
 		{{header}}
 	</head>
 	<body>
-		<main>
-			<header>
-				<nav>
-					<a href="/">Inicio</a>
-					<a href="/conta">Conta</a>
-					<a href="/servicos">Serviços</a>
-					<a href="/{{cliente}}">Quem Somos</a>
-					<a href="/contato">contato</a>
-				</nav>
+		<!-- Wrap your entire app inside .window -->
+		<div class="window">
+			<!-- .toolbar-header sits at the top of your app -->
+			<header class="toolbar toolbar-header">
+				<a href="/">Inicio</a>
+				<a href="/conta">Conta</a>
+				<a href="/servicos">Serviços</a>
+				<a href="/{{cliente}}">Quem Somos</a>
+				<a href="/contato">contato</a>
 			</header>
-			<section>
-				{{visao}}
-			</section>
-			<footer class="rodape">
-				MVC_Maydana.com.br - 2018
+
+			<!-- Your app's content goes inside .window-content -->
+			<div class="window-content">
+				<div class="padded-more">
+					{{visao}}
+				</div>
+			</div>
+			<footer class="toolbar toolbar-footer">
+				<h2 class="title">Matheus Maydana 2018</h>
 			</footer>
-		</main>
+		</div>
 		<link rel="stylesheet" href="{{static}}css/site.min.css{{cache}}">
 		<script src="{{static}}js/site.min.js{{cache}}"></script>
 	</body>
