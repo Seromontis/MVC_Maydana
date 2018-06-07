@@ -1,16 +1,35 @@
-<?php
+<?
 /*
 	{
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "26/04/2018",
 		"CONTROLADOR": "Index",
-		"LAST EDIT": "01/06/2018",
-		"VERSION":"0.0.6"
+		"LAST EDIT": "07/06/2018",
+		"VERSION":"0.0.7"
 	}
 */
 class Conta {
 
+	public $_conexao;
+
+	public $_consulta;
+
+	public $_util;
+
 	function __construct(){
+
+		$this->_conexao = new Model_Bancodados_Conexao;
+
+		$this->_consulta = new Model_Bancodados_Consultas($this->_conexao);
+
+		$this->_util = new Model_Pluggs_Utilit;
+	}
+
+	function __destruct(){
+
+		$this->_conexao = null;
+
+		$this->_consulta = null;
 	}
 
 	function index(){
@@ -23,9 +42,7 @@ class Conta {
 		** @param = nome bigode de gato {{exemplo}} - ARRAY ou STRING
 		**/
 		$GOD = new Model_GOD;
-		$mustache = array(
-			'{{header}}' => $GOD->headerHTML()
-		);
+		$mustache = array();
 
 		echo $GOD->_visao($GOD->_layout('conta', 'conta'), $mustache);
 	}
@@ -41,10 +58,10 @@ class Conta {
 		/* SE EXISTER CONTA, SENHA E TOKEN VÁLIDO, ENTÃO FAÇA O CADASTRO */
 		if(isset($_POST['email'], $_POST['token']) and !empty($_POST['email']) and !empty($_POST['nome']) and $_POST['url'] == $url){
 
-			$email = $GOD->basico($_POST['email']);
-			$nome = $GOD->basico($_POST['nome']);
-			$senha = $GOD->basico($_POST['senha']);
-			$token = $GOD->basico($_POST['token']);
+			$email = $this->_util->basico($_POST['email']);
+			$nome = $this->_util->basico($_POST['nome']);
+			$senha = $this->_util->basico($_POST['senha']);
+			$token = $this->_util->basico($_POST['token']);
 
 			/* COLOCA OS DADOS TRATATOS NUM ARRAY*/
 			$dados['email'] = $email;
@@ -53,7 +70,7 @@ class Conta {
 			$dados['token'] = $token;
 
 			/* COLOCA DOS DADOS NA FUNÇÃO PARA CRIAR CONTA */
-			$criar = $GOD->newAccount($dados);
+			$criar = $this->_consulta->newAccount($dados);
 
 			switch ($criar) {
 				case 2:
@@ -84,7 +101,6 @@ class Conta {
 		}
 
 		$mustache = array(
-			'{{header}}' => $GOD->headerHTML(),
 			'{{token}}' => $seguranca['token'],
 			'{{url}}'	=> $seguranca['url']
 		);
@@ -102,15 +118,15 @@ class Conta {
 		/* SE EXISTER CONTA, SENHA E TOKEN VÁLIDO, ENTÃO FAÇA O CADASTRO */
 		if(isset($_POST['email']) and !empty($_POST['email']) and $_POST['url'] == $url){
 
-			$email = $GOD->basico($_POST['email']);
-			$senha = $GOD->basico($_POST['senha']);
+			$email = $this->_util->basico($_POST['email']);
+			$senha = $this->_util->basico($_POST['senha']);
 
 			/* COLOCA OS DADOS TRATATOS NUM ARRAY*/
 			$dados['email'] = $email;
 			$dados['senha'] = $senha;
 
 			/* COLOCA DOS DADOS NA FUNÇÃO PARA FAZER O LOGIN */
-			$login = $GOD->login($dados);
+			$login = $this->_consulta->login($dados);
 
 			switch ($login) {
 				case 3:
@@ -134,7 +150,6 @@ class Conta {
 		}
 
 		$mustache = array(
-			'{{header}}' => $GOD->headerHTML(),
 			'{{token}}' => $seguranca['token'],
 			'{{url}}'	=> $seguranca['url']
 		);
@@ -144,12 +159,10 @@ class Conta {
 
 	function sair(){
 
-		$GOD = new Model_GOD;
-
 		/* FALTA PASSAR UM TOKEN PARA SEGURANÇA.. */
 		if(isset($_GET['usr']) AND is_numeric($_GET['usr'])){
 
-			$return = $GOD->logout($_GET['usr']);
+			$return = $this->_consulta->logout($_GET['usr']);
 
 			if($return == 2){
 				header('location: /');

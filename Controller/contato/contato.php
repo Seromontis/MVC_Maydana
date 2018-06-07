@@ -1,4 +1,4 @@
-<?php
+<?
 /*
 	{
 		"AUTHOR":"Matheus Maydana",
@@ -11,8 +11,34 @@
 
 class Contato {
 	
+	public $_conexao;
+
+	public $_consulta;
+
+	public $_render;
+
+	public $_func;
+
 	function __construct(){
 
+		$this->_conexao = new Model_Bancodados_Conexao;
+
+		$this->_consulta = new Model_Bancodados_Consultas($this->_conexao);
+
+		$this->_func = new Model_Functions_Functions;
+
+		$this->_render = new Model_Functions_Render;
+	}
+
+	function __destruct(){
+
+		$this->_conexao = null;
+
+		$this->_consulta = null;
+
+		$this->_func = null;
+
+		$this->_render = null;
 	}
 
 	function index(){
@@ -26,11 +52,12 @@ class Contato {
 		**/
 
 		$GOD = new Model_GOD;
-		$GOD->checkLogin();
+		$this->_func->checkLogin();
 		/* PEGA OS DADOS DA PAGINA CONTATO NO BANCO DE DADOS */
-		$pg = $GOD->siteContato($_SESSION['login']);
+		$pg = $this->_consulta->siteContato($_SESSION[CLIENTE]['login']);
+
 		/* RENDER _ PREPARA OS DADOS */
-		$pg = $GOD->_conteudo($pg);
+		$pg = $this->_render->conteudo($pg);
 
 		$redesociais = '';
 		if(isset($pg['redesociais'])){
@@ -49,7 +76,6 @@ class Contato {
 		}
 
 		$mustache = array(
-			'{{header}}' => $GOD->headerHTML(),
 			'{{titulo}}' => $pg['conteudo']['titulo'],
 			'{{subtitulo}}' => $pg['conteudo']['subtitulo'],
 			'{{contato}}' => $contato,

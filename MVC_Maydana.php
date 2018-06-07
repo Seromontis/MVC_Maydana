@@ -4,8 +4,8 @@
 	"AUTHOR":"MVC_Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"NUCLEO": "MVC_Maydana",
-	"LAST EDIT": "09/04/2018",
-	"VERSION":"0.0.2"
+	"LAST EDIT": "07/06/2018",
+	"VERSION":"0.0.3"
 }
 */
 
@@ -19,9 +19,12 @@ class MVC_Maydana {
 	protected $visao 	  = 'index';
 	protected $action 	  = 'index';
 	protected $url 		  = array();
+	protected $conexao;
 
 	function __construct(){
 
+		$_conexao = new Model_Bancodados_Conexao;
+		$this->conexao = $_conexao;
 		
 		// COLOCAR A URL EM UM ARRAY PARA TER CONTROLE MVC
 		if(isset($_SERVER['REQUEST_URI']) and !empty($_SERVER['REQUEST_URI'])){
@@ -117,8 +120,7 @@ class MVC_Maydana {
 
 	private function maydana(){
 
-		$GOD = new Model_GOD;
-
+		$GOD = new Model_GOD($this->conexao);
 
 		$dependencias = '';
 		if($this->dependencias() !== true){
@@ -127,7 +129,6 @@ class MVC_Maydana {
 		}
 
 		$mustache = array(
-			'{{header}}' => $GOD->headerHTML(),
 			'{{define}}' => $dependencias
 		);
 
@@ -169,11 +170,26 @@ class MVC_Maydana {
 
 	private function dependencias(){
 
+		/** 
+		** @see DEFINE for System
+		**/
 		$defined = array();
+		$defined[]	= 'DIR';
+		$defined[]	= 'URL_STATIC';
+		$defined[]	= 'DIRETORIO_PROJETO';
+		$defined[]	= 'PRODUCAO';
+		$defined[]	= 'CLIENTE';
+		$defined[]	= 'URL_SITE';
+		$defined[]	= 'HOJE';
+		$defined[]	= 'AGORA';
+		$defined[]	= 'IP';
 		$defined[]	= 'LAYOUT';
+		$defined[]	= 'VERSION_MVC';
+		$defined[]	= 'NOME_PROJETO';
 		$defined[]	= 'EXTENSAO_VISAO';
 		$defined[]	= 'EXTENSAO_CONTROLADOR';
 		$defined[]	= 'SAVE_SESSIONS';
+		$defined[]	= 'HASH_PASSWORD';
 		$defined[] 	= 'BANCO_DADOS';
 		$defined[] 	= 'DB_HOST';
 		$defined[] 	= 'DB_NAME';

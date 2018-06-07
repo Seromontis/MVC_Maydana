@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"CONFIG": "Setting",
-	"LAST EDIT": "04/06/2018",
-	"VERSION":"0.0.5"
+	"LAST EDIT": "07/06/2018",
+	"VERSION":"0.0.6"
 }
 */
 
@@ -18,15 +18,14 @@ define('DIR', '../');
 define('URL_STATIC', '/');
 
 // Usado somente no windows - xampp /* USADO PELO CONTROLE DE MVCs que eu criei em casa */
-define('DIRETORIO_PROJETO', '../MVC_Maydana');		// diretório
-
+define('DIRETORIO_PROJETO', '../MVC_Maydana/');		// diretório
 
 /**
 ** CONFIGURAÇÕES
 **/
 
 /* TRUE ONLINE - FALSE DESENVOLVIMENTO */
-define('PRODUCAO', true);
+define('PRODUCAO', false);
 
 /* NOME CLIENTE */
 define('CLIENTE', 'Prosdocimo');
@@ -59,20 +58,16 @@ define('SAVE_SESSIONS', 'Sessions');
 define('HASH_PASSWORD', '123');
 
 
-
 /**
-** CONEXÃO DATA_BASE
+** BANCO DADOS
+** @param pgsql ou mysql
+** @see demais dados em Model/Bancodados/Pssw
 **/
 
-define('BANCO_DADOS', 'pgsql');
-define('DB_HOST', '127.0.0.1');				// Nome Host
-define('DB_PORT', '5432');					// port banco dados (pgsql)
-define('DB_NAME', 'maydana');				// Nome Banco
-define('DB_USER', 'maydana');				// Usuário banco
-define('DB_PASS', 'senhaqualquer');				// Senha Usuário
+define('BANCO_DADOS', 'mysql');
 
 // É NECESSÁRIO QUE A SESSÃO/COOKIE SEJA A MESMA DO SITE
 session_save_path(DIR.SAVE_SESSIONS);
 session_set_cookie_params(9999999, '/', $_SERVER['SERVER_NAME']);
 
-session_start();
+@session_start();

@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Layout",
-	"LAST EDIT": "04/06/2018",
-	"VERSION":"0.0.3"
+	"LAST EDIT": "07/06/2018",
+	"VERSION":"0.0.4"
 }
 */
 
@@ -18,10 +18,25 @@
 
 class Model_Layout {
 
-	function __construct($st_view = null, $v_params = null){
-		if($st_view != null)
+	public $_url;
+
+	public $_conexao;
+
+	public $_consulta;
+
+	function __construct($conexao, $st_view = null, $v_params = null){
+
+		$this->_conexao = $conexao;
+
+		$this->_consulta = new Model_Bancodados_Consultas($conexao);
+
+		$this->_url 	= new Model_Pluggs_Url;
+
+		if($st_view !== null){
+
 			$this->setView($st_view);
-		$this->v_params = $v_params;
+			$this->v_params = $v_params;
+		}
 	}
 
 	public function setView($st_view){
@@ -59,38 +74,28 @@ class Model_Layout {
 		try{
 
 			if(isset($this->st_view)){
+
 				$layout = $this->st_view;
 
 				$cliente = '';
-				if(isset($_SESSION['login'])){
+				if(isset($_SESSION[CLIENTE]['login'])){
 
-					$GOD = new Model_GOD;
-					$PDO = $GOD->conexao();
-
-					$sql = $PDO->prepare('SELECT nome FROM conta WHERE id_conta = :id_conta');
-					$sql->bindParam(':id_conta', $_SESSION['login']);
-					$sql->execute();
-					$cliente = $sql->fetch(PDO::FETCH_ASSOC);
-					$sql = null;
-					$PDO = null;
-				}
-
-
-				$cliente = '';
-				if(isset($cliente['nome']) and !empty($cliente['nome'])){
-
-					$cliente = $cliente['nome'];
+					/* ESSA VARIAVEL VAI JOGAR NO LAYOUT O NOME DO CLIENTE - PAGINA QUEM SOMOS */
+					$cliente = $this->_consulta->getInfoCliente('nome', $_SESSION[CLIENTE]['login']);
 				}
 
 				/* COLOCAR CACHE NOS ARQUIVOS STATICOS QUANDO NÃO ESTÁ EM PRODUÇÃO */
 				$cache = '';
+				$random = mt_rand(10000, 99999);
+
 				if(PRODUCAO !== true){
-					$cache = '?cache='.random_int(10000, 99999);
+					$cache = '?cache='.$random;
 				}
 
 				$mustache = array(
 					'{{cliente}}' => $cliente,
 					'{{static}}' => URL_STATIC,
+					'{{header}}' => $this->_headerHTML(),
 					'{{cache}}' => $cache
 				);
 
@@ -111,5 +116,40 @@ class Model_Layout {
 	public function showContents(){
 		echo $this->getContents();
 		exit;
+	}
+
+	private function _headerHTML(){
+
+		$url = $this->_url->url();
+		
+		$noscript = '<noscript><meta  http-equiv="refresh"  content="1; URL=/noscript"  /></noscript>';
+		if(isset($url[1]) and $url[1] == 'noscript'){
+
+			$noscript = '';
+		}
+
+		$cliente = '';
+		if(isset($_SESSION[CLIENTE]['login'])){
+
+			$cliente = $this->_consulta->getInfoCliente('nome', $_SESSION[CLIENTE]['login']);
+			$cliente = '- '.$cliente;
+		}
+
+		$header = <<<php
+<title>Matheus Maydana {$cliente}</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, height=device-height, user-scalable=yes, initial-scale=1" />
+<meta name="msapplication-tap-highlight" content="no" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="description" content="">
+<meta  name="robots"  content="index, follow"  />
+{$noscript}
+<meta name="author" content="Matheus Maydana" />
+<link rel="shortcut icon" href="/img/site/caveira.png" type="image/x-icon">
+<link rel="icon" href="/img/site/caveira.png" type="image/x-icon">	
+php;
+
+		return $header;
 	}
 }

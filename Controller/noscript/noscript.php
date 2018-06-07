@@ -1,11 +1,11 @@
-<?php
+<?
 /*
 	{
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "09/04/2018",
 		"CONTROLADOR": "No Script",
-		"LAST EDIT": "09/04/2018",
-		"VERSION":"0.0.2"
+		"LAST EDIT": "07/06/2018",
+		"VERSION":"0.0.3"
 	}
 */
 class Noscript{
@@ -24,9 +24,7 @@ class Noscript{
 		**/
 		$GOD = new Model_GOD;
 
-		$mustache = array(
-			'{{header}}' => $GOD->headerHTML()
-		);
+		$mustache = array();
 
 		echo $GOD->_visao($GOD->_layout('noscript', 'noscript'), $mustache);
 	}

@@ -3,75 +3,29 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Functions",
-	"LAST EDIT": "04/06/2018",
-	"VERSION":"0.0.3"
+	"LAST EDIT": "07/06/2018",
+	"VERSION":"0.0.4"
 */
 
-class Model_Functions_Functions extends Model_Functions_Render {
+class Model_Functions_Functions {
 
-	public $url;
+	public $_conexao;
+
+	public $_consulta;
 
 	function __construct(){
 
+		$this->_conexao = new Model_Bancodados_Conexao;
+
+		$this->_consulta = new Model_Bancodados_Consultas($this->_conexao);
 	}
 
-	/**
-	** @see Estrutura básica do controlador
-	** @param string - nome template
-	** @param string - nome controlador
-	** @param string - nome view
-	** @param array  - bigodim
-	** @return HTML
-	**/
-	function _layout($controlador, $visao){
+	function __destruct(){
 
-		$eye = new Model_View;
-		$layout = new Model_Layout;
+		$this->_conexao = null;
 
-		$layout->setView(LAYOUT);
-		$eye->setView($controlador, $visao);
-		
-		return $this->comprimeHTML(str_replace('{{visao}}', $eye->visao(), $layout->Layout()));
-	}
+		$this->_consulta = null;
 
-	function _visao($visao, $bigodim = null){
-
-		if(is_array($bigodim) and $bigodim !== null and $bigodim !== ''){
-
-			$var = $this->comprimeHTML(str_replace(array_keys($bigodim), array_values($bigodim), $visao));
-
-			return $var;
-		
-		}else{
-
-			return $this->comprimeHTML(str_replace('{{visao}}', $bigodim, $visao));
-		}
-	}
-
-
-	/**
-	** @see Função comprime HTML
-	** @param string
-	** @return string
-	**/
-	function comprimeHTML($html){
-
-		$html = preg_replace(array("/<!--(.*?)-->/", "/\t+/"), '', $html);
-		$html = str_replace(array("\t", " ", PHP_EOL), ' ', $html);
-		$html = str_replace('> <', '><', $html);
-		
-		return str_replace('NAOENTER', PHP_EOL, $html);
-	}
-
-	function url(){
-
-		// COLOCAR A URL EM UM ARRAY PARA TER CONTROLE MVC
-		if(isset($_SERVER['REQUEST_URI']) and !empty($_SERVER['REQUEST_URI'])){
-
-			$url = $this->explodeUrl($_SERVER['REQUEST_URI']);
-
-			return $this->url = $url;
-		}
 	}
 
 	function _token(){
@@ -95,11 +49,13 @@ class Model_Functions_Functions extends Model_Functions_Render {
 		
 		return $dados;
 	}
+
 	/**
 	** @see Cria o hash da senha, usando MD5 e SHA-1 + Salt
 	** @param string
 	** @return string
 	**/
+
    function HASH($string){
 
    		/**
@@ -110,19 +66,6 @@ class Model_Functions_Functions extends Model_Functions_Render {
 		$salt = '31256578196*&%@#*(!$!+_%$(_+!%anpadfbahidpqwm,ksdpoqww[pqwṕqw[';
 
 		return sha1(substr(md5($salt.$string), 5,25));
-	}
-
-	function explodeUrl($url){
-
-		$array = explode('/', $url);
-		$temp = array();
-
-		foreach ($array as $key => $value) {
-
-			$temp[$key] = preg_replace('/\?.*$|\!.*$|#.*$|\'.*$|\@.*$|\$.*$|&.*$|\*.*$|-.*$|\+.*$|\..*$/', '', $value);
-		}
-		
-		return $temp;
 	}
 
 	function checkLogin(){
@@ -137,51 +80,11 @@ class Model_Functions_Functions extends Model_Functions_Render {
 		/* SE EXISTIR A SESSÃO, VERIFICA SE EXISTE O DADO NO DB, SE NÃO TIVER LIMPA A SESSION */
 		if(isset($_SESSION[CLIENTE]['login'])){
 
-			$PDO = $this->conexao();
+			$cliente = $this->_consulta->getInfoCliente('nome', $_SESSION[CLIENTE]['login']);
 
-			$sql = $PDO->prepare('SELECT nome FROM conta WHERE id_conta = :id_conta');
-			$sql->bindParam(':id_conta', $_SESSION[CLIENTE]['login']);
-			$sql->execute();
-			$cliente = $sql->fetch(PDO::FETCH_ASSOC);
-			$sql = null;
-			$PDO = null;
-
-			if($cliente === false){
+			if($cliente === null){
 				unset($_SESSION[CLIENTE]['login']);
 			}
 		}
-	}
-
-	function initSession($array){
-
-		foreach ($array as $key => $value){
-			$_SESSION[CLIENTE][$key] = $value;
-		}
-	}
-
-	function endSession($array){
-
-		foreach ($array as $key => $value){
-			unset($_SESSION[CLIENTE][$key]);
-		}
-	}
-
-	function _hoje(){
-		return HOJE;
-	}
-
-	function _agora(){
-		return AGORA;
-	}
-
-	function _ip(){
-		return IP;
-	}
-
-	function basico($string){
-
-		$string = (string) $string;
-
-		return addslashes(strip_tags(trim($string)));
 	}
 }

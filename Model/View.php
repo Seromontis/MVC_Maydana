@@ -17,7 +17,7 @@
 
 class Model_View {
 
-		function __construct($st_view = null, $v_params = null, $st_controlador = null){
+	function __construct($st_view = null, $v_params = null, $st_controlador = null){
 
 		try{
 
@@ -71,7 +71,7 @@ class Model_View {
 		return $this->v_params;
 	}
 
-	public function visao(){
+	function visao(){
 
 		try{
 
