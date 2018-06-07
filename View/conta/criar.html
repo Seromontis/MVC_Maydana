@@ -1,24 +1,23 @@
-<h2>Criar Conta</h2>
-<div align="center">
+<form action="/conta/criar" method="post">
+	<div class="form-group">
+		<label>Email address</label>
+		<input type="email" class="form-control" placeholder="Email">
+	</div>
+	<div class="form-group">
+		<label>Password</label>
+		<input type="password" class="form-control" placeholder="Password">
+	</div>
 
-	<form action="/conta/criar" method="post">
-		<table>
-			<tr>
-				<th>Nome</th>
-				<th><input type="text" name="nome"></th>
-			</tr>
-			<tr>
-				<th>E-mail</th>
-				<th><input type="text" name="email"><input type="hidden" name="token" value="{{token}}"><input type="hidden" name="url" value="{{url}}"></th>
-			</tr>
-			<tr>
-				<th>Senha</th>
-				<th><input type="text" name="senha"></th>
-			</tr>
-			<tr>
-				<th><button>Criar</button></th>
-				<th><a href="/conta/entrar">Entrar</a></th>
-			</tr>
-		</table>
-	</form>
-</div>
+	<div class="toolbar-actions">
+		<button class="btn btn-default">
+			Cancel
+		</button>
+
+		<button class="btn btn-primary pull-right">
+			Save
+		</button>
+	</div>
+
+	<input type="hidden" name="token" value="{{token}}">
+	<input type="hidden" name="url" value="{{url}}">
+</form>

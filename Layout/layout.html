@@ -2,30 +2,60 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br">
 	<head>
 		{{header}}
+		<link rel="stylesheet" href="{{static}}css/site.min.css{{cache}}">
 	</head>
-	<body>
-		<!-- Wrap your entire app inside .window -->
-		<div class="window">
-			<!-- .toolbar-header sits at the top of your app -->
-			<header class="toolbar toolbar-header">
+			<!-- <header class="toolbar toolbar-header">
 				<a href="/">Inicio</a>
 				<a href="/conta">Conta</a>
 				<a href="/servicos">Serviços</a>
 				<a href="/{{cliente}}">Quem Somos</a>
 				<a href="/contato">contato</a>
+			</header> -->
+	<body>
+		<div class="window">
+			<header class="toolbar toolbar-header">
+				<h1 class="title">Header</h1>
 			</header>
-
-			<!-- Your app's content goes inside .window-content -->
 			<div class="window-content">
-				<div class="padded-more">
-					{{visao}}
+				<div class="pane-group">
+					<div class="pane-sm sidebar">
+						<nav class="nav-group">
+							<h5 class="nav-group-title">Favorites</h5>
+							<a href="/" class="nav-group-item active">
+								<span class="icon icon-home"></span>
+								início
+							</a>
+							<a href="/conta" class="nav-group-item">
+								<span class="icon icon-user"></span>
+								conta
+							</a>
+							<span class="nav-group-item">
+								<span class="icon icon-folder"></span>
+								Documents
+							</span>
+							<span class="nav-group-item">
+								<span class="icon icon-signal"></span>
+								AirPlay
+							</span>
+							<span class="nav-group-item">
+								<span class="icon icon-print"></span>
+								Applications
+							</span>
+							<span class="nav-group-item">
+								<span class="icon icon-cloud"></span>
+								Desktop
+							</span>
+						</nav>
+					</div>
+					<div class="pane" style="padding: 40px;">
+						{{visao}}
+					</div>
 				</div>
 			</div>
 			<footer class="toolbar toolbar-footer">
-				<h2 class="title">Matheus Maydana 2018</h>
+			<h1 class="title">Footer</h1>
 			</footer>
 		</div>
-		<link rel="stylesheet" href="{{static}}css/site.min.css{{cache}}">
 		<script src="{{static}}js/site.min.js{{cache}}"></script>
 	</body>
 </html>

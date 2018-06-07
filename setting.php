@@ -64,7 +64,7 @@ define('HASH_PASSWORD', '123');
 ** @see demais dados em Model/Bancodados/Pssw
 **/
 
-define('BANCO_DADOS', 'mysql');
+define('BANCO_DADOS', 'pgsql');
 
 // É NECESSÁRIO QUE A SESSÃO/COOKIE SEJA A MESMA DO SITE
 session_save_path(DIR.SAVE_SESSIONS);
