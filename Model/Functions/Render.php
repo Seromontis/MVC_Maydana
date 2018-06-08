@@ -7,7 +7,7 @@
 	"VERSION":"0.0.5"
 */
 
-class Model_Functions_Render {
+class Model_Functions_Render{
 
 	public $_util;
 
@@ -19,6 +19,46 @@ class Model_Functions_Render {
 	function __destruct(){
 
 		$this->_util = null;
+	}
+
+	function getconfig($configuracoes){
+
+		
+		$var = '';
+		foreach ($configuracoes as $value){
+
+			$nome = '-';
+			if(isset($value['nome']) and !empty($value['nome'])){
+				$nome = $this->_util->basico($value['nome']);
+			}
+
+			$licenca = '-';
+			if(isset($value['licenca']) and !empty($value['licenca'])){
+				$licenca = $this->_util->basico($value['licenca']);
+			}
+			
+			$modulo = '-';
+			if(isset($value['modulo']) and !empty($value['modulo'])){
+				$modulo = $this->_util->basico($value['modulo']);
+			}
+			
+
+			$validade = '-';
+			if(isset($value['validade']) and !empty($value['validade'])){
+				$validade =$this->_util->basico( $value['validade']);
+			}
+
+			$var .= <<<conf
+			<tr>
+				<td class="text-center">{$nome}</td>
+				<td class="text-center">{$licenca}</td>
+				<td class="text-center">{$modulo}</td>
+				<td class="text-center">{$validade}</td>
+			</tr>
+conf;
+		}
+
+		return $var;
 	}
 
 	function conteudo($pg){

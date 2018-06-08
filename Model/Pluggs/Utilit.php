@@ -23,6 +23,12 @@ class Model_Pluggs_Utilit {
 		return IP;
 	}
 
+	function noLogin(){
+		if(isset($_SESSION[CLIENTE]['login'])){
+			header('location: /');
+		}
+	}
+
 	function basico($string){
 
 		$string = (string) $string;
@@ -34,7 +40,7 @@ class Model_Pluggs_Utilit {
 
 		/** CRIA A SESSION LOGIN **/
 		foreach ($array as $key => $value){
-			$_SESSION[CLIENTE][$key] = $value;
+			$_SESSION[CLIENTE]['login'][$key] = $value;
 		}
 	}
 
@@ -42,7 +48,7 @@ class Model_Pluggs_Utilit {
 
 		/** 'DESTROI' A SESSION LOGIN **/
 		foreach ($array as $key => $value){
-			unset($_SESSION[CLIENTE][$key]);
+			unset($_SESSION[CLIENTE]['login'][$key]);
 		}
 	}
 }

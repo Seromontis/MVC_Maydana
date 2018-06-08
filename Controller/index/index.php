@@ -15,6 +15,8 @@ class Index {
 	function __construct(){
 
 		$this->_func = new Model_Functions_Functions;
+		/* checkLogin é para páginas que precisam de login */
+		$this->_func->checkLogin();
 	}
 
 	function index(){
@@ -28,8 +30,6 @@ class Index {
 		**/
 
 		$GOD = new Model_GOD;
-		/* checkLogin é para páginas que precisam de login */
-		$this->_func->checkLogin();
 
 		$mustache = array(
 			'{{id_login}}' 	=> $_SESSION[CLIENTE]['login']

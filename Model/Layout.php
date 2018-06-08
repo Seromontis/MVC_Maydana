@@ -44,6 +44,7 @@ class Model_Layout {
 		try{
 
 			if(file_exists(DIR.'Layout/'.$st_view.EXTENSAO_VISAO)){
+
 				$this->st_view = $st_view;
 			}
 
@@ -95,6 +96,7 @@ class Model_Layout {
 				$mustache = array(
 					'{{cliente}}' => $cliente,
 					'{{static}}' => URL_STATIC,
+					'{{nome_sistema}}' => NOME_SISTEMA,
 					'{{header}}' => $this->_headerHTML(),
 					'{{cache}}' => $cache
 				);
@@ -136,7 +138,7 @@ class Model_Layout {
 		}
 
 		$header = <<<php
-<title>Matheus Maydana {$cliente}</title>
+<title>MS {$cliente}</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, height=device-height, user-scalable=yes, initial-scale=1" />
@@ -151,5 +153,41 @@ class Model_Layout {
 php;
 
 		return $header;
+	}
+
+
+	function navi(){
+
+		$var = <<<nav
+<div class="pane-sm sidebar">
+	<nav class="nav-group">
+		<h5 class="nav-group-title">Favorites</h5>
+		<a href="/" class="nav-group-item active">
+			<span class="icon icon-home"></span>
+			início
+		</a>
+		<a href="/conta" class="nav-group-item">
+			<span class="icon icon-user"></span>
+			conta
+		</a>
+		<span class="nav-group-item">
+			<span class="icon icon-folder"></span>
+			Documents
+		</span>
+		<span class="nav-group-item">
+			<span class="icon icon-signal"></span>
+			AirPlay
+		</span>
+		<span class="nav-group-item">
+			<span class="icon icon-print"></span>
+			Applications
+		</span>
+		<span class="nav-group-item">
+			<span class="icon icon-cloud"></span>
+			Desktop
+		</span>
+	</nav>
+</div>
+nav;
 	}
 }

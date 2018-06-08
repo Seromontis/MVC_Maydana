@@ -14,48 +14,73 @@
 	<body>
 		<div class="window">
 			<header class="toolbar toolbar-header">
-				<h1 class="title">Header</h1>
+				<h1 class="title">{{nome_sistema}}</h1>
 			</header>
 			<div class="window-content">
 				<div class="pane-group">
-					<div class="pane-sm sidebar">
+					<div class="pane pane-sm sidebar">
 						<nav class="nav-group">
-							<h5 class="nav-group-title">Favorites</h5>
-							<a href="/" class="nav-group-item active">
+							<h5 class="nav-group-title">{{cliente}}</h5>
+							<a class="nav-group-item active" href="/">
 								<span class="icon icon-home"></span>
 								início
 							</a>
-							<a href="/conta" class="nav-group-item">
+							<a class="nav-group-item" href="/clientes">
 								<span class="icon icon-user"></span>
-								conta
+								Clientes
 							</a>
 							<span class="nav-group-item">
-								<span class="icon icon-folder"></span>
-								Documents
+								<span class="icon icon-basket"></span>
+								Produtos
 							</span>
 							<span class="nav-group-item">
 								<span class="icon icon-signal"></span>
 								AirPlay
 							</span>
 							<span class="nav-group-item">
-								<span class="icon icon-print"></span>
-								Applications
+								<span class="icon icon-mail"></span>
+								E-mail
 							</span>
 							<span class="nav-group-item">
-								<span class="icon icon-cloud"></span>
-								Desktop
+								<span class="icon icon-chart-bar"></span>
+								Relatórios
 							</span>
+							<a class="nav-group-item" href="/configuracao">
+								<span class="icon icon-cog"></span>
+								Configuração
+							</a>
+							<a class="nav-group-item" href="/login/sair/?usr={{id_login}}">
+								<span class="icon icon-logout"></span>
+								Sair
+							</a>
+						</nav>
+
+
+						<nav class="nav-group">
+							<h5 class="nav-group-title"><span class="icon icon-globe"></span> Site 	</h5>
+							<span class="nav-group-item" href="#">
+								<span class="icon icon-record" style="color:#34c84a"></span>
+								Online
+							</span>
+							<a class="nav-group-item" href="/configuração">
+								<span class="icon icon-tools"></span>
+								Configuração
+							</a>
 						</nav>
 					</div>
-					<div class="pane" style="padding: 40px;">
+					<div class="pane">
 						{{visao}}
 					</div>
 				</div>
 			</div>
 			<footer class="toolbar toolbar-footer">
-			<h1 class="title">Footer</h1>
+				<h2 class="title">matheusmaydana.com.br · 2018</h2>
 			</footer>
 		</div>
-		<script src="{{static}}js/site.min.js{{cache}}"></script>
+		<!-- Javascript -->
+		<script src="{{static}}/js/jq.js{{cache}}" charset="utf-8"></script>
+		<script src="{{static}}/js/sticky.js{{cache}}" charset="utf-8"></script>
+		<script src="{{static}}/js/docs.js{{cache}}" charset="utf-8"></script>
+		<script src="{{static}}js/site.min.js{{cache}}" charset="utf-8"></script>
 	</body>
 </html>

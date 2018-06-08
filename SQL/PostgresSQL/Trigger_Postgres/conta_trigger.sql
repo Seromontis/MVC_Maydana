@@ -13,6 +13,7 @@ $conta_trigger$
 		IF (TG_OP = 'INSERT') THEN
 			INSERT INTO pessoas (id_conta) VALUES (NEW.id_conta);
 			INSERT INTO site_contato (id_conta) VALUES (NEW.id_conta);
+			INSERT INTO acc_config (id_conta) VALUES (NEW.id_conta);
 		END IF;
 		RETURN NULL;
 	END;

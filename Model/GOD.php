@@ -8,6 +8,7 @@
 	"VERSION":"0.0.4"
 }
 */
+
 class Model_God extends Model_Functions_Functions{
 
 
@@ -34,12 +35,12 @@ class Model_God extends Model_Functions_Functions{
 	** @param array  - bigodim
 	** @return HTML
 	**/
-	function _layout($controlador, $visao){
+	function _layout($controlador, $visao, $template = LAYOUT){
 
 		$eye = new Model_View;
 		$layout = new Model_Layout($this->_conexao);
 
-		$layout->setView(LAYOUT);
+		$layout->setView($template);
 		$eye->setView($controlador, $visao);
 
 		$mustache = array(
@@ -70,7 +71,7 @@ class Model_God extends Model_Functions_Functions{
 	**/
 	function comprimeHTML($html){
 
-		$html = preg_replace(array("/<!--(.*?)-->/", "/\t+/"), '', $html);
+		$html = preg_replace(array("/<!--(.*?)-->/", "/\t+/"), ' ', $html);
 		$html = str_replace(array("\t", " ", PHP_EOL), ' ', $html);
 		$html = str_replace(PHP_EOL, ' ', $html);
 		$html = str_replace('> <', '><', $html);

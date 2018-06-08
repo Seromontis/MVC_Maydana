@@ -136,7 +136,7 @@ class MVC_Maydana {
 		exit;
 	}
 
-	private function error404(){
+	public function error404(){
 
 		try{
 
@@ -186,6 +186,7 @@ class MVC_Maydana {
 		$defined[]	= 'LAYOUT';
 		$defined[]	= 'VERSION_MVC';
 		$defined[]	= 'NOME_PROJETO';
+		$defined[]	= 'NOME_SISTEMA';
 		$defined[]	= 'EXTENSAO_VISAO';
 		$defined[]	= 'EXTENSAO_CONTROLADOR';
 		$defined[]	= 'SAVE_SESSIONS';

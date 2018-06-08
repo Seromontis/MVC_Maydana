@@ -42,6 +42,8 @@ define('LAYOUT', 'layout');						// nome do layout (.html)
 
 define('VERSION_MVC', '0.0.1'); 				// Version MVC
 
+define('NOME_SISTEMA', '<span class="icon icon-evernote"></span> Maydana System');			// Nome Projeto
+
 define('NOME_PROJETO', 'mvc_maydana');			// Nome Projeto
 
 define('EXTENSAO_VISAO', '.html'); 				// Extenção das views

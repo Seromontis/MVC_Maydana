@@ -1,0 +1,36 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br">
+	<head>
+		{{header}}
+		<link rel="stylesheet" href="{{static}}css/site.min.css{{cache}}">
+	</head>
+			<!-- <header class="toolbar toolbar-header">
+				<a href="/">Inicio</a>
+				<a href="/conta">Conta</a>
+				<a href="/servicos">Serviços</a>
+				<a href="/{{cliente}}">Quem Somos</a>
+				<a href="/contato">contato</a>
+			</header> -->
+	<body>
+		<div class="window">			
+			<header class="toolbar toolbar-header">
+				<h2 class="title">{{nome_sistema}}</h2>
+			</header>
+			<div class="window-content">
+				<div class="pane-group">
+					<div class="pane" style="max-width: 360px; margin: auto; padding: 40px;">
+						{{visao}}
+					</div>
+				</div>
+			</div>
+			<footer class="toolbar toolbar-footer">
+				<h2 class="title">matheusmaydana.com.br · 2018</h2>
+			</footer>
+		</div>
+		<!-- Javascript -->
+		<script src="{{static}}/js/jq.js{{cache}}" charset="utf-8"></script>
+		<script src="{{static}}/js/sticky.js{{cache}}" charset="utf-8"></script>
+		<script src="{{static}}/js/docs.js{{cache}}" charset="utf-8"></script>
+		<script src="{{static}}js/site.min.js{{cache}}" charset="utf-8"></script>
+	</body>
+</html>

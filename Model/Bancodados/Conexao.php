@@ -30,7 +30,7 @@ class Model_Bancodados_Conexao {
 
 			}else{
 
-				// MYSQL 
+				// MYSQL
 				$PDO = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME.'', DB_USER, DB_PASS);
 				return $PDO;
 			}

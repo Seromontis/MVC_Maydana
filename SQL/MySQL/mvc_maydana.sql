@@ -56,7 +56,8 @@ DELIMITER //
 CREATE TRIGGER `conta_trigger` AFTER INSERT ON `conta`
  FOR EACH ROW BEGIN
 	INSERT INTO pessoas (id_conta) VALUES (NEW.id_conta);
-	INSERT INTO site_contato (id_conta) VALUES (NEW.id_conta);
+	INSERT INTO acc_config (id_conta) VALUES (NEW.id_conta);
+  INSERT INTO site_contato (id_conta) VALUES (NEW.id_conta);
 END
 //
 DELIMITER ;

@@ -82,7 +82,14 @@ class Model_View {
 
 				if(file_exists(DIR.'View/'.$controlador.'/'.$visao.EXTENSAO_VISAO)){
 
-					return file_get_contents(DIR.'View/'.$controlador.'/'.$visao.EXTENSAO_VISAO);
+
+				$mustache = array(
+					'{{static}}' => URL_STATIC
+				);
+
+				$visao = str_replace(array_keys($mustache), array_values($mustache), file_get_contents(DIR.'View/'.$controlador.'/'.$visao.EXTENSAO_VISAO));
+
+					return $visao;
 
 				}else{
 					/**

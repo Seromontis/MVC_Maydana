@@ -74,7 +74,7 @@ class Model_Functions_Functions {
 		if(!isset($_SESSION[CLIENTE]['login']) and empty($_SESSION[CLIENTE]['login'])){
 
 			/* PRECISA ESTAR LOGADO PARA ENTRAR NO SISTEMA */
-			header('location: /conta');
+			header('location: /login');
 		}
 
 		/* SE EXISTIR A SESSÃO, VERIFICA SE EXISTE O DADO NO DB, SE NÃO TIVER LIMPA A SESSION */

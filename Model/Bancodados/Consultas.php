@@ -8,7 +8,7 @@
 	"VERSION":"0.0.1"
 }
 */
-class Model_Bancodados_Consultas{
+class Model_Bancodados_Consultas {
 
 	public $_conexao;
 
@@ -25,6 +25,14 @@ class Model_Bancodados_Consultas{
 		$this->_conexao = $conexao->conexao();
 
 		$this->_util = new Model_Pluggs_Utilit;
+
+	}
+
+	function __destruct(){
+
+		$this->_conexao = null;
+
+		$this->_util = null;
 
 	}
 
@@ -241,6 +249,33 @@ class Model_Bancodados_Consultas{
 		}
 	}
 
+	function getConfig($id_conta){
+
+		if(!empty($id_conta) and is_numeric($id_conta)){
+
+			$sql = $this->_conexao->prepare('SELECT
+				conf.nome,
+				modulo.nome AS modulo,
+				conf.licenca,
+				conf.validade,
+				conf.tipo
+			FROM conta AS acc
+			LEFT JOIN acc_config AS conf ON conf.id_conta = acc.id_conta
+			LEFT JOIN ms_modulos AS modulo ON modulo.modulo_id = conf.modulo_id
+			WHERE acc.id_conta = :id_conta');
+			$sql->bindParam(':id_conta', $id_conta, PDO::PARAM_INT);
+			$sql->execute();
+
+			$temp = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+			$sql = null;
+
+			return $temp;
+		}
+
+		return false;
+
+	}
 
 	/* QUERY dados do site */
 	function siteContato($id_conta){
