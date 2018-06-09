@@ -14,6 +14,10 @@ class Model_God extends Model_Functions_Functions{
 
 	public $_conexao;
 
+	public $_eye;
+
+	public $_layout;
+
 	function __construct($conexao = null){
 
 		if($conexao !== null){
@@ -25,6 +29,10 @@ class Model_God extends Model_Functions_Functions{
 			$conexao = new Model_Bancodados_Conexao;
 			$this->_conexao = $conexao;
 		}
+
+		$this->_eye = new Model_View;
+
+		$this->_layout = new Model_Layout($this->_conexao);
 	}
 
 	/**
@@ -37,17 +45,14 @@ class Model_God extends Model_Functions_Functions{
 	**/
 	function _layout($controlador, $visao, $template = LAYOUT){
 
-		$eye = new Model_View;
-		$layout = new Model_Layout($this->_conexao);
-
-		$layout->setView($template);
-		$eye->setView($controlador, $visao);
+		$this->_layout->setView($template);
+		$this->_eye->setView($controlador, $visao);
 
 		$mustache = array(
-			'{{visao}}' => $eye->visao()
+			'{{visao}}' => $this->_eye->visao()
 		);		
 
-		return $this->comprimeHTML(str_replace(array_keys($mustache), array_values($mustache), $layout->Layout()));
+		return $this->comprimeHTML(str_replace(array_keys($mustache), array_values($mustache), $this->_layout->Layout()));
 	}
 
 	function _visao($visao, $bigodim = null){
@@ -61,6 +66,19 @@ class Model_God extends Model_Functions_Functions{
 		}else{
 
 			return $this->comprimeHTML(str_replace('{{visao}}', $bigodim, $visao));
+		}
+	}
+
+	function push($controlador, $visao, $bigodim = null){
+		$this->_eye->setView($controlador, $visao);
+
+		if(is_array($bigodim) and $bigodim !== null and $bigodim !== ''){
+
+			return $this->comprimeHTML(str_replace(array_keys($bigodim), array_values($bigodim), $this->_eye->visao()));
+
+		}else{
+
+			return $this->comprimeHTML(str_replace('{{visao}}', $bigodim, $this->_eye->visao()));
 		}
 	}
 

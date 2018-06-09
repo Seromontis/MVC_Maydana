@@ -54,7 +54,7 @@ const gulp   = require('gulp'),
       sourcemaps = require('gulp-sourcemaps');
 
 const contate_site = [
-  'js/js/arquivoqualquer.js',
+  'js/js/site.js',
 ];
 
 /**
@@ -76,11 +76,24 @@ gulp.task('scss_producao', function(){
       .pipe(notify({ title:projeto+' - Produção', message: msg }));
 });
 
-gulp.task('GNR_producao', function(cb){
-  // Função compila o GNR.JS SEM Map para produção
-  return gulp.src('js/js/GNR/GNR.js')
+gulp.task('MS_producao', function(cb){
+  // Função compila o MS.JS SEM Map para produção
+  return gulp.src('js/js/MS/MS.js')
     .pipe(uglify())
-    .pipe(rename('GNR.min.js'))
+    .pipe(rename('MS.min.js'))
+    .pipe(gulp.dest('js'))
+    .on('error', function(err) {
+        notify().write(err);
+        this.emit('end');
+    })
+    .pipe(notify({ title:projeto+' - Produção', message: msg }));
+});
+
+gulp.task('jQuery_producao', function(cb){
+  // Função compila o MS.JS SEM Map para produção
+  return gulp.src('js/js/jQuery/jQuery.js')
+    .pipe(uglify())
+    .pipe(rename('jQuery.min.js'))
     .pipe(gulp.dest('js'))
     .on('error', function(err) {
         notify().write(err);
@@ -102,11 +115,24 @@ gulp.task('site_producao', function(cb){
     .pipe(notify({ title:projeto+' - Produção', message: msg }));
 });
 
-gulp.task('GNR', function(cb){
-  // Função compila o GNR.JS com Map para Debugar
-  return gulp.src('js/js/GNR/GNR.js')
+gulp.task('jQuery', function(cb){
+  // Função compila o MS.JS com Map para Debugar
+  return gulp.src('js/js/jQuery/jQuery.js')
     .pipe(sourcemaps.init())
-    .pipe(rename('GNR.min.js'))
+    .pipe(rename('jQuery.min.js'))
+    .pipe(sourcemaps.write('./map'))
+    .pipe(gulp.dest('js'))
+    .on('error', function(err) {
+        notify().write(err);
+        this.emit('end');
+    })
+    .pipe(notify({ title:projeto+' - Desenvolvimento', message: msg }));
+});
+gulp.task('MS', function(cb){
+  // Função compila o MS.JS com Map para Debugar
+  return gulp.src('js/js/MS/MS.js')
+    .pipe(sourcemaps.init())
+    .pipe(rename('MS.min.js'))
     .pipe(sourcemaps.write('./map'))
     .pipe(gulp.dest('js'))
     .on('error', function(err) {
@@ -159,7 +185,8 @@ gulp.task('scss', function(){
 **/
 gulp.task('default', function() {
     gulp.watch(['css/scss/**/*.scss'],['scss']);
-    gulp.watch('js/js/GNR/GNR.js', ['GNR']);
+    gulp.watch('js/js/MS/MS.js', ['MS']);
+    gulp.watch('js/js/jQuery/jQuery.js', ['jQuery']);
     gulp.watch('js/js/**.js', ['site']);
 });
 
@@ -168,12 +195,14 @@ gulp.task('css', function() {
 });
 
 gulp.task('js', function() {
-  gulp.watch('js/js/GNR/GNR.js', ['GNR']);
+  gulp.watch('js/js/MS/MS.js', ['MS']);
+  gulp.watch('js/js/jQuery/jQuery.js', ['jQuery']);
   gulp.watch('js/js/**.js', ['site']);
 });
 
 gulp.task('producao', function() {
   gulp.watch('css/scss/**/*.scss',['scss_producao']);
-  gulp.watch('js/js/GNR/GNR.js', ['GNR_producao']);
+  gulp.watch('js/js/MS/MS.js', ['MS_producao']);
+  gulp.watch('js/js/jQuery/jQuery.js', ['jQuery_producao']);
   gulp.watch('js/js/**.js', ['site_producao']);
 });

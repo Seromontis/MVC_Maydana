@@ -3,14 +3,8 @@
 	<head>
 		{{header}}
 		<link rel="stylesheet" href="{{static}}css/site.min.css{{cache}}">
+		<script src="{{static}}js/jQuery.min.js{{cache}}" charset="utf-8"></script>
 	</head>
-			<!-- <header class="toolbar toolbar-header">
-				<a href="/">Inicio</a>
-				<a href="/conta">Conta</a>
-				<a href="/servicos">Serviços</a>
-				<a href="/{{cliente}}">Quem Somos</a>
-				<a href="/contato">contato</a>
-			</header> -->
 	<body>
 		<div class="window">
 			<header class="toolbar toolbar-header">
@@ -68,7 +62,7 @@
 							</a>
 						</nav>
 					</div>
-					<div class="pane">
+					<div class="pane push-conteudo">
 						{{visao}}
 					</div>
 				</div>
@@ -78,9 +72,6 @@
 			</footer>
 		</div>
 		<!-- Javascript -->
-		<script src="{{static}}/js/jq.js{{cache}}" charset="utf-8"></script>
-		<script src="{{static}}/js/sticky.js{{cache}}" charset="utf-8"></script>
-		<script src="{{static}}/js/docs.js{{cache}}" charset="utf-8"></script>
 		<script src="{{static}}js/site.min.js{{cache}}" charset="utf-8"></script>
 	</body>
 </html>

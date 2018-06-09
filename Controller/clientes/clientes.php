@@ -18,7 +18,9 @@ class Clientes {
 
 	public $_render;
 
-	public $_nucleo;
+	public $_cor;
+
+	private $_push = false;
 
 	function __construct(){
 
@@ -30,14 +32,18 @@ class Clientes {
 
 		$this->_render = new Model_Functions_Render;
 
-		$this->_nucleo = new Model_GOD;
+		$this->_cor = new Model_GOD;
 
+		if(isset($_POST['push']) and $_POST['push'] == 'push'){
+			$this->_push = true;
+		}
+
+		/* checkLogin é para páginas que precisam de login */
+		$this->_func->checkLogin();
 	}
 
 	function index(){
 
-		/* checkLogin é para páginas que precisam de login */
-		$this->_func->checkLogin();
 
 		$configuracoes = $this->_consulta->getConfig($_SESSION[CLIENTE]['login']);
 
@@ -47,6 +53,13 @@ class Clientes {
 			'{{id_login}}' 	=> $_SESSION[CLIENTE]['login']
 		);
 
-		echo $this->_nucleo->_visao($this->_nucleo->_layout('clientes', 'clientes'), $mustache);
+		if($this->_push === false){
+
+			echo $this->_cor->_visao($this->_cor->_layout('clientes', 'clientes'), $mustache);
+
+		}else{
+
+			echo $this->_cor->push('clientes', 'clientes');
+		}
 	}
 }

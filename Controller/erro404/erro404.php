@@ -10,7 +10,17 @@
 */
 class Erro404 {
 
+	public $_cor;
+
+	private $_push = false;
+
 	function __construct(){
+
+		$this->_cor = new Model_GOD;
+
+		if(isset($_POST['push']) and $_POST['push'] == 'push'){
+			$this->_push = true;
+		}
 	}
 
 	function index(){
@@ -22,10 +32,16 @@ class Erro404 {
 		** @param = nome visão - STRING
 		** @param = nome bigode de gato {{exemplo}} - ARRAY ou STRING
 		**/
-		$GOD = new Model_GOD;
 
 		$mustache = array();
 
-		echo $GOD->_visao($GOD->_layout('erro404', 'erro404'), $mustache);
+		if($this->_push === false){
+
+			echo $this->_cor->_visao($this->_cor->_layout('erro404', 'erro404'), $mustache);
+
+		}else{
+
+			echo $this->_cor->push('erro404', 'erro404', $mustache);
+		}
 	}
 }

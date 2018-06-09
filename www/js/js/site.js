@@ -25,4 +25,3 @@ $(document).ready(function() {
         openURL(e.state.href);
    }); 
 });
-//# sourceMappingURL=map/site.min.js.map

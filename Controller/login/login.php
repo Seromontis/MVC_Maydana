@@ -18,6 +18,10 @@ class Login {
 
 	public $_template = 'login';
 
+	public $_cor;
+
+	private $_push = false;
+
 	function __construct(){
 
 		$this->_conexao = new Model_Bancodados_Conexao;
@@ -28,6 +32,12 @@ class Login {
 
 		/* Function noLogin não permite entrar no controlador login com Login.. kk*/
 		$this->_util->noLogin();
+
+		$this->_cor = new Model_GOD;
+
+		if(isset($_POST['push']) and $_POST['push'] == 'push'){
+			$this->_push = true;
+		}
 	}
 
 	function __destruct(){
@@ -50,25 +60,28 @@ class Login {
 		** @param = nome visão - STRING
 		** @param = nome bigode de gato {{exemplo}} - ARRAY ou STRING
 		**/
-		$GOD = new Model_GOD;
-
 		/* GERA TOKEN */
-		$seguranca = $GOD->_token();
+		$seguranca = $this->_cor->_token();
 		$url = URL_SITE;
 
 		$mustache = array(
 			'{{url}}'	=> $seguranca['url']
 		);
 
-		echo $GOD->_visao($GOD->_layout('login', 'login', $this->_template), $mustache);
+		if($this->_push === false){
+
+			echo $this->_cor->_visao($this->_cor->_layout('login', 'login', $this->_template), $mustache);
+
+		}else{
+
+			echo $this->_cor->push('login', 'login', $mustache);
+		}
 	}
 
 	function criar(){
 
-		$GOD = new Model_GOD;
-
 		/* GERA TOKEN */
-		$seguranca = $GOD->_token();
+		$seguranca = $this->_cor->_token();
 		$url = URL_SITE;
 
 		$mustache = array(
@@ -76,7 +89,14 @@ class Login {
 			'{{url}}'	=> $seguranca['url']
 		);
 
-		echo $GOD->_visao($GOD->_layout('login', 'criar', $this->_template), $mustache);
+		if($this->_push === false){
+
+			echo $this->_cor->_visao($this->_cor->_layout('login', 'criar', $this->_template), $mustache);
+
+		}else{
+
+			echo $this->_cor->push('login', 'criar', $mustache);
+		}
 	}
 
 	function novo(){

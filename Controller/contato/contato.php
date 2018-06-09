@@ -19,6 +19,10 @@ class Contato {
 
 	public $_func;
 
+	public $_cor;
+
+	public $_push = false;
+
 	function __construct(){
 
 		$this->_conexao = new Model_Bancodados_Conexao;
@@ -27,7 +31,16 @@ class Contato {
 
 		$this->_func = new Model_Functions_Functions;
 
-		$this->_render = new Model_Functions_Render;
+		$this->_render = new Model_Functions_Render;		
+
+		$this->_cor = new Model_GOD;
+
+		/* checkLogin é para páginas que precisam de login */
+		$this->_func->checkLogin();
+
+		if(isset($_POST['push']) and $_POST['push'] == 'push'){
+			$this->_push = true;
+		}
 	}
 
 	function __destruct(){
@@ -51,8 +64,6 @@ class Contato {
 		** @param = nome bigode de gato {{exemplo}} - ARRAY ou STRING
 		**/
 
-		$GOD = new Model_GOD;
-		$this->_func->checkLogin();
 		/* PEGA OS DADOS DA PAGINA CONTATO NO BANCO DE DADOS */
 		$pg = $this->_consulta->siteContato($_SESSION[CLIENTE]['login']);
 
@@ -76,12 +87,19 @@ class Contato {
 		}
 
 		$mustache = array(
-			'{{titulo}}' => $pg['conteudo']['titulo'],
-			'{{subtitulo}}' => $pg['conteudo']['subtitulo'],
-			'{{contato}}' => $contato,
-			'{{redesociais}}' => $redesociais,
+			'{{titulo}}' 		=> $pg['conteudo']['titulo'],
+			'{{subtitulo}}' 	=> $pg['conteudo']['subtitulo'],
+			'{{contato}}' 		=> $contato,
+			'{{redesociais}}' 	=> $redesociais,
 		);
 
-		echo $GOD->_visao($GOD->_layout('contato', 'contato'), $mustache);
+		if($this->_push === false){
+
+			echo $this->_cor->_visao($this->_cor->_layout('contato', 'contato'), $mustache);
+
+		}else{
+
+			echo $this->_cor->push('contato', 'contato', $mustache);
+		}
 	}
 }

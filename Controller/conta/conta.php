@@ -16,6 +16,10 @@ class Conta {
 
 	public $_util;
 
+	public $_cor;
+
+	private $_push = false;
+
 	function __construct(){
 
 		$this->_conexao = new Model_Bancodados_Conexao;
@@ -23,6 +27,15 @@ class Conta {
 		$this->_consulta = new Model_Bancodados_Consultas($this->_conexao);
 
 		$this->_util = new Model_Pluggs_Utilit;
+
+		$this->_cor = new Model_GOD;
+
+		/* checkLogin é para páginas que precisam de login */
+		$this->_func->checkLogin();
+
+		if(isset($_POST['push']) and $_POST['push'] == 'push'){
+			$this->_push = true;
+		}
 	}
 
 	function __destruct(){
@@ -39,20 +52,25 @@ class Conta {
 		** @param = nome layout/template - STRING
 		** @param = nome controlador - STRING
 		** @param = nome visão - STRING
-		** @param = nome bigode de gato {{exemplo}} - ARRAY ou STRING
+		** @param = nome bithis->_core de gato {{exemplo}} - ARRAY ou STRING
 		**/
-		$GOD = new Model_GOD;
+
 		$mustache = array();
 
-		echo $GOD->_visao($GOD->_layout('conta', 'conta'), $mustache);
+		if($this->_push === false){
+
+			echo $this->_cor->_visao($this->_cor->_layout('conta', 'conta'), $mustache);
+
+		}else{
+
+			echo $this->_cor->push('conta', 'conta', $mustache);
+		}
 	}
 
 	function criar(){
 
-		$GOD = new Model_GOD;
-
 		/* GERA TOKEN */
-		$seguranca = $GOD->_token();
+		$seguranca = $this->_cor->_token();
 		$url = URL_SITE;
 
 		/* SE EXISTER CONTA, SENHA E TOKEN VÁLIDO, ENTÃO FAÇA O CADASTRO */
@@ -105,14 +123,20 @@ class Conta {
 			'{{url}}'	=> $seguranca['url']
 		);
 
-		echo $GOD->_visao($GOD->_layout('conta', 'criar'), $mustache);
+		if($this->_push === false){
+
+			echo $this->_cor->_visao($this->_cor->_layout('configuracao', 'configuracao'), $mustache);
+
+		}else{
+
+			echo $this->_cor->push('configuracao', 'configuracao', $mustache);
+		}
 	}
 
 	function entrar(){
 
-		$GOD = new Model_GOD;
 		/* GERA TOKEN */
-		$seguranca = $GOD->_token();
+		$seguranca = $this->_cor->_token();
 		$url = URL_SITE;
 
 		/* SE EXISTER CONTA, SENHA E TOKEN VÁLIDO, ENTÃO FAÇA O CADASTRO */
@@ -154,7 +178,14 @@ class Conta {
 			'{{url}}'	=> $seguranca['url']
 		);
 
-		echo $GOD->_visao($GOD->_layout('conta', 'entrar'), $mustache);
+		if($this->_push === false){
+
+			echo $this->_cor->_visao($this->_cor->_layout('configuracao', 'configuracao'), $mustache);
+
+		}else{
+
+			echo $this->_cor->push('configuracao', 'configuracao', $mustache);
+		}
 	}
 
 	function sair(){
