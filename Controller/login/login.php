@@ -165,23 +165,26 @@ class Login {
 				case 3:
 
 					/* SENHA ERRADA*/
-					echo 'E-mail ou senha incorreto!';
-					break;
+					echo json_encode(array('res' => 'no', 'info' => 'E-mail ou senha incorreto!'));
+					exit;
 
 				case 4:
 
 					/* DADOS INVÁLIDOS */
-					echo 'Preencha os dados conforme solicitado';
-					break;
+
+					echo json_encode(array('res' => 'no', 'info' => 'Preencha os dados conforme solicitado'));
+					exit;
 				
 				default:
 
 					/* LOGADO COM SUCESSO */
-					header('location: /');
-					echo 'Login successfully';
-					break;
+					echo json_encode(array('res' => 'ok', 'info' => 'Login efetuado com sucesso!'));
+					exit;
 			}
 		}
+		/* INFORME OS DADOS CORRETO */
+		echo json_encode(array('res' => 'no', 'info' => 'Informe os dados'));
+		exit;
 	}
 
 	function sair(){
@@ -192,7 +195,17 @@ class Login {
 			$return = $this->_consulta->logout($_GET['usr']);
 
 			if($return == 2){
-				header('location: /');
+
+				if($this->_push == false){
+					
+					header('location: /');
+					exit;
+
+				}else{
+
+					echo "<script>$(location).attr('href', '/');</script>";
+					exit;
+				}
 			}
 		}
 	}

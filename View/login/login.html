@@ -32,7 +32,7 @@
 
 			res.html('Aguarde...');
 			res.removeClass('hidden');
-			boxNeutro(resposta_ajax);
+			boxNeutro(res);
 			$.ajax({
 				url: '/login/entrar',
 				dataType: 'json',
@@ -49,9 +49,9 @@
 					$('.toolbar-actions').removeClass('hidden');
 
 					if(data.res == 'ok'){
-							
 						boxTrue(res);
 						res.html('<span class="icon icon-check"></span> '+data.info);
+						$(location).attr('href', '/');
 
 					}else{
 
@@ -62,12 +62,13 @@
 				},
 				error: function(xhr,er) {
 
+					boxFalse(res);
 				}
 			});
 		});		
 
 		$("#resposta-ajax").bind('click', function() {
 			$('#resposta-ajax').addClass('hidden');
-		}
+		});
 	});
 </script>

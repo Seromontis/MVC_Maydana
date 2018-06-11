@@ -37,7 +37,7 @@ class Noscript{
 
 		if($this->_push === false){
 
-			echo $this->_cor->_visao($this->_cor->_layout('noscript', 'noscript'), $mustache);
+			echo $this->_cor->_visao($this->_cor->_layout('noscript', 'noscript', 'login'), $mustache);
 
 		}else{
 

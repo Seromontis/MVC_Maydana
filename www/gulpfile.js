@@ -44,6 +44,13 @@ const projeto = 'Matheus Maydana',
 	# gulp-sourcemaps
 		npm i gulp-sourcemaps
 
+
+  # ERRO ESCUTA GULP
+    gulp watch fails with error: Error: watch ... ENOSPC
+
+    ( SOLUÇÃO )
+    - no terminal -
+    echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
 **/
 const gulp   = require('gulp'),
       uglify = require('gulp-uglify-es').default,
