@@ -25,7 +25,6 @@ class Model_Bancodados_Consultas {
 		$this->_conexao = $conexao->conexao();
 
 		$this->_util = new Model_Pluggs_Utilit;
-
 	}
 
 	function __destruct(){

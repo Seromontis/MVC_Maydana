@@ -24,6 +24,14 @@ define('DIRETORIO_PROJETO', '../MVC_Maydana/');		// diretório
 ** CONFIGURAÇÕES
 **/
 
+/**
+** BANCO DADOS
+** @param pgsql ou mysql
+** @see demais dados em Model/Bancodados/Pssw
+**/
+
+define('BANCO_DADOS', 'pgsql');
+
 /* TRUE ONLINE - FALSE DESENVOLVIMENTO */
 define('PRODUCAO', false);
 
@@ -59,14 +67,6 @@ define('SAVE_SESSIONS', 'Sessions');
 
 define('HASH_PASSWORD', '123');
 
-
-/**
-** BANCO DADOS
-** @param pgsql ou mysql
-** @see demais dados em Model/Bancodados/Pssw
-**/
-
-define('BANCO_DADOS', 'pgsql');
 
 // É NECESSÁRIO QUE A SESSÃO/COOKIE SEJA A MESMA DO SITE
 session_save_path(DIR.SAVE_SESSIONS);

@@ -12,7 +12,7 @@
 
 	<div class="toolbar-actions">
 		<input type="submit" class="btn btn-large btn-positive" value="Entrar" />
-		<a href="/login/criar" class="pull-right">
+		<a href="/login/criar" data-push="false" class="pull-right">
 			Não tenho login
 		</a>
 	</div>
@@ -65,7 +65,7 @@
 					boxFalse(res);
 				}
 			});
-		});		
+		});
 
 		$("#resposta-ajax").bind('click', function() {
 			$('#resposta-ajax').addClass('hidden');

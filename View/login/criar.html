@@ -16,7 +16,7 @@
 
 	<div class="toolbar-actions">
 		<input type="submit" class="btn btn-large btn-positive" value="Entrar" />
-		<a href="/login" class="pull-right">
+		<a href="/login" data-push="push" class="pull-right">
 			Já tenho login
 		</a>
 	</div>
@@ -35,8 +35,8 @@
 			document.querySelector('.toolbar-actions').classList.add('hidden');
 
 			res.html('Aguarde...');
-			resposta_ajax.classList.remove('hidden');
-			boxNeutro(resposta_ajax);
+			res.removeClass('hidden');
+			boxNeutro(res);
 			$.ajax({
 				url: '/login/novo',
 				dataType: 'json',
@@ -54,25 +54,27 @@
 
 					if(data.res == 'ok'){
 
-						boxTrue(resposta_ajax);
+						boxTrue(res);
 						res.html('<span class="icon icon-check"></span> '+data.info);
+						$(location).attr('href', '/');
 
 					}else{
 
-						boxFalse(resposta_ajax);
+						boxFalse(res);
 						res.html('<span class="icon icon-cancel"></span> '+data.info);
-						$('#input-nome').focus();
+						$('#input-email').focus();
 					}
 				},
 				error: function(xhr,er) {
 
+					boxFalse(res);
 				}
 			});
 		});
 
-		resposta_ajax.addEventListener('click', function(evt){
+		$("#resposta-ajax").bind('click', function() {
 
-			resposta_ajax.classList.add('hidden');
-		}, true);
-	})
+			$('#resposta-ajax').addClass('hidden');
+		});
+	});
 </script>

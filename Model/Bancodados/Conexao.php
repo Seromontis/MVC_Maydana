@@ -23,7 +23,6 @@ class Model_Bancodados_Conexao {
 
 			$banco = BANCO_DADOS;
 			if($banco == 'pgsql'){
-
 				// POSTGRES
 				$PDO = new PDO('pgsql:host='.DB_HOST.' dbname='.DB_NAME.' user='.DB_USER.' password='.DB_PASS.' port='.DB_PORT.'');
 				return $PDO;
