@@ -62,4 +62,25 @@ class Clientes {
 			echo $this->_cor->push('clientes', 'clientes');
 		}
 	}
+
+	function novocliente(){
+
+
+		$configuracoes = $this->_consulta->getConfig($_SESSION[CLIENTE]['login']);
+
+		$conf = $this->_render->getconfig($configuracoes);
+
+		$mustache = array(
+			'{{id_login}}' 	=> $_SESSION[CLIENTE]['login']
+		);
+
+		if($this->_push === false){
+
+			echo $this->_cor->_visao($this->_cor->_layout('clientes', 'novo-cliente'), $mustache);
+
+		}else{
+
+			echo $this->_cor->push('clientes', 'novo-cliente');
+		}
+	}
 }

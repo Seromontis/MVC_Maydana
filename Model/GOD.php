@@ -93,6 +93,9 @@ class Model_God extends Model_Functions_Functions{
 		$html = str_replace(array("\t", " ", PHP_EOL), ' ', $html);
 		$html = str_replace(PHP_EOL, ' ', $html);
 		$html = str_replace('> <', '><', $html);
+		$html = str_replace('  ', ' ', $html);
+		$html = str_replace('   ', ' ', $html);
+		$html = str_replace('    ', ' ', $html);
 		
 		return str_replace('NAOENTER', PHP_EOL, $html);
 	}

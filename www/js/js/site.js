@@ -1,4 +1,4 @@
-function openURL(href){
+function xhr(href){
 
         var link = href;  //$(this).attr('href');                                    
         $.ajax({                                                             
@@ -18,14 +18,14 @@ $(document).ready(function() {
    $(document).on('click', 'a', function () {
 
      if(!$(this).attr("data-push")){
-      openURL($(this).attr("href"));
+      xhr($(this).attr("href"));
       return false; //intercept the link
      }
    });  
 
    window.addEventListener('popstate', function(e){
       if(e.state)
-        openURL(e.state.href);
+        xhr(e.state.href);
    }); 
 });
 

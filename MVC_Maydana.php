@@ -96,9 +96,11 @@ class MVC_Maydana {
 				// VERIFICA SE EXISTE A ACTION NO CONTROLADOR,
 				if(isset($url[2]) and !empty($url[2])){
 
-					if(method_exists($controlador, $url[2])){
+					$action = str_replace('-', '', $url[2]);
 
-						$this->action 	  = $url[2];
+					if(method_exists($controlador, $action)){
+
+						$this->action 	  = $action;
 						// AQUI EXECUTA A ACTION EXISTENTE NO CONTROLADOR E NA URL
 						$controlador->{$this->action}();
 
@@ -162,7 +164,7 @@ class MVC_Maydana {
 
 		foreach ($array as $key => $value) {
 
-			$temp[$key] = preg_replace('/\?.*$|\!.*$|#.*$|\'.*$|\@.*$|\$.*$|&.*$|\*.*$|-.*$|\+.*$|\..*$/', '', $value);
+			$temp[$key] = preg_replace('/\?.*$|\!.*$|#.*$|\'.*$|\@.*$|\$.*$|&.*$|\*.*$|\+.*$|\..*$/', '', $value);
 		}
 		
 		return $temp;
