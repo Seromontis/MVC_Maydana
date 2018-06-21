@@ -1,9 +1,9 @@
 <div class="pane" style="padding: 40px;">
 	<h2>Novo Cliente</h2>
-	<form>
+	<form id="form-novo-cliente">
 		<div class="form-group">
 			<label>Nome completo</label>
-			<input type="text" class="form-control" placeholder="nome completo">
+			<input type="text" name="nome" class="form-control" placeholder="nome completo">
 		</div>
 
 		<div class="form-group">
@@ -29,4 +29,41 @@
 			<button type="submit" class="btn btn-form btn-default">Cancel</button>
 		</div>
 	</form>
-</div>		
+</div>
+<script>
+	$("#form-novo-cliente").validate({
+		rules:{
+			nome:{
+				required:true,
+				minlength:5
+			},
+			sexo:{
+				required:true
+			},
+			 cidade:{
+				required:true
+			},
+			 descricao:{
+				required:true
+			}
+		},
+		messages:{
+			nome:{
+				required:"Por favor, informe seu nome",
+				minlength:"O nome deve ter pelo menos 5 caracteres"
+			},
+			sexo:{
+				required:"É necessário informar seu sexo"
+			},
+			cidade:{
+				required:"É necessário informar sua cidade"
+			},
+			descricao:{
+				required:"A descricao não pode ficar em branco"
+			}
+		}
+});
+
+
+
+</script>
