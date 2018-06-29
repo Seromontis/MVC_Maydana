@@ -3,7 +3,7 @@
 	<h2>Criar</h2>	
 	<div class="form-group">
 		<label>Nome</label>
-		<input id="input-nome" name="nome" type="nome" class="form-control" placeholder="nome">
+		<input id="input-nome" name="nome" type="text" class="form-control" placeholder="nome">
 	</div>
 	<div class="form-group">
 		<label>Email</label>
@@ -56,7 +56,7 @@
 
 						boxTrue(res);
 						res.html('<span class="icon icon-check"></span> '+data.info);
-						$(location).attr('href', '/');
+						$(location).attr('href', '/login');
 
 					}else{
 

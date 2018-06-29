@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "View",
-	"LAST EDIT": "09/04/2018",
-	"VERSION":"0.0.1"
+	"LAST EDIT": "29/06/2018",
+	"VERSION":"0.0.2"
 }
 */
 
@@ -84,7 +84,8 @@ class Model_View {
 
 
 				$mustache = array(
-					'{{static}}' => URL_STATIC
+					'{{static}}' => URL_STATIC,
+					'{{nome_sistema}}' => ACTION
 				);
 
 				$visao = str_replace(array_keys($mustache), array_values($mustache), file_get_contents(DIR.'View/'.$controlador.'/'.$visao.EXTENSAO_VISAO));

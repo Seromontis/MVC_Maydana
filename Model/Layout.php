@@ -4,7 +4,7 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Layout",
-	"LAST EDIT": "07/06/2018",
+	"LAST EDIT": "29/06/2018",
 	"VERSION":"0.0.4"
 }
 */
@@ -94,11 +94,12 @@ class Model_Layout {
 				}
 
 				$mustache = array(
-					'{{cliente}}' => $cliente,
-					'{{static}}' => URL_STATIC,
-					'{{nome_sistema}}' => NOME_SISTEMA,
-					'{{header}}' => $this->_headerHTML(),
-					'{{cache}}' => $cache
+					'{{cliente}}' 		=> $cliente,
+					'{{static}}' 		=> URL_STATIC,
+					'{{nome_sistema}}' 	=> NOME_SISTEMA,
+					'{{header}}' 		=> $this->_headerHTML(),
+					'{{cache}}' 		=> $cache,
+					'{{id_login}}' 		=> $_SESSION[CLIENTE]['login']
 				);
 
 				$layout = str_replace(array_keys($mustache), array_values($mustache), file_get_contents(DIR.'Layout/'.$layout.EXTENSAO_VISAO));

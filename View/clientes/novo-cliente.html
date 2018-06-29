@@ -1,6 +1,6 @@
 <div class="pane" style="padding: 40px;">
 	<h2>Novo Cliente</h2>
-	<form id="form-novo-cliente">
+	<form id="form-novo-cliente" novalidate="novalidate">
 		<div class="form-group">
 			<label>Nome completo</label>
 			<input type="text" name="nome" class="form-control" placeholder="nome completo">
@@ -25,44 +25,68 @@
 		</div>
 
 		<div class="form-actions">
-			<button type="submit" class="btn btn-form btn-primary">OK</button>
+
+			<input type="submit" class="btn btn-large btn-positive" value="Entrar" />
+			<button type="button" class="btn btn-form btn-primary">OK</button>
 			<button type="submit" class="btn btn-form btn-default">Cancel</button>
 		</div>
 	</form>
+	<p id="resposta-ajax"></p>
+	<span id="reload" class="icon icon-arrows-ccw text-center hidden"></span>
 </div>
 <script>
-	$("#form-novo-cliente").validate({
-		rules:{
-			nome:{
-				required:true,
-				minlength:5
-			},
-			sexo:{
-				required:true
-			},
-			 cidade:{
-				required:true
-			},
-			 descricao:{
-				required:true
-			}
-		},
-		messages:{
-			nome:{
-				required:"Por favor, informe seu nome",
-				minlength:"O nome deve ter pelo menos 5 caracteres"
-			},
-			sexo:{
-				required:"É necessário informar seu sexo"
-			},
-			cidade:{
-				required:"É necessário informar sua cidade"
-			},
-			descricao:{
-				required:"A descricao não pode ficar em branco"
-			}
-		}
-});
+	
+	$(document).ready(function(){
+		$('#form-novo-cliente').submit(function(e) {
+			e.preventDefault();
+			var serializeDados = $('#form-novo-cliente').serialize();
+			var res = $('#resposta-ajax');
+			var reload = document.getElementById('reload');
+			document.querySelector('.form-actions').classList.add('hidden');
+
+			res.html('Aguarde...');
+			res.removeClass('hidden');
+			boxNeutro(res);
+			$.ajax({
+				url: '/login/novo',
+				dataType: 'json',
+				type: 'POST',
+				data: serializeDados,
+				beforeSend: function() {
+
+				},
+				complete: function() {
+
+				},
+				success: function(data, textStatus) {
+
+					document.querySelector('.form-actions').classList.remove('hidden');
+
+					if(data.res == 'ok'){
+
+						boxTrue(res);
+						res.html('<span class="icon icon-check"></span> '+data.info);
+						$(location).attr('href', '/login');
+
+					}else{
+
+						boxFalse(res);
+						res.html('<span class="icon icon-cancel"></span> '+data.info);
+						$('#input-email').focus();
+					}
+				},
+				error: function(xhr,er) {
+
+					boxFalse(res);
+				}
+			});
+		});
+
+		$("#resposta-ajax").bind('click', function() {
+
+			$('#resposta-ajax').addClass('hidden');
+		});
+	});
 
 
 

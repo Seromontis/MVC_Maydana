@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "07/06/2018",
 		"CONTROLADOR": "Configuracao",
-		"LAST EDIT": "07/06/2018",
-		"VERSION":"0.0.1"
+		"LAST EDIT": "29/06/2018",
+		"VERSION":"0.0.2"
 	}
 */
 class Clientes {
@@ -49,9 +49,7 @@ class Clientes {
 
 		$conf = $this->_render->getconfig($configuracoes);
 
-		$mustache = array(
-			'{{id_login}}' 	=> $_SESSION[CLIENTE]['login']
-		);
+		$mustache = array();
 
 		if($this->_push === false){
 
@@ -70,9 +68,7 @@ class Clientes {
 
 		$conf = $this->_render->getconfig($configuracoes);
 
-		$mustache = array(
-			'{{id_login}}' 	=> $_SESSION[CLIENTE]['login']
-		);
+		$mustache = array();
 
 		if($this->_push === false){
 
@@ -82,5 +78,14 @@ class Clientes {
 
 			echo $this->_cor->push('clientes', 'novo-cliente');
 		}
+	}
+
+	function novo(){
+
+		/* TEST PHP 7.0*/
+		$valor = $_GET['doesNotExist'] ?? 'fallback';
+
+		new de($valor);
+
 	}
 }
