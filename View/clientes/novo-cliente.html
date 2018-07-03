@@ -1,6 +1,6 @@
 <div class="pane" style="padding: 40px;">
 	<h2>Novo Cliente</h2>
-	<form id="form-novo-cliente" novalidate="novalidate">
+	<form id="form-novo-cliente" action="/{{nome_sistema}}" name="form-login" method="post" novalidate="novalidate">
 		<div class="form-group">
 			<label>Nome completo</label>
 			<input type="text" name="nome" class="form-control" placeholder="nome completo">
@@ -8,7 +8,7 @@
 
 		<div class="form-group">
 			<label>Sexo</label>
-			<select class="form-control">
+			<select name="sexo" class="form-control">
 				<option>Masculino</option>
 				<option>Feminino</option>
 			</select>
@@ -16,12 +16,12 @@
 
 		<div class="form-group">
 			<label>Cidade</label>
-			<input type="text" class="form-control" placeholder="cidade">
+			<input name="cidade" type="text" class="form-control" placeholder="cidade">
 		</div>
 
 		<div class="form-group">
 			<label>Descrição</label>
-			<textarea class="form-control" rows="3"></textarea>
+			<textarea name="descricao" class="form-control" rows="3"></textarea>
 		</div>
 
 		<div class="form-actions">
@@ -48,7 +48,7 @@
 			res.removeClass('hidden');
 			boxNeutro(res);
 			$.ajax({
-				url: '/login/novo',
+				url: '/clientes/novo',
 				dataType: 'json',
 				type: 'POST',
 				data: serializeDados,

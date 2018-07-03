@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "07/06/2018",
 		"CONTROLADOR": "Configuracao",
-		"LAST EDIT": "29/06/2018",
-		"VERSION":"0.0.2"
+		"LAST EDIT": "03/07/2018",
+		"VERSION":"0.0.3"
 	}
 */
 class Clientes {
@@ -82,10 +82,33 @@ class Clientes {
 
 	function novo(){
 
-		/* TEST PHP 7.0*/
-		$valor = $_GET['doesNotExist'] ?? 'fallback';
+		if(isset($_POST['nome'], $_POST['sexo'], $_POST['cidade'], $_POST['descricao']) and !empty($_POST['nome'])){
 
-		new de($valor);
+			$nome 		= $_POST['nome'] ?? '';
+			$sexo 		= $_POST['sexo'] ?? '';
+			$cidade 	= $_POST['cidade'] ?? '';
+			$descricao 	= $_POST['descricao'] ?? '';
 
+			$dados[] = $nome;
+			$dados[] = $sexo;
+			$dados[] = $cidade;
+			$dados[] = $descricao;
+
+			try{
+
+				$this->_consulta->newPessoa('isahdhias');
+
+			} catch (Exception $ex) {
+				echo json_decode(array('r' => 'no', 'info' => 'Informe os dados correto'));
+				exit;
+			}catch (Error $ex) {
+				echo json_decode(array('r' => 'no', 'info' => 'Informe os dados correto'));
+				exit;
+			}
+		}
+
+		header('HTTP/1.0 404 Not Found', true, 404);
+		header('location: /erro404');
+		exit;
 	}
 }

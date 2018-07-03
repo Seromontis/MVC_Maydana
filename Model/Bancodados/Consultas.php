@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "07/06/2018",
 	"MODEL": "Consultas",
-	"LAST EDIT": "07/06/2018",
-	"VERSION":"0.0.1"
+	"LAST EDIT": "03/07/2018",
+	"VERSION":"0.0.2"
 }
 */
 class Model_Bancodados_Consultas {
@@ -33,6 +33,20 @@ class Model_Bancodados_Consultas {
 
 		$this->_util = null;
 
+	}
+
+	function newPessoa(array $dados){
+
+		$nome 		= $this->_util->basico($dados[0] ?? '');
+		$sexo 		= $this->_util->basico($dados[1] ?? '');
+		$cidade 	= $this->_util->basico($dados[2] ?? '');
+		$descricao 	= $this->_util->basico($dados[3] ?? '');
+
+		$sql = $this->_conexao->prepare('INSERT INTO () VALUES ()');
+		$sql->bindParam(':', $var);
+		$sql->execute();
+		$fetch = $sql->fetch(PDO::FETCH_ASSOC);
+		$sql = null;
 	}
 
 	function newAccount($dados){
