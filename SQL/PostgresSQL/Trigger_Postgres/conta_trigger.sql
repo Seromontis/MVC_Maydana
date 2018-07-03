@@ -2,12 +2,12 @@
 -- DATA: 30/05/2018
 -- CRIADOR: MAYDANA
 
+-- Function: conta_trigger_procedure()
+-- DROP FUNCTION conta_trigger_procedure();
 
--- DROP TRIGGER IF EXISTS conta_trigger ON conta;
--- DROP FUNCTION IF EXISTS public.conta_trigger_procedure();
-
-CREATE OR REPLACE FUNCTION conta_trigger_procedure() RETURNS TRIGGER AS
-$conta_trigger$
+CREATE OR REPLACE FUNCTION conta_trigger_procedure()
+  RETURNS trigger AS
+$BODY$
 	BEGIN
 
 		IF (TG_OP = 'INSERT') THEN
@@ -17,6 +17,8 @@ $conta_trigger$
 		END IF;
 		RETURN NULL;
 	END;
-$conta_trigger$ LANGUAGE plpgsql;
-
-CREATE TRIGGER conta_trigger AFTER INSERT ON conta FOR EACH ROW EXECUTE PROCEDURE conta_trigger_procedure();
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION conta_trigger_procedure()
+  OWNER TO matheus;

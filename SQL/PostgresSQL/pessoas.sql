@@ -1,8 +1,8 @@
--- Table: public.pessoas
+-- Table: pessoas
 
--- DROP TABLE public.pessoas;
+-- DROP TABLE pessoas;
 
-CREATE TABLE public.pessoas
+CREATE TABLE pessoas
 (
   id_conta integer,
   nome character varying(150), -- nome completo do cidadão
@@ -16,18 +16,22 @@ CREATE TABLE public.pessoas
   whatsapp character varying(30),
   telefone character varying(30),
   celular character varying(30),
-  id integer NOT NULL DEFAULT nextval('pessoas_id_seq'::regclass)
+  id serial NOT NULL,
+  CONSTRAINT pessoas_pkey PRIMARY KEY (id),
+  CONSTRAINT pessoas_id_conta_fkey FOREIGN KEY (id_conta)
+      REFERENCES conta (id_conta) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.pessoas
-  OWNER TO maydana;
-COMMENT ON COLUMN public.pessoas.nome IS 'nome completo do cidadão';
-COMMENT ON COLUMN public.pessoas.sexo IS '1 = masculino
+ALTER TABLE pessoas
+  OWNER TO matheus;
+COMMENT ON COLUMN pessoas.nome IS 'nome completo do cidadão';
+COMMENT ON COLUMN pessoas.sexo IS '1 = masculino
 2 = feminino
 3 = outro';
-COMMENT ON COLUMN public.pessoas.cid_codigo IS 'codigo da cidade';
-COMMENT ON COLUMN public.pessoas.est_codigo IS 'codigo do estado';
-COMMENT ON COLUMN public.pessoas.bai_codigo IS 'codigo do bairro';
+COMMENT ON COLUMN pessoas.cid_codigo IS 'codigo da cidade';
+COMMENT ON COLUMN pessoas.est_codigo IS 'codigo do estado';
+COMMENT ON COLUMN pessoas.bai_codigo IS 'codigo do bairro';
 
