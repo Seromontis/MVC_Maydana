@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "07/06/2018",
 	"MODEL": "Consultas",
-	"LAST EDIT": "03/07/2018",
-	"VERSION":"0.0.2"
+	"LAST EDIT": "04/07/2018",
+	"VERSION":"0.0.3"
 }
 */
 class Model_Bancodados_Consultas {
@@ -35,18 +35,56 @@ class Model_Bancodados_Consultas {
 
 	}
 
+	function getClientes(){
+
+		$sql = $this->_conexao->prepare('
+			SELECT *
+			FROM pessoas
+			WHERE tipo = 1
+		');
+		$sql->execute();
+		$fecth = $sql->fetchAll(PDO::FETCH_ASSOC);
+		$sql = null;
+
+		return $fecth;
+	}
+
 	function newPessoa(array $dados){
 
-		$nome 		= $this->_util->basico($dados[0] ?? '');
-		$sexo 		= $this->_util->basico($dados[1] ?? '');
-		$cidade 	= $this->_util->basico($dados[2] ?? '');
-		$descricao 	= $this->_util->basico($dados[3] ?? '');
+		$nome 		= $this->_util->basico($dados[0] ?? null);
+		$sexo 		= $this->_util->basico($dados[1] ?? 0);
+		$cidade 	= $this->_util->basico($dados[2] ?? 0);
+		$descricao 	= $this->_util->basico($dados[3] ?? null);
 
-		$sql = $this->_conexao->prepare('INSERT INTO () VALUES ()');
-		$sql->bindParam(':', $var);
+		$sql = $this->_conexao->prepare("INSERT INTO pessoas (
+			nome, 
+			sexo, 
+			cid_codigo, 
+			descricao
+		) VALUES (
+			:nome,
+			:sexo,
+			:cidade,
+			:descricao
+		)");
+		$sql->bindParam(':nome', $nome);
+		$sql->bindParam(':sexo', $sexo);
+		$sql->bindParam(':cidade', $cidade);
+		$sql->bindParam(':descricao', $descricao);
 		$sql->execute();
 		$fetch = $sql->fetch(PDO::FETCH_ASSOC);
 		$sql = null;
+
+		/* SUCESSO */
+		$return = 1;
+
+		if($fetch === false){
+
+			/* FALHA */
+			$return = 2;
+		}
+
+		return $return;
 	}
 
 	function newAccount($dados){

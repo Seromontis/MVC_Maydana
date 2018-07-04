@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "07/06/2018",
 		"CONTROLADOR": "Configuracao",
-		"LAST EDIT": "03/07/2018",
-		"VERSION":"0.0.3"
+		"LAST EDIT": "04/07/2018",
+		"VERSION":"0.0.4"
 	}
 */
 class Clientes {
@@ -22,6 +22,8 @@ class Clientes {
 
 	private $_push = false;
 
+	public $foo;
+
 	function __construct(){
 
 		$this->_func = new Model_Functions_Functions;
@@ -33,6 +35,8 @@ class Clientes {
 		$this->_render = new Model_Functions_Render;
 
 		$this->_cor = new Model_GOD;
+
+		$this->foo = new Model_Functions_Exception($this->_conexao);
 
 		if(isset($_POST['push']) and $_POST['push'] == 'push'){
 			$this->_push = true;
@@ -49,6 +53,9 @@ class Clientes {
 
 		$conf = $this->_render->getconfig($configuracoes);
 
+		$clientes = $this->_consulta->getClientes();
+
+		new de($clientes);
 		$mustache = array();
 
 		if($this->_push === false){
@@ -84,31 +91,43 @@ class Clientes {
 
 		if(isset($_POST['nome'], $_POST['sexo'], $_POST['cidade'], $_POST['descricao']) and !empty($_POST['nome'])){
 
-			$nome 		= $_POST['nome'] ?? '';
-			$sexo 		= $_POST['sexo'] ?? '';
-			$cidade 	= $_POST['cidade'] ?? '';
-			$descricao 	= $_POST['descricao'] ?? '';
+			$nome 		= $_POST['nome'] ?? null;
+			$sexo 		= $_POST['sexo'] ?? 0;
+			$cidade 	= $_POST['cidade'] ?? 0;
+			$descricao 	= $_POST['descricao'] ?? null;
 
 			$dados[] = $nome;
 			$dados[] = $sexo;
 			$dados[] = $cidade;
 			$dados[] = $descricao;
 
-			try{
+			$newPessoa = $this->foo->newPessoa($dados);
 
-				$this->_consulta->newPessoa('isahdhias');
+			switch ($newPessoa) {
 
-			} catch (Exception $ex) {
-				echo json_decode(array('r' => 'no', 'info' => 'Informe os dados correto'));
-				exit;
-			}catch (Error $ex) {
-				echo json_decode(array('r' => 'no', 'info' => 'Informe os dados correto'));
-				exit;
+				case 85:
+
+					echo json_encode(array('res' => 'no', 'info' => 'Ocorreu um erro, entre em contato com o suporte!'));
+					break;
+				
+				case 2:
+
+					echo json_encode(array('res' => 'no', 'info' => 'Não foi possível registrar um novo cliente!'));
+					break;
+
+				default:
+
+					echo json_encode(array('res' => 'ok', 'info' => 'Novo cliente registrado com sucesso!'));
+					break;
 			}
+
+			exit;
 		}
 
-		header('HTTP/1.0 404 Not Found', true, 404);
-		header('location: /erro404');
+		echo json_encode(array('res' => 'no', 'info' => 'Informe os dados correto'));
 		exit;
+		/*header('HTTP/1.0 404 Not Found', true, 404);
+		header('location: /erro404');
+		exit;*/
 	}
 }

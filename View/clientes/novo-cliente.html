@@ -9,8 +9,8 @@
 		<div class="form-group">
 			<label>Sexo</label>
 			<select name="sexo" class="form-control">
-				<option>Masculino</option>
-				<option>Feminino</option>
+				<option value="1">Masculino</option>
+				<option value="2">Feminino</option>
 			</select>
 		</div>
 
@@ -42,7 +42,7 @@
 			var serializeDados = $('#form-novo-cliente').serialize();
 			var res = $('#resposta-ajax');
 			var reload = document.getElementById('reload');
-			document.querySelector('.form-actions').classList.add('hidden');
+			$('.form-actions').addClass('hidden');
 
 			res.html('Aguarde...');
 			res.removeClass('hidden');
@@ -60,13 +60,12 @@
 				},
 				success: function(data, textStatus) {
 
-					document.querySelector('.form-actions').classList.remove('hidden');
-
+					$('.form-actions').removeClass('hidden');
 					if(data.res == 'ok'){
 
 						boxTrue(res);
 						res.html('<span class="icon icon-check"></span> '+data.info);
-						$(location).attr('href', '/login');
+						xhr('/clientes');
 
 					}else{
 

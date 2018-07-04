@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Layout",
-	"LAST EDIT": "29/06/2018",
-	"VERSION":"0.0.4"
+	"LAST EDIT": "04/07/2018",
+	"VERSION":"0.0.5"
 }
 */
 
@@ -93,13 +93,15 @@ class Model_Layout {
 					$cache = '?cache='.$random;
 				}
 
+				$login = $_SESSION[CLIENTE]['login'] ?? '';
+
 				$mustache = array(
 					'{{cliente}}' 		=> $cliente,
 					'{{static}}' 		=> URL_STATIC,
 					'{{nome_sistema}}' 	=> NOME_SISTEMA,
 					'{{header}}' 		=> $this->_headerHTML(),
 					'{{cache}}' 		=> $cache,
-					'{{id_login}}' 		=> $_SESSION[CLIENTE]['login']
+					'{{id_login}}' 		=> $login
 				);
 
 				$layout = str_replace(array_keys($mustache), array_values($mustache), file_get_contents(DIR.'Layout/'.$layout.EXTENSAO_VISAO));
