@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "GOD",
-	"LAST EDIT": "07/06/2018",
-	"VERSION":"0.0.4"
+	"LAST EDIT": "05/07/2018",
+	"VERSION":"0.0.5"
 }
 */
 
@@ -59,7 +59,7 @@ class Model_God extends Model_Functions_Functions{
 
 		if(is_array($bigodim) and $bigodim !== null and $bigodim !== ''){
 
-			$var = $this->comprimeHTML(str_replace(array_keys($bigodim), array_values($bigodim), $visao));
+			@$var = $this->comprimeHTML(str_replace(array_keys($bigodim), array_values($bigodim), $visao));
 
 			return $var;
 		
@@ -74,7 +74,8 @@ class Model_God extends Model_Functions_Functions{
 
 		if(is_array($bigodim) and $bigodim !== null and $bigodim !== ''){
 
-			return $this->comprimeHTML(str_replace(array_keys($bigodim), array_values($bigodim), $this->_eye->visao()));
+			@$var = $this->comprimeHTML(str_replace(array_keys($bigodim), array_values($bigodim), $this->_eye->visao())); 
+			return $var;
 
 		}else{
 

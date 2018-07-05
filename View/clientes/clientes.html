@@ -1,58 +1,19 @@
 <div  style="display: inline-block; vertical-align: top;"  class="pane pane-sm sidebar">
 	<ul class="list-group">			
 		<li class="list-group-header">
-			<input class="form-control" type="text" placeholder="procurar cliente">
+			<input id="procuracliente" class="form-control" type="text" placeholder="procurar cliente">
 		</li>
-
-		<li class="list-group-item">
-			<div class="media-body">
-				<p>encontramos 6 clientes</p>
-			</div>
-		</li>
-		<li class="list-group-item active">
-			<img class="img-circle media-object pull-left" src="{{static}}img/avatar.jpg" width="32" height="32">
-			<div class="media-body">
-				<strong>List item title</strong>
-				<p>Lorem ipsum dolor sit amet.</p>
-			</div>
-		</li>
-		<li class="list-group-item">
-			<img class="img-circle media-object pull-left" src="{{static}}img/avatar2.png" width="32" height="32">
-			<div class="media-body">
-				<strong>List item title</strong>
-				<p>Lorem ipsum dolor sit amet.</p>
-			</div>
-		</li>
-		<li class="list-group-item">
-			<img class="img-circle media-object pull-left" src="{{static}}img/avatar3.jpg" width="32" height="32">
-			<div class="media-body">
-				<strong>List item title</strong>
-				<p>Lorem ipsum dolor sit amet.</p>
-			</div>
-		</li>
-		<li class="list-group-item">
-			<img class="img-circle media-object pull-left" src="{{static}}img/avatar4.jpg" width="32" height="32">
-			<div class="media-body">
-				<strong>List item title</strong>
-				<p>Lorem ipsum dolor sit amet.</p>
-			</div>
-		</li>
-		<li class="list-group-item">
-			<img class="img-circle media-object pull-left" src="{{static}}img/avatar5.png" width="32" height="32">
-			<div class="media-body">
-				<strong>List item title</strong>
-				<p>Lorem ipsum dolor sit amet.</p>
-			</div>
-		</li>
-		<li class="list-group-item">
-			<img class="img-circle media-object pull-left" src="{{static}}/img/avatar6.jpg" width="32" height="32">
-			<div class="media-body">
-				<strong>List item title</strong>
-				<p>Lorem ipsum dolor sit amet.</p>
-			</div>
-		</li>
+		{{clientes}}
 	</ul>
 </div>
 <div style="display: inline-block; vertical-align: top;" class="pane">
 	<button class="btn btn-positive" data-push="push" onclick="xhr('/clientes/novo-cliente')">Novo Cliente</button>
 </div>
+<script>
+	window.clientes = {{clientesarray}};
+
+	$('#procuracliente').on('keyup', function (){
+
+
+	});
+</script>

@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "07/06/2018",
 		"CONTROLADOR": "Configuracao",
-		"LAST EDIT": "04/07/2018",
-		"VERSION":"0.0.4"
+		"LAST EDIT": "05/07/2018",
+		"VERSION":"0.0.5"
 	}
 */
 class Clientes {
@@ -48,15 +48,17 @@ class Clientes {
 
 	function index(){
 
-
 		$configuracoes = $this->_consulta->getConfig($_SESSION[CLIENTE]['login']);
 
 		$conf = $this->_render->getconfig($configuracoes);
 
-		$clientes = $this->_consulta->getClientes();
+		$clientesarray 	= $this->_consulta->getClientes();
+		$clientes 		= $this->_render->getClientes($clientesarray);
 
-		new de($clientes);
-		$mustache = array();
+		$mustache = array(
+			'{{clientes}}' 		=> $clientes,
+			'{{clientesarray}}' => json_encode($clientesarray)
+		);
 
 		if($this->_push === false){
 
@@ -64,12 +66,11 @@ class Clientes {
 
 		}else{
 
-			echo $this->_cor->push('clientes', 'clientes');
+			echo $this->_cor->push('clientes', 'clientes', $mustache);
 		}
 	}
 
 	function novocliente(){
-
 
 		$configuracoes = $this->_consulta->getConfig($_SESSION[CLIENTE]['login']);
 

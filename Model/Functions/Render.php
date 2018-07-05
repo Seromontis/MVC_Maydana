@@ -3,8 +3,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Render HTML",
-	"LAST EDIT": "07/06/2018",
-	"VERSION":"0.0.5"
+	"LAST EDIT": "05/07/2018",
+	"VERSION":"0.0.6"
 */
 
 class Model_Functions_Render{
@@ -99,5 +99,36 @@ conf;
 		}
 
 		return false;
+	}
+
+	function getClientes($dados){
+
+		$total = count($dados);
+		$li = '';
+		foreach ($dados as $arr){
+			
+			$nome = $arr['nome'] ?? '';
+			$cpf = $arr['cpf'] ?? '';
+
+			$li .= <<<li
+			<li class="list-group-item">
+				<img class="img-circle media-object pull-left" src="{{static}}img/avatar2.png" width="32" height="32">
+				<div class="media-body">
+					<strong>{$nome}</strong>
+					<p>{$cpf}</p>
+				</div>
+			</li>
+li;
+		}
+
+		$var = <<<var
+		<li class="list-group-item">
+			<div class="media-body">
+				<p>encontramos {$total} clientes</p>
+			</div>
+		</li>
+		{$li}
+var;
+		return $var;
 	}
 }

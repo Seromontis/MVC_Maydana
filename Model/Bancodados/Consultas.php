@@ -41,6 +41,7 @@ class Model_Bancodados_Consultas {
 			SELECT *
 			FROM pessoas
 			WHERE tipo = 1
+			ORDER BY nome ASC
 		');
 		$sql->execute();
 		$fecth = $sql->fetchAll(PDO::FETCH_ASSOC);
