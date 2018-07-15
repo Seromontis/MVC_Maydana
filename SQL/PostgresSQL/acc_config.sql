@@ -26,4 +26,4 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE acc_config
-  OWNER TO matheus;
+  OWNER TO maydana;

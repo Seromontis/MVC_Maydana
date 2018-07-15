@@ -23,7 +23,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE conta
-  OWNER TO matheus;
+  OWNER TO maydana;
 COMMENT ON COLUMN conta.status IS '0 = inativo
 1 = ativo
 2 = offline

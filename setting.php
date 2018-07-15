@@ -14,6 +14,14 @@
 **/
 define('DIR', '../');
 
+define('SAVE_SESSIONS', 'Sessions');
+
+// É NECESSÁRIO QUE A SESSÃO/COOKIE SEJA A MESMA DO SITE
+session_save_path('../Sessions');
+session_set_cookie_params(9999999, '/', $_SERVER['SERVER_NAME']);
+
+session_start();
+
 /* USANDO HOST-VIRTUAL url é só /, no windows é ../mvc_maydana/ */
 define('URL_STATIC', '/');
 
@@ -60,18 +68,9 @@ define('EXTENSAO_VISAO', '.html'); 				// Extenção das views
 
 define('EXTENSAO_CONTROLADOR', '.php'); 		// Extenção das controllers
 
-define('SAVE_SESSIONS', 'Sessions');
-
 
 /**
 ** FUNÇÕES E MODELS
 **/
 
 define('HASH_PASSWORD', '123');
-
-
-// É NECESSÁRIO QUE A SESSÃO/COOKIE SEJA A MESMA DO SITE
-session_save_path(DIR.SAVE_SESSIONS);
-session_set_cookie_params(9999999, '/', $_SERVER['SERVER_NAME']);
-
-@session_start();

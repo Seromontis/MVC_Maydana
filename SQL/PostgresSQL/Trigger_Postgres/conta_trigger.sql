@@ -21,4 +21,4 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION conta_trigger_procedure()
-  OWNER TO matheus;
+  OWNER TO maydana;

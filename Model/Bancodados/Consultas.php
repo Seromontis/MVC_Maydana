@@ -234,7 +234,6 @@ class Model_Bancodados_Consultas {
 		$sql->execute();
 
 		$sql = null;
-		$PDO = null;
 
 		if(!isset($_SESSION[CLIENTE]['login']) || empty($_SESSION[CLIENTE]['login'])){
 

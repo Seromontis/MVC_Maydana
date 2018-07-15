@@ -19,8 +19,8 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE account
-  OWNER TO matheus;
-GRANT ALL ON TABLE account TO matheus;
+  OWNER TO maydana;
+GRANT ALL ON TABLE account TO maydana;
 GRANT ALL ON TABLE account TO public;
 COMMENT ON TABLE account
   IS 'Tabela responsável por armazenar todas as contas dos usuários.';

@@ -52,7 +52,6 @@ class Login {
 
 	function index(){
 
-
 		/**
 		** _controller(param1, param2, param3)
 		** @param = nome layout/template - STRING

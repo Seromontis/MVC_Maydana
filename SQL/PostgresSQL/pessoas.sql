@@ -28,7 +28,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE pessoas
-  OWNER TO matheus;
+  OWNER TO maydana;
 COMMENT ON COLUMN pessoas.nome IS 'nome completo do cidadão';
 COMMENT ON COLUMN pessoas.sexo IS '1 = masculino
 2 = feminino

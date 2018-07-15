@@ -12,4 +12,4 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE ms_modulos
-  OWNER TO matheus;
+  OWNER TO maydana;
