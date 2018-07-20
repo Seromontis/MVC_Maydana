@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "07/06/2018",
 	"MODEL": "Consultas",
-	"LAST EDIT": "04/07/2018",
-	"VERSION":"0.0.3"
+	"LAST EDIT": "20/07/2018",
+	"VERSION":"0.0.4"
 }
 */
 class Model_Bancodados_Consultas {
@@ -48,6 +48,52 @@ class Model_Bancodados_Consultas {
 		$sql = null;
 
 		return $fecth;
+	}
+
+	function newVeiculo(array $dados){
+		
+		$nome 		= $this->_util->basico($dados[0] ?? null);
+		$publicado 	= $this->_util->basico($dados[1] ?? null);
+		$tipo 		= $this->_util->basico($dados[2] ?? null);
+		$modelo 	= $this->_util->basico($dados[3] ?? null);
+		$descricao 	= $this->_util->basico($dados[4] ?? null);
+
+		$sql = $this->_conexao->prepare("INSERT INTO pessoas (
+			nome,
+			ano,
+			modelo,
+			descricao,
+			tipo,
+			cor,
+			marca,
+			portas,
+			quilometragem,
+			opcionais
+		) VALUES (
+			:nome,
+			:ano,
+			:modelo,
+			:descricao,
+			:tipo,
+			:cor,
+			:marca,
+			:portas,
+			:quilometragem,
+			:opcionais
+		)");
+		$sql->bindParam(':nome', $nome);
+		$sql->bindParam(':ano', $ano);
+		$sql->bindParam(':modelo', $modelo);
+		$sql->bindParam(':descricao', $descricao);
+		$sql->bindParam(':tipo', $tipo);
+		$sql->bindParam(':cor', $cor);
+		$sql->bindParam(':marca', $marca);
+		$sql->bindParam(':portas', $portas);
+		$sql->bindParam(':quilometragem', $quilometragem);
+		$sql->bindParam(':opcionais', $opcionais);
+		$sql->execute();
+		$fetch = $sql->fetch(PDO::FETCH_ASSOC);
+		$sql = null;
 	}
 
 	function newPessoa(array $dados){

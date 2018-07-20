@@ -3,8 +3,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Functions",
-	"LAST EDIT": "07/06/2018",
-	"VERSION":"0.0.4"
+	"LAST EDIT": "20/07/2018",
+	"VERSION":"0.0.5"
 */
 
 class Model_Functions_Functions {
@@ -56,13 +56,13 @@ class Model_Functions_Functions {
 	** @return string
 	**/
 
-   function HASH($string){
+	function HASH($string){
 
-   		/**
-   		** @see NUNCA !!!!
-   		** @see NUNCA, JAMAIS, ALTERE O VALOR DA VARIÁVEL $salt
-   		**/
-   		$string = (string) $string;
+		/**
+		** @see NUNCA !!!!
+		** @see NUNCA, JAMAIS, ALTERE O VALOR DA VARIÁVEL $salt
+		**/
+		$string = (string) $string;
 		$salt = '31256578196*&%@#*(!$!+_%$(_+!%anpadfbahidpqwm,ksdpoqww[pqwṕqw[';
 
 		return sha1(substr(md5($salt.$string), 5,25));

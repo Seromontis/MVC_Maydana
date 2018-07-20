@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"CONFIG": "Setting",
-	"LAST EDIT": "29/06/2018",
-	"VERSION":"0.0.7"
+	"LAST EDIT": "20/07/2018",
+	"VERSION":"0.0.8"
 }
 */
 
@@ -74,3 +74,19 @@ define('EXTENSAO_CONTROLADOR', '.php'); 		// Extenção das controllers
 **/
 
 define('HASH_PASSWORD', '123');
+
+
+/**
+** CONFIGURAÇÕES IMAGEMS
+**/
+
+define('URL_DADOS', '../Dados/');
+define('URL_IMG_VEICULOS', URL_DADOS.$_SESSION[CLIENTE]['login'].'/veiculos/');
+define('URL_IMG_VEICULOS_THUMBS', URL_IMG_VEICULOS.'thumbs/');
+define('URL_IMG_VEICULOS_ORIGIN', URL_IMG_VEICULOS.'origin/');
+define('HEIGHT_THUMB', 190);
+define('WIDTH_THUMB', 240);
+define('HEIGHT_VIEW', 520);
+define('WIDTH_VIEW', 840);
+define('FORMATO_THUMBS', '.jpg');
+define('SUBNOME_THUMBS', '_thumb');

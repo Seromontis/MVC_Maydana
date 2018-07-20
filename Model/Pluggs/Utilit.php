@@ -23,6 +23,22 @@ class Model_Pluggs_Utilit {
 		return IP;
 	}
 
+	function HASH_RANDOM(){
+		return uniqid(rand(), true);
+	}
+
+	function HASH_URL($string){
+
+		/**
+		** @see NUNCA !!!!
+		** @see NUNCA, JAMAIS, ALTERE O VALOR DA VARIÁVEL $salt
+		**/
+		$string = (string) $string;
+		$salt = '1q23w32dcf87g7OPIH)WS+-*)(&@!$*("!$-=IHDwqpqwfdpnb';
+
+		return sha1(substr(md5($salt.$string), 5,12));
+	}
+
 	function noLogin(){
 		if(isset($_SESSION[CLIENTE]['login'])){
 			header('location: /');

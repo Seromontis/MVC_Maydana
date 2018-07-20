@@ -1,0 +1,57 @@
+<div class="pane" style="padding: 40px;">
+	<div class="form-group">
+		<label>Imagens</label>
+		<div id="fileuploader">Upload</div>
+		<span id="reload" class="icon icon-arrows-ccw text-center hidden"></span>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#fileuploader").uploadFile({
+			url:"/veiculo/novo",
+			dragDrop: true,
+			fileName: "imgveiculo",
+			returnType: "json",
+			showDelete: true,
+			showDownload:true,
+			statusBarWidth:600,
+			dragdropWidth:600,
+			maxFileSize:2000*20024,
+			showPreview:true,
+			previewHeight: "100px",
+			previewWidth: "100px",
+
+			onLoad:function(obj){
+			   	$.ajax({
+						cache: false,
+						url: "/veiculo/novo",
+						dataType: "json",
+						success: function(data){
+
+							for(var i=0;i<data.length;i++){ 
+
+				   				obj.createProgress(data[i]["name"],data[i]["path"],data[i]["size"]);
+				   			}
+						}
+					});
+			  },
+			  deleteCallback: function(data,pd){
+
+				for (var i = 0; i < data.length; i++){
+
+					$.post("delete.php", {op: "delete",name: data[i]},
+						function (resp,textStatus, jqXHR) {
+							alert("File Deleted");
+					});
+				}
+
+				pd.statusbar.hide();
+
+			},
+			downloadCallback:function(filename,pd){
+
+				location.href="download.php?filename="+filename;
+			}
+		}); 
+	});
+</script>
