@@ -1,10 +1,10 @@
--- Table: site_contato
+-- Table: public.site_contato
 
--- DROP TABLE site_contato;
+-- DROP TABLE public.site_contato;
 
-CREATE TABLE site_contato
+CREATE TABLE public.site_contato
 (
-  id serial NOT NULL,
+  id serial,
   id_conta integer,
   usu_codigo_change integer,
   titulo character varying(200) NOT NULL DEFAULT 'contato'::character varying,
@@ -24,14 +24,14 @@ CREATE TABLE site_contato
   data_atualizacao character varying(30),
   hora_atualizacao character varying(30),
   CONSTRAINT site_contato_id_conta_fkey FOREIGN KEY (id_conta)
-      REFERENCES conta (id_conta) MATCH SIMPLE
+      REFERENCES public.conta (id_conta) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT site_contato_usu_codigo_change_fkey FOREIGN KEY (usu_codigo_change)
-      REFERENCES pessoas (id) MATCH SIMPLE
+      REFERENCES public.pessoas (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE site_contato
+ALTER TABLE public.site_contato
   OWNER TO maydana;

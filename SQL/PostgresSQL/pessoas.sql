@@ -1,10 +1,10 @@
--- Table: pessoas
+-- Table: public.pessoas
 
--- DROP TABLE pessoas;
+-- DROP TABLE public.pessoas;
 
-CREATE TABLE pessoas
+CREATE TABLE public.pessoas
 (
-  id serial NOT NULL,
+  id serial,
   id_conta integer,
   tipo smallint DEFAULT 1, -- 1 = usuario...
   nome character varying(150), -- nome completo do cidadão
@@ -21,24 +21,23 @@ CREATE TABLE pessoas
   descricao character varying(250),
   CONSTRAINT pessoas_pkey PRIMARY KEY (id),
   CONSTRAINT pessoas_id_conta_fkey FOREIGN KEY (id_conta)
-      REFERENCES conta (id_conta) MATCH SIMPLE
+      REFERENCES public.conta (id_conta) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE pessoas
+ALTER TABLE public.pessoas
   OWNER TO maydana;
-COMMENT ON COLUMN pessoas.nome IS 'nome completo do cidadão';
-COMMENT ON COLUMN pessoas.sexo IS '1 = masculino
-2 = feminino
-3 = outro';
-COMMENT ON COLUMN pessoas.cid_codigo IS 'codigo da cidade';
-COMMENT ON COLUMN pessoas.est_codigo IS 'codigo do estado';
-COMMENT ON COLUMN pessoas.bai_codigo IS 'codigo do bairro';
-COMMENT ON COLUMN pessoas.tipo IS '1 = usuario
+COMMENT ON COLUMN public.pessoas.tipo IS '1 = usuario
 2 = cliente
 3 = funcionario
 4 = gerente
 5 = GOD';
-
+COMMENT ON COLUMN public.pessoas.nome IS 'nome completo do cidadão';
+COMMENT ON COLUMN public.pessoas.cid_codigo IS 'codigo da cidade';
+COMMENT ON COLUMN public.pessoas.est_codigo IS 'codigo do estado';
+COMMENT ON COLUMN public.pessoas.bai_codigo IS 'codigo do bairro';
+COMMENT ON COLUMN public.pessoas.sexo IS '1 = masculino
+2 = feminino
+3 = outro';

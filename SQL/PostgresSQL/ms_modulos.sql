@@ -1,8 +1,8 @@
--- Table: ms_modulos
+-- Table: public.ms_modulos
 
--- DROP TABLE ms_modulos;
+-- DROP TABLE public.ms_modulos;
 
-CREATE TABLE ms_modulos
+CREATE TABLE public.ms_modulos
 (
   modulo_id serial,
   nome character varying(50),
@@ -11,5 +11,5 @@ CREATE TABLE ms_modulos
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE ms_modulos
+ALTER TABLE public.ms_modulos
   OWNER TO maydana;

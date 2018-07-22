@@ -1,8 +1,8 @@
--- Table: conta
+-- Table: public.conta
 
--- DROP TABLE conta;
+-- DROP TABLE public.conta;
 
-CREATE TABLE conta
+CREATE TABLE public.conta
 (
   id_conta serial,
   email character varying(150) NOT NULL,
@@ -22,13 +22,13 @@ CREATE TABLE conta
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE conta
+ALTER TABLE public.conta
   OWNER TO maydana;
-COMMENT ON COLUMN conta.status IS '0 = inativo
+COMMENT ON COLUMN public.conta.status IS '0 = inativo
 1 = ativo
 2 = offline
 3 = online';
-COMMENT ON COLUMN conta.acesso IS 'nível de acesso do usuário
+COMMENT ON COLUMN public.conta.acesso IS 'nível de acesso do usuário
 
 1 = normal
 2 = aluno
@@ -36,13 +36,13 @@ COMMENT ON COLUMN conta.acesso IS 'nível de acesso do usuário
 4 = diretor
 5 = DEUS';
 
--- Trigger: conta_trigger on conta
 
--- DROP TRIGGER conta_trigger ON conta;
+-- Trigger: conta_trigger on public.conta
+
+-- DROP TRIGGER conta_trigger ON public.conta;
 
 CREATE TRIGGER conta_trigger
   AFTER INSERT
-  ON conta
+  ON public.conta
   FOR EACH ROW
-  EXECUTE PROCEDURE conta_trigger_procedure();
-
+  EXECUTE PROCEDURE public.conta_trigger_procedure();

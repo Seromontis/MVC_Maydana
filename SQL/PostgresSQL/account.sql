@@ -1,10 +1,10 @@
--- Table: account
+-- Table: public.account
 
--- DROP TABLE account;
+-- DROP TABLE public.account;
 
-CREATE TABLE account
+CREATE TABLE public.account
 (
-  id_account serial NOT NULL,
+  id_account serial,
   token character varying(50) NOT NULL DEFAULT 0,
   senha character varying(100),
   data_cadastro character varying(30) NOT NULL, -- Dia que criou a conta
@@ -18,14 +18,14 @@ CREATE TABLE account
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE account
+ALTER TABLE public.account
   OWNER TO maydana;
-GRANT ALL ON TABLE account TO maydana;
-GRANT ALL ON TABLE account TO public;
-COMMENT ON TABLE account
+GRANT ALL ON TABLE public.account TO maydana;
+GRANT ALL ON TABLE public.account TO public;
+COMMENT ON TABLE public.account
   IS 'Tabela responsável por armazenar todas as contas dos usuários.';
-COMMENT ON COLUMN account.data_cadastro IS 'Dia que criou a conta';
-COMMENT ON COLUMN account.status IS '1 = off
+COMMENT ON COLUMN public.account.data_cadastro IS 'Dia que criou a conta';
+COMMENT ON COLUMN public.account.status IS '1 = off
 2 = on
 3 = bloqueado
 4 = inativo
