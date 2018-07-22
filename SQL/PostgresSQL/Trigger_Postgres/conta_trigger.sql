@@ -2,10 +2,11 @@
 -- DATA: 30/05/2018
 -- CRIADOR: MAYDANA
 
--- Function: conta_trigger_procedure()
--- DROP FUNCTION conta_trigger_procedure();
+-- Function: public.conta_trigger_procedure()
 
-CREATE OR REPLACE FUNCTION conta_trigger_procedure()
+-- DROP FUNCTION public.conta_trigger_procedure();
+
+CREATE OR REPLACE FUNCTION public.conta_trigger_procedure()
   RETURNS trigger AS
 $BODY$
 	BEGIN
@@ -20,5 +21,5 @@ $BODY$
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION conta_trigger_procedure()
+ALTER FUNCTION public.conta_trigger_procedure()
   OWNER TO maydana;
