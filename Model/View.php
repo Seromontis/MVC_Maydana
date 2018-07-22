@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "View",
-	"LAST EDIT": "29/06/2018",
-	"VERSION":"0.0.2"
+	"LAST EDIT": "22/07/2018",
+	"VERSION":"0.0.3"
 }
 */
 
@@ -83,9 +83,21 @@ class Model_View {
 				if(file_exists(DIR.'View/'.$controlador.'/'.$visao.EXTENSAO_VISAO)){
 
 
+				/* FORMS SELECT */
+				$hoje = date('Y');
+				$optionAnos = '';
+				for($i = 1960; $i < $hoje; $i++){
+
+					$array[] = '<option value="'.$i.'">'.$i.'</option>';
+					krsort($array);
+
+					$optionAnos = implode($array);
+
+				}
+
 				$mustache = array(
-					'{{static}}' => URL_STATIC,
-					'{{nome_sistema}}' => ACTION
+					'{{nome_sistema}}' => ACTION,
+					'{{select_ano}}' => $optionAnos
 				);
 
 				$visao = str_replace(array_keys($mustache), array_values($mustache), file_get_contents(DIR.'View/'.$controlador.'/'.$visao.EXTENSAO_VISAO));

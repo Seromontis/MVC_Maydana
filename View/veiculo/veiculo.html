@@ -1,95 +1,23 @@
-<div class="pane" style="padding: 40px;">
-	<h1>Novo Veículo</h1>
-	<form id="form-novo-veiculo" action="/{{nome_sistema}}" name="form-login" method="post" enctype="multipart/form-data" novalidate="novalidate">
-		Publicar
-		<select name="publicado" class="form-control">
-			<option>Sim</option>
-			<option>Não</option>
-		</select>
-		Tipo
-		<select name="tipo" class="form-control">
-			<option>Usado</option>
-			<option>Novo</option>
-			<option>Semi-novo</option>
-		</select>
-		<div class="form-group">
-			<label>Ano</label>
-			<input type="text" name="ano" class="form-control" placeholder="nome">
-		</div>
-		<div class="form-group">
-			<label>Nome</label>
-			<input type="text" name="nome" class="form-control" placeholder="nome">
-		</div>
-		<div class="form-group">
-			<label>Modelo</label>
-			<input type="text" name="modelo" class="form-control" placeholder="Modelo">
-		</div>
-		<div class="form-group">
-			<label>Description</label>
-			<textarea name="descricao" class="form-control" rows="3"></textarea>
-		</div>
-		<div class="form-actions">
-			<input type="submit" cclass="btn btn-form btn-default" value="Cancel">
-			<button type="submit" class="btn btn-form btn-primary">OK</button>
-		</div>
-	</form>
-<p id="resposta-ajax"></p>
+<div  style="display: inline-block; width: 50%; vertical-align: top;"  class="pane sidebar">
+	<ul class="list-group">			
+		<li class="list-group-header">
+			<input id="procuraveiculo" class="form-control" type="text" placeholder="procurar veiculo">
+		</li>
+		{{veiculos}}
+	</ul>
+</div>
+<div style="display: inline-block; vertical-align: top;" class="pane">
+	<button class="btn btn-positive" data-push="push" onclick="xhr('/veiculo/novo-veiculo')">Novo Veiculo</button>
+</div>
 <script>
-	$(document).ready(function(){
-		$('#form-novo-veiculo').submit(function(e) {
-			e.preventDefault();
-			var serializeDados = $('#form-novo-veiculo').serialize();
-			var res = $('#resposta-ajax');
-			var reload = document.getElementById('reload');
-			$('.form-actions').addClass('hidden');
+	/* teste remove comentario */
+	window.veiculos = {{veiculosarray}};
 
-			res.html('Aguarde...');
-			res.removeClass('hidden');
-			boxNeutro(res);
+	$('#procuraveiculo').on('keyup', function (){
 
-			$.ajax({
-				cache: false,
-				url: '/veiculo/novo',
-				dataType: 'json',
-				type: 'POST',
-				data: serializeDados,
-				beforeSend: function() {
+		for(var x in veiculos){
 
-				},
-				complete: function() {
-
-				},
-				success: function(data, textStatus) {
-
-					for(var i=0;i<data.length;i++){
-
-						obj.createProgress(data[i]);
-					}
-					/*$('.form-actions').removeClass('hidden');
-					if(data.res == 'ok'){
-
-						boxTrue(res);
-						res.html('<span class="icon icon-check"></span> '+data.info);
-					/*	xhr('/clientes'); 
-
-					}else{
-
-						boxFalse(res);
-						res.html('<span class="icon icon-cancel"></span> '+data.info);
-						$('#input-email').focus();
-					}*/
-				},
-				error: function(xhr,er) {
-
-					boxFalse(res);
-				}
-			});
-		});
-
-		$("#resposta-ajax").bind('click', function() {
-
-			$('#resposta-ajax').addClass('hidden');
-		});
+			console.log(veiculos[x]);
+		}
 	});
-
 </script>

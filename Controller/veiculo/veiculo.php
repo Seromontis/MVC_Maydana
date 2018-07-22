@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "15/07/2018",
 		"CONTROLADOR": "Veiculo",
-		"LAST EDIT": "20/07/2018",
-		"VERSION":"0.0.2"
+		"LAST EDIT": "22/07/2018",
+		"VERSION":"0.0.3"
 	}
 */
 class Veiculo {
@@ -113,21 +113,72 @@ class Veiculo {
 
 		$conf = $this->_render->getconfig($configuracoes);
 
-		$clientesarray 	= $this->_consulta->getClientes();
-		$clientes 		= $this->_render->getClientes($clientesarray);
+		$veiculosarray 	= $this->_consulta->getVeiculos();
+		$veiculos 		= $this->_render->getVeiculos($veiculosarray);
 
 		$mustache = array(
-			'{{clientes}}' 		=> $clientes,
-			'{{clientesarray}}' => json_encode($clientesarray)
+			'{{veiculos}}' 		=> $veiculos,
+			'{{veiculosarray}}' => json_encode($veiculosarray)
 		);
 
 		if($this->_push === false){
 
 			echo $this->_cor->_visao($this->_cor->_layout('veiculo', 'veiculo'), $mustache);
+			exit;
 
 		}else{
 
 			echo $this->_cor->push('veiculo', 'veiculo', $mustache);
+			exit;
+		}
+	}
+
+	function editar(){
+
+		if(isset($_GET['id']) and is_numeric($_GET['id'])){
+
+			$id = $_GET['id'] ?? null;
+
+			$mustache = array();
+
+			if($this->_push === false){
+
+				echo $this->_cor->_visao($this->_cor->_layout('veiculo', 'editar-veiculo'), $mustache);
+
+			}else{
+
+				echo $this->_cor->push('veiculo', 'editar-veiculo');
+			}
+
+		}else{
+
+			$this->_cor->Erro404($this->_push);
+		}
+	}
+
+	function remover(){
+
+		if(isset($_GET['id']) and is_numeric($_GET['id'])){
+
+			$id = $_GET['id'] ?? null;
+			$deleteCliente = $this->_consulta->deleteSQL('veiculo', 'id_veiculo', $id);
+
+			switch ($deleteCliente) {
+
+				case 85:
+
+					echo json_encode(array('res' => 'no', 'info' => 'Ocorreu um erro, entre em contato com o suporte!'));
+					break;
+
+				default:
+
+					echo json_encode(array('res' => 'ok', 'info' => 'O veiculo foi removido com sucesso!'));
+					break;
+			}
+
+		}else{
+
+			$this->_cor->Erro404($this->_push);
 		}
 	}
 
@@ -153,7 +204,6 @@ class Veiculo {
 
 		if(isset($_FILES['imgveiculo']) and !empty($_FILES['imgveiculo'])){
 
-
 			$extensaoPermitida = array('image/png', 'image/jpeg', 'image/jpg');
 
 			if($_FILES["imgveiculo"]["type"] == $extensaoPermitida[0] OR $_FILES["imgveiculo"]["type"] == $extensaoPermitida[1] OR $_FILES["imgveiculo"]["type"] == $extensaoPermitida[2]){
@@ -162,7 +212,7 @@ class Veiculo {
 				$nomeImagem = $this->_utilit->HASH_URL($_FILES['imgveiculo']['name']);
 
 				$destino = URL_IMG_VEICULOS_ORIGIN.$nomeImagem.FORMATO_THUMBS;
-				        // tenta mover o arquivo para o destino
+
 				if(move_uploaded_file($arquivo_tmp, $destino)){
 
 					$destinoThumb = URL_IMG_VEICULOS_ORIGIN.$nomeImagem.FORMATO_THUMBS;
@@ -200,17 +250,27 @@ class Veiculo {
 
 		if(isset($_POST['nome']) and !empty($_POST['nome'])){
 
-			$nome 		= $_POST['nome'] ?? null;
-			$modelo 	= $_POST['modelo'] ?? null;
-			$tipo 		= $_POST['tipo'] ?? null;
-			$descricao 	= $_POST['descricao'] ?? null;
-			$imagem 	= $_FILES['imagem'] ?? null;
+			$publicar		= $_POST['publicar'] ?? 1;
+			$tipo			= $_POST['tipo'] ?? 2;
+			$ano			= $_POST['ano'] ?? 0;
+			$nome 			= $_POST['nome'] ?? '';
+			$modelo 		= $_POST['modelo'] ?? 0;
+			$cor 			= $_POST['cor'] ?? 0;
+			$marca 			= $_POST['marca'] ?? 0;
+			$portas			= $_POST['portas'] ?? 1;
+			$descricao 		= $_POST['descricao'] ?? '-';
+			$quilometragem 	= $_FILES['quilometragem'] ?? 0;
 
+			$dados[] = $publicar;
+			$dados[] = $tipo;
+			$dados[] = $ano;
 			$dados[] = $nome;
 			$dados[] = $modelo;
-			$dados[] = $tipo;
+			$dados[] = $cor;
+			$dados[] = $marca;
+			$dados[] = $portas;
 			$dados[] = $descricao;
-			$dados[] = $imagem;
+			$dados[] = $quilometragem;
 
 			$newVeiculo = $this->foo->newVeiculo($dados);
 
@@ -223,12 +283,12 @@ class Veiculo {
 				
 				case 2:
 
-					echo json_encode(array('res' => 'no', 'info' => 'Não foi possível registrar um novo cliente!'));
+					echo json_encode(array('res' => 'no', 'info' => 'Não foi possível registrar um novo veiculo!'));
 					break;
 
 				default:
 
-					echo json_encode(array('res' => 'ok', 'info' => 'Novo cliente registrado com sucesso!'));
+					echo json_encode(array('res' => 'ok', 'info' => 'Novo veiculo registrado com sucesso!'));
 					break;
 			}
 

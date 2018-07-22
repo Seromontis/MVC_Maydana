@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "07/06/2018",
 		"CONTROLADOR": "Configuracao",
-		"LAST EDIT": "05/07/2018",
-		"VERSION":"0.0.5"
+		"LAST EDIT": "22/07/2018",
+		"VERSION":"0.0.6"
 	}
 */
 class Clientes {
@@ -70,6 +70,55 @@ class Clientes {
 		}
 	}
 
+	function editar(){
+
+		if(isset($_GET['id']) and is_numeric($_GET['id'])){
+
+			$id = $_GET['id'] ?? null;
+
+			$mustache = array();
+
+			if($this->_push === false){
+
+				echo $this->_cor->_visao($this->_cor->_layout('clientes', 'editar-cliente'), $mustache);
+
+			}else{
+
+				echo $this->_cor->push('clientes', 'editar-cliente');
+			}
+
+		}else{
+
+			$this->_cor->Erro404($this->_push);
+		}
+	}
+
+	function remover(){
+
+		if(isset($_GET['id']) and is_numeric($_GET['id'])){
+
+			$id = $_GET['id'] ?? null;
+			$deleteCliente = $this->_consulta->deleteSQL('pessoas', 'id', $id);
+
+			switch ($deleteCliente) {
+
+				case 85:
+
+					echo json_encode(array('res' => 'no', 'info' => 'Ocorreu um erro, entre em contato com o suporte!'));
+					break;
+
+				default:
+
+					echo json_encode(array('res' => 'ok', 'info' => 'O cliente foi removido com sucesso!'));
+					break;
+			}
+
+		}else{
+
+			$this->_cor->Erro404($this->_push);
+		}
+	}
+
 	function novocliente(){
 
 		$configuracoes = $this->_consulta->getConfig($_SESSION[CLIENTE]['login']);
@@ -127,8 +176,7 @@ class Clientes {
 
 		echo json_encode(array('res' => 'no', 'info' => 'Informe os dados correto'));
 		exit;
-		/*header('HTTP/1.0 404 Not Found', true, 404);
-		header('location: /erro404');
-		exit;*/
+		
+		/* echo $this->_cor->push('clientes', 'novo-cliente'); */
 	}
 }

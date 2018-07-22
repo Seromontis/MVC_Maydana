@@ -4,10 +4,17 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"CONFIG": "Setting",
-	"LAST EDIT": "20/07/2018",
-	"VERSION":"0.0.8"
+	"LAST EDIT": "22/07/2018",
+	"VERSION":"0.0.9"
 }
 */
+
+/* DEBUG DESENVOLVIMENTO */
+/**
+TRUE = DESENVOLVIMENTO
+FALSE = PRODUCAO (saveLogs);
+**/
+define('DEV', true);
 
 /**
 ** CONFIGURAÇÕES DO MVC
@@ -80,8 +87,9 @@ define('HASH_PASSWORD', '123');
 ** CONFIGURAÇÕES IMAGEMS
 **/
 
+$id_cliente = $_SESSION[CLIENTE]['login'] ?? 99;
 define('URL_DADOS', '../Dados/');
-define('URL_IMG_VEICULOS', URL_DADOS.$_SESSION[CLIENTE]['login'].'/veiculos/');
+define('URL_IMG_VEICULOS', URL_DADOS.$id_cliente.'/veiculos/');
 define('URL_IMG_VEICULOS_THUMBS', URL_IMG_VEICULOS.'thumbs/');
 define('URL_IMG_VEICULOS_ORIGIN', URL_IMG_VEICULOS.'origin/');
 define('HEIGHT_THUMB', 190);

@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "GOD",
-	"LAST EDIT": "05/07/2018",
-	"VERSION":"0.0.5"
+	"LAST EDIT": "22/07/2018",
+	"VERSION":"0.0.6"
 }
 */
 
@@ -83,6 +83,17 @@ class Model_God extends Model_Functions_Functions{
 		}
 	}
 
+	function Erro404($xhr, $mustache = array()){
+
+		if($xhr === false){
+
+			echo $this->_visao($this->_layout('erro404', 'erro404'), $mustache);
+
+		}else{
+
+			echo $this->push('erro404', 'erro404', $mustache);
+		}
+	}
 	/**
 	** @see Função comprime HTML
 	** @param string
@@ -90,7 +101,7 @@ class Model_God extends Model_Functions_Functions{
 	**/
 	function comprimeHTML($html){
 
-		$html = preg_replace(array("/<!--(.*?)-->/", "/\t+/"), ' ', $html);
+		$html = preg_replace(array("/\/\*(.*?)\*\//", "/<!--(.*?)-->/", "/\t+/"), ' ', $html);
 		$html = str_replace(array("\t", " ", PHP_EOL), ' ', $html);
 		$html = str_replace(PHP_EOL, ' ', $html);
 		$html = str_replace('> <', '><', $html);

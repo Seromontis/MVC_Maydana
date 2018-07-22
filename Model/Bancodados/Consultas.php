@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "07/06/2018",
 	"MODEL": "Consultas",
-	"LAST EDIT": "20/07/2018",
-	"VERSION":"0.0.4"
+	"LAST EDIT": "22/07/2018",
+	"VERSION":"0.0.5"
 }
 */
 class Model_Bancodados_Consultas {
@@ -35,6 +35,76 @@ class Model_Bancodados_Consultas {
 
 	}
 
+	function getVeiculos(){
+
+		$sql = $this->_conexao->prepare("
+			SELECT
+			id_veiculo,
+			nome,
+			modelo,
+			ano,
+			cor,
+			marca,
+			descricao,
+				CONCAT(quilometragem, ' Km') AS quilometragem,
+				CASE tipo
+					WHEN 1 THEN 'Novo'
+					WHEN 2 THEN 'Usado'
+					ELSE 'Semi-novo'
+				END AS tipo,
+				CASE portas
+					WHEN 1 THEN '2 portas'
+					ELSE '4 portas'
+				END AS portas,
+				CASE publicado
+					WHEN 1 THEN 'publicado'
+					ELSE 'Não publicado'
+				END AS publicado
+			FROM veiculo
+			ORDER BY nome ASC
+		");
+		$sql->execute();
+
+		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+			
+			$this->saveLogs($sql->errorInfo());
+		}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+			new de($sql->errorInfo());
+		}
+		$fecth = $sql->fetchAll(PDO::FETCH_ASSOC);
+		$sql = null;
+
+		return $fecth;
+	}
+
+	function deleteSQL($tabela, $coluna, $id){
+
+		$sql = $this->_conexao->prepare('DELETE FROM '.$tabela.' WHERE '.$coluna.' = :id');
+		$sql->bindParam(':id', $id);
+		$sql->execute();
+		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+			
+			$this->saveLogs($sql->errorInfo());
+		}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+			new de($sql->errorInfo());
+		}
+		$fetch = $sql->fetch(PDO::FETCH_ASSOC);
+		$sql = null;
+
+		/* SUCESSO */
+		$return = 1;
+
+		if($fetch === false){
+
+			/* FALHA */
+			$return = 2;
+		}
+
+		return $return;
+	}
+
 	function getClientes(){
 
 		$sql = $this->_conexao->prepare('
@@ -44,6 +114,14 @@ class Model_Bancodados_Consultas {
 			ORDER BY nome ASC
 		');
 		$sql->execute();
+
+		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+			
+			$this->saveLogs($sql->errorInfo());
+		}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+			new de($sql->errorInfo());
+		}
 		$fecth = $sql->fetchAll(PDO::FETCH_ASSOC);
 		$sql = null;
 
@@ -51,14 +129,19 @@ class Model_Bancodados_Consultas {
 	}
 
 	function newVeiculo(array $dados){
-		
-		$nome 		= $this->_util->basico($dados[0] ?? null);
-		$publicado 	= $this->_util->basico($dados[1] ?? null);
-		$tipo 		= $this->_util->basico($dados[2] ?? null);
-		$modelo 	= $this->_util->basico($dados[3] ?? null);
-		$descricao 	= $this->_util->basico($dados[4] ?? null);
 
-		$sql = $this->_conexao->prepare("INSERT INTO pessoas (
+		$publicar		= $this->_util->basico($dados[0]) ?? 1;
+		$tipo			= $this->_util->basico($dados[1]) ?? 2;
+		$ano			= $this->_util->basico($dados[2]) ?? 0;
+		$nome 			= $this->_util->basico($dados[3]) ?? '';
+		$modelo 		= $this->_util->basico($dados[4]) ?? 0;
+		$cor 			= $this->_util->basico($dados[5]) ?? 0;
+		$marca 			= $this->_util->basico($dados[6]) ?? 0;
+		$portas			= $this->_util->basico($dados[7]) ?? 1;
+		$descricao 		= $this->_util->basico($dados[8]) ?? '-';
+		$quilometragem 	= $this->_util->basico($dados[9]) ?? 0;
+
+		$sql = $this->_conexao->prepare("INSERT INTO veiculo (
 			nome,
 			ano,
 			modelo,
@@ -67,8 +150,7 @@ class Model_Bancodados_Consultas {
 			cor,
 			marca,
 			portas,
-			quilometragem,
-			opcionais
+			quilometragem
 		) VALUES (
 			:nome,
 			:ano,
@@ -78,8 +160,7 @@ class Model_Bancodados_Consultas {
 			:cor,
 			:marca,
 			:portas,
-			:quilometragem,
-			:opcionais
+			:quilometragem
 		)");
 		$sql->bindParam(':nome', $nome);
 		$sql->bindParam(':ano', $ano);
@@ -90,10 +171,79 @@ class Model_Bancodados_Consultas {
 		$sql->bindParam(':marca', $marca);
 		$sql->bindParam(':portas', $portas);
 		$sql->bindParam(':quilometragem', $quilometragem);
-		$sql->bindParam(':opcionais', $opcionais);
+		$sql->execute();
+
+		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+			
+			$this->saveLogs($sql->errorInfo());
+		}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+			new de($sql->errorInfo());
+		}
+		$fetch = $sql->fetch(PDO::FETCH_ASSOC);
+		$sql = null;
+
+		/* SUCESSO */
+		$return = 1;
+
+		if($fetch === false){
+
+			/* FALHA */
+			$return = 2;
+		}
+
+		return $return;
+	}
+
+	function saveLogs(array $erro){
+
+		$codigo_postgres 	= $erro[0] ?? 0;
+		$tipo_postgres 		= $erro[1] ?? 0;
+		$descricao 			= $erro[2] ?? '-';
+		$arrayzao 			= implode(' - ', $erro);
+		$usu_codigo 		= $_SESSION[CLIENTE]['login'] ?? 0;
+
+		$sql = $this->_conexao->prepare("INSERT INTO erro_logs (
+			descricao,
+			data,
+			hora,
+			ip,
+			usu_codigo,
+			codigo_postgres,
+			tipo_postgres,
+			arrayzao
+		) VALUES (
+			:descricao,
+			:data,
+			:hora,
+			:ip,
+			:usu_codigo,
+			:codigo_postgres,
+			:tipo_postgres,
+			:arrayzao
+		)");
+		$sql->bindParam(':descricao', $descricao);
+		$sql->bindParam(':data', $this->_hoje);
+		$sql->bindParam(':hora', $this->_agora);
+		$sql->bindParam(':ip', $this->_ip);
+		$sql->bindParam(':usu_codigo', $usu_codigo);
+		$sql->bindParam(':codigo_postgres', $codigo_postgres);
+		$sql->bindParam(':tipo_postgres', $tipo_postgres);
+		$sql->bindParam(':arrayzao', $arrayzao);
 		$sql->execute();
 		$fetch = $sql->fetch(PDO::FETCH_ASSOC);
 		$sql = null;
+
+		/* SUCESSO */
+		$return = 1;
+
+		if($fetch === false){
+
+			/* FALHA */
+			$return = 2;
+		}
+
+		return $return;
 	}
 
 	function newPessoa(array $dados){
@@ -119,6 +269,15 @@ class Model_Bancodados_Consultas {
 		$sql->bindParam(':cidade', $cidade);
 		$sql->bindParam(':descricao', $descricao);
 		$sql->execute();
+
+		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+			
+			$this->saveLogs($sql->errorInfo());
+		}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+			new de($sql->errorInfo());
+		}
+
 		$fetch = $sql->fetch(PDO::FETCH_ASSOC);
 		$sql = null;
 
@@ -178,6 +337,14 @@ class Model_Bancodados_Consultas {
 				$sql->bindParam(':hoje', $this->_hoje);
 				$sql->bindParam(':agora', $this->_agora);
 				$sql->execute();
+
+				if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+					
+					$this->saveLogs($sql->errorInfo());
+				}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+					new de($sql->errorInfo());
+				}
 				$temp = $sql->fetch(PDO::FETCH_ASSOC);
 				$sql = null;
 
@@ -211,6 +378,14 @@ class Model_Bancodados_Consultas {
 			$sql->bindParam(':email', $email);
 			$sql->bindParam(':senha', $senha);
 			$sql->execute();
+
+			if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+				
+				$this->saveLogs($sql->errorInfo());
+			}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+				new de($sql->errorInfo());
+			}
 			$temp = $sql->fetch(PDO::FETCH_ASSOC);
 			$sql = null;
 
@@ -279,6 +454,14 @@ class Model_Bancodados_Consultas {
 		$sql->bindParam(':id_conta', $id_conta, PDO::PARAM_INT);
 		$sql->execute();
 
+		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+			
+			$this->saveLogs($sql->errorInfo());
+		}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+			new de($sql->errorInfo());
+		}
+
 		$sql = null;
 
 		if(!isset($_SESSION[CLIENTE]['login']) || empty($_SESSION[CLIENTE]['login'])){
@@ -294,6 +477,14 @@ class Model_Bancodados_Consultas {
 		$sql = $this->_conexao->prepare($sql);
 		$sql->bindParam(':id_conta', $id_conta);
 		$sql->execute();
+
+		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+			
+			$this->saveLogs($sql->errorInfo());
+		}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+			new de($sql->errorInfo());
+		}
 		$temp = $sql->fetch(PDO::FETCH_ASSOC);
 		$sql = null;
 
@@ -318,6 +509,14 @@ class Model_Bancodados_Consultas {
 			WHERE p.id_conta = :id_conta');
 			$sql->bindParam(':id_conta', $id_conta, PDO::PARAM_STR);
 			$sql->execute();
+
+			if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+				
+				$this->saveLogs($sql->errorInfo());
+			}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+				new de($sql->errorInfo());
+			}
 
 			$temp = $sql->fetch(PDO::FETCH_ASSOC);
 
@@ -363,6 +562,14 @@ class Model_Bancodados_Consultas {
 			$sql->bindParam(':id_conta', $id_conta, PDO::PARAM_INT);
 			$sql->execute();
 
+			if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+				
+				$this->saveLogs($sql->errorInfo());
+			}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+				new de($sql->errorInfo());
+			}
+
 			$temp = $sql->fetchAll(PDO::FETCH_ASSOC);
 
 			$sql = null;
@@ -395,6 +602,14 @@ class Model_Bancodados_Consultas {
 			WHERE id_conta = :id_conta');
 			$sql->bindParam(':id_conta', $id_conta, PDO::PARAM_INT);
 			$sql->execute();
+
+			if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+				
+				$this->saveLogs($sql->errorInfo());
+			}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+				new de($sql->errorInfo());
+			}
 			$temp = $sql->fetch(PDO::FETCH_ASSOC);
 
 			$sql = null;

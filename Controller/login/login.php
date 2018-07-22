@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "26/04/2018",
 		"CONTROLADOR": "Login",
-		"LAST EDIT": "29/09/2018",
-		"VERSION":"0.0.8"
+		"LAST EDIT": "22/07/2018",
+		"VERSION":"0.0.9"
 	}
 */
 class Login {
@@ -142,7 +142,14 @@ class Login {
 					echo json_encode(array('res' => 'ok', 'info' => 'Sua conta foi criada com sucesso!'));
 					break;
 			}
+
+		}else{
+
+			/* INFORME OS DADOS CORRETO */
+			echo json_encode(array('res' => 'no', 'info' => 'Informe os dados'));
+			exit;
 		}
+
 	}
 
 	function entrar(){
