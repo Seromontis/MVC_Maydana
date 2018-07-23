@@ -27,7 +27,7 @@
 			e.preventDefault();
 			var serializeDados = $('#form-login').serialize();
 			var res = $('#resposta-ajax');
-			var reload = document.getElementById('reload');
+			var reload = $('#reload');
 			$('.toolbar-actions').addClass('hidden');
 
 			res.html('Aguarde...');
@@ -68,6 +68,7 @@
 		});
 
 		$("#resposta-ajax").bind('click', function() {
+
 			$('#resposta-ajax').addClass('hidden');
 		});
 	});

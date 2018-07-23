@@ -4,15 +4,14 @@
 			<input id="procuracliente" class="form-control" type="text" placeholder="procurar cliente">
 		</li>
 		{{clientes}}
+		<div id="renderTo"></div>
 	</ul>
 </div>
 <div style="display: inline-block; vertical-align: top;" class="pane">
 	<button class="btn btn-positive" data-push="push" onclick="xhr('/clientes/novo-cliente')">Novo Cliente</button>
 </div>
 <script>
+	/* TESTE */
 	window.clientes = {{clientesarray}};
 
-	$('#procuracliente').on('keyup', function (){
-
-	});
 </script>

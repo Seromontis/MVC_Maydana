@@ -122,10 +122,31 @@ class Model_Bancodados_Consultas {
 
 			new de($sql->errorInfo());
 		}
-		$fecth = $sql->fetchAll(PDO::FETCH_ASSOC);
+		$temp = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+		$fetch = array();
+		foreach ($temp as $key => $arr){
+
+			$fetch[$key]['telefone'] = (string) $arr['telefone'];
+			$fetch[$key]['whatsapp'] = (string) $arr['whatsapp'];
+			$fetch[$key]['nascimento'] = (string) $arr['nascimento'];
+			$fetch[$key]['sexo'] = (string) $arr['sexo'];
+			$fetch[$key]['nome'] = (string) $arr['nome'];
+			$fetch[$key]['tipo'] = (string) $arr['tipo'];
+			$fetch[$key]['id_conta'] = (string) $arr['id_conta'];
+			$fetch[$key]['id'] = (string) $arr['id'];
+			$fetch[$key]['est_codigo'] = (string) $arr['est_codigo'];
+			$fetch[$key]['rg'] = (string) $arr['rg'];
+			$fetch[$key]['cpf'] = (string) $arr['cpf'];
+			$fetch[$key]['cid_codigo'] = (string) $arr['cid_codigo'];
+			$fetch[$key]['celular'] = (string) $arr['celular'];
+			$fetch[$key]['bai_codigo'] = (string) $arr['bai_codigo'];
+			$fetch[$key]['descricao'] = $arr['descricao'];
+		}
+
 		$sql = null;
 
-		return $fecth;
+		return $fetch;
 	}
 
 	function newVeiculo(array $dados){

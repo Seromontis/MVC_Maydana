@@ -31,8 +31,8 @@
 			e.preventDefault();
 			var serializeDados = $('#form-criar').serialize();
 			var res = $('#resposta-ajax');
-			var reload = document.getElementById('reload');
-			document.querySelector('.toolbar-actions').classList.add('hidden');
+			var reload = $('#reload');
+			$('.toolbar-actions').addClass('hidden');
 
 			res.html('Aguarde...');
 			res.removeClass('hidden');
@@ -50,13 +50,12 @@
 				},
 				success: function(data, textStatus) {
 
-					document.querySelector('.toolbar-actions').classList.remove('hidden');
+					$('.toolbar-actions').removeClass('hidden');
 
 					if(data.res == 'ok'){
-
-						/*boxTrue(res);
+						boxTrue(res);
 						res.html('<span class="icon icon-check"></span> '+data.info);
-						$(location).attr('href', '/login');*/
+						$(location).attr('href', '/login');
 
 					}else{
 
