@@ -55,7 +55,7 @@ define('PRODUCAO', false);
 /* NOME CLIENTE */
 define('CLIENTE', 'Prosdocimo');
 
-define('URL_SITE', 'http://mvc_maydana.local/');
+define('URL_SITE', 'http://sistema.local/');
 
 define('HOJE', date('d/m/Y'));
 
