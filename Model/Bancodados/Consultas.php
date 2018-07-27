@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "07/06/2018",
 	"MODEL": "Consultas",
-	"LAST EDIT": "22/07/2018",
-	"VERSION":"0.0.5"
+	"LAST EDIT": "27/07/2018",
+	"VERSION":"0.0.6"
 }
 */
 class Model_Bancodados_Consultas {
@@ -72,10 +72,26 @@ class Model_Bancodados_Consultas {
 
 			new de($sql->errorInfo());
 		}
-		$fecth = $sql->fetchAll(PDO::FETCH_ASSOC);
+		$temp = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+		$fetch = array();
+		foreach ($temp as $key => $value){
+
+			$fetch[$key]['id_veiculo'] = (string) $value['id_veiculo'];
+			$fetch[$key]['nome'] = (string) $value['nome'];
+			$fetch[$key]['modelo'] = (string) $value['modelo'];
+			$fetch[$key]['ano'] = (string) $value['ano'];
+			$fetch[$key]['cor'] = (string) $value['cor'];
+			$fetch[$key]['marca'] = (string) $value['marca'];
+			$fetch[$key]['descricao'] = (string) $value['descricao'];
+			$fetch[$key]['quilometragem'] = (string) $value['quilometragem'];
+			$fetch[$key]['tipo'] = (string) $value['tipo'];
+			$fetch[$key]['portas'] = (string) $value['portas'];
+			$fetch[$key]['publicado'] = (string) $value['publicado'];
+		}
 		$sql = null;
 
-		return $fecth;
+		return $fetch;
 	}
 
 	function deleteSQL($tabela, $coluna, $id){

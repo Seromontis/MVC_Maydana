@@ -1,4 +1,3 @@
-var oi = 'oi';
 function xhr(href){
 
 		var link = href;  //$(this).attr('href');									
@@ -88,6 +87,26 @@ window.boxFalse = function(id){
   $(id).removeClass('box-true');
   $(id).removeClass('box-neutro');
 };
+
+
+
+$(document).ready(function() {
+	window.MS = {
+
+		delay: function (fn, tm) {
+			window.setTimeout(function () {
+				fn();
+			}, tm);
+		},
+		delayPersistent: (function(fn, ms){
+			var timer = 0;
+			return function(fn, ms){
+				clearTimeout(timer);
+				timer = setTimeout(fn, ms);
+			};
+		}()),
+	};
+});
 
 window.Render = {
 
@@ -234,29 +253,3 @@ window.Render = {
 		return results;
 	}
 };
-
-
-
-$(document).ready(function() {
-
-	$('#procuracliente').bind("keyup", function(){
-		var search = Render.searchFor($('#procuracliente').val(), clientes);
-
-		var maskFirst = `<li class="list-group-item"><div class="media-body"><p>encontramos {{total_resultados}} veiculo</p></div></li>`;
-		var mask = `
-		<li class="list-group-item">
-			<img class="img-circle media-object pull-left" src="/img/avatar2.png" width="32" height="32">
-			<div class="media-body">
-				<strong>{{nome}}</strong>
-				<p>{{sexo}} - {{cpf}} - {{descricao}} - {{telefone}}<span style="float: right;">
-	<button class="btn btn-secondary" data-push="push" onclick="xhr('/clientes/remover?id={{id}}')">Remover</button>
-	<button class="btn btn-primary" data-push="push" onclick="xhr('/clientes/editar?id={{id}}')">Editar</button>
-	<span></p>
-			</div>
-		</li>`;
-
-
-
-		Render.execute(search, $('#renderTo'), mask, maskFirst, 2);
-	});
-});

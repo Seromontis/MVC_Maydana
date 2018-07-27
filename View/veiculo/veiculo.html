@@ -3,7 +3,7 @@
 		<li class="list-group-header">
 			<input id="procuraveiculo" class="form-control" type="text" placeholder="procurar veiculo">
 		</li>
-		{{veiculos}}
+		<div id="veiculo-renderTo"></div>
 	</ul>
 </div>
 <div style="display: inline-block; vertical-align: top;" class="pane">
@@ -13,11 +13,53 @@
 	/* teste remove comentario */
 	window.veiculos = {{veiculosarray}};
 
-	$('#procuraveiculo').on('keyup', function (){
+	window.renderVeiculos = function(){
+		var search = Render.searchFor($('#procuraveiculo').val(), veiculos);
 
-		for(var x in veiculos){
+		var maskFirst = `<li class="list-group-item"><div class="media-body"><p>encontramos {{total_resultados}} veiculo</p></div></li>`;
+		var mask = `
+		<li class="list-group-item">
+			<img class="img-circle media-object pull-left" src="/img/avatar2.png" width="32" height="32">
+			<div class="media-body">
+				<strong>{{nome}}</strong>
+				<p>{{ano}} - {{modelo}} - {{cor}} - {{marca}}<span style="float: right;">
+	<button class="btn btn-secondary" data-push="push" onclick="xhr('/veiculos/remover?id={{id}}')">Remover</button>
+	<button class="btn btn-primary" data-push="push" onclick="xhr('/veiculos/editar?id={{id}}')">Editar</button>
+	<span></p>
+			</div>
+		</li>`;
 
-			console.log(veiculos[x]);
-		}
+
+
+		Render.execute(search, $('#veiculo-renderTo'), mask, maskFirst);
+	};
+
+	$(document).ready(function() {
+
+		$('#procuraveiculo').bind("keyup", function(){
+			var search = Render.searchFor($('#procuraveiculo').val(), veiculos);
+
+			var maskFirst = `<li class="list-group-item"><div class="media-body"><p>encontramos {{total_resultados}} veiculo</p></div></li>`;
+			var mask = `
+			<li class="list-group-item">
+				<img class="img-circle media-object pull-left" src="/img/avatar2.png" width="32" height="32">
+				<div class="media-body">
+					<strong>{{nome}}</strong>
+					<p>{{ano}} - {{modelo}} - {{cor}} - {{marca}}<span style="float: right;">
+		<button class="btn btn-secondary" data-push="push" onclick="xhr('/veiculos/remover?id={{id}}')">Remover</button>
+		<button class="btn btn-primary" data-push="push" onclick="xhr('/veiculos/editar?id={{id}}')">Editar</button>
+		<span></p>
+				</div>
+			</li>`;
+
+
+
+			Render.execute(search, $('#veiculo-renderTo'), mask, maskFirst);
+		});
+	});
+
+	$(document).ready(function(){
+
+		renderVeiculos();
 	});
 </script>
