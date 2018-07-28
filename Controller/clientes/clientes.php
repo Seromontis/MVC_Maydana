@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "07/06/2018",
 		"CONTROLADOR": "Configuracao",
-		"LAST EDIT": "22/07/2018",
-		"VERSION":"0.0.6"
+		"LAST EDIT": "28/07/2018",
+		"VERSION":"0.0.7"
 	}
 */
 class Clientes {
@@ -53,10 +53,8 @@ class Clientes {
 		$conf = $this->_render->getconfig($configuracoes);
 
 		$clientesarray 	= $this->_consulta->getClientes();
-		$clientes 		= $this->_render->getClientes($clientesarray);
 
 		$mustache = array(
-			'{{clientes}}' 		=> $clientes,
 			'{{clientesarray}}' => json_encode($clientesarray)
 		);
 

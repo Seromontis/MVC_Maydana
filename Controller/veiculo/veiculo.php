@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "15/07/2018",
 		"CONTROLADOR": "Veiculo",
-		"LAST EDIT": "22/07/2018",
-		"VERSION":"0.0.3"
+		"LAST EDIT": "28/07/2018",
+		"VERSION":"0.0.4"
 	}
 */
 class Veiculo {
@@ -26,6 +26,8 @@ class Veiculo {
 
 	public $foo;
 
+	public $Imagick;
+
 	function __construct(){
 
 		$this->_func = new Model_Functions_Functions;
@@ -42,69 +44,14 @@ class Veiculo {
 
 		$this->foo = new Model_Functions_Exception($this->_conexao);
 
+		$this->Imagick = new Model_Pluggs_Imagick;
+
 		if(isset($_POST['push']) and $_POST['push'] == 'push'){
 			$this->_push = true;
 		}
 
 		/* checkLogin é para páginas que precisam de login */
 		$this->_func->checkLogin();
-
-		
-	}
-		
-	function generateView($img, $width = WIDTH_VIEW, $height = HEIGHT_VIEW, $quality = 70){
-
-		if(is_file($img)){
-
-			$imagick = new Imagick(realpath($img));
-			$imagick->setImageFormat('jpg');
-			$imagick->setImageCompression(Imagick::COMPRESSION_JPEG);
-			$imagick->setImageCompressionQuality($quality);
-			$imagick->thumbnailImage($width, $height, false, false);
-			$filename_no_ext = trim(explode('/origin/', $img)[1], FORMATO_THUMBS);
-
-			if(file_put_contents(URL_IMG_VEICULOS.$filename_no_ext.FORMATO_THUMBS, $imagick) === false) {
-
-				throw new Exception("Could not put contents.");
-			}
-
-			return true;
-
-		}else{
-
-			throw new Exception("No valid image provided with {$img}.");
-		}
-	}
-
-	function generateThumbnail($img, $width = WIDTH_THUMB, $height = HEIGHT_THUMB, $quality = 90){
-
-		if(is_file($img)){
-
-			$imagick = new Imagick(realpath($img));
-			$imagick->setImageFormat('jpg');
-			$imagick->setImageCompression(Imagick::COMPRESSION_JPEG);
-			$imagick->setImageCompressionQuality($quality);
-			$imagick->thumbnailImage($width, $height, false, false);
-			$filename_no_ext = trim(explode('/origin/', $img)[1], FORMATO_THUMBS);
-
-			if(!file_exists(URL_IMG_VEICULOS)){
-				mkdir(URL_IMG_VEICULOS, 777);
-				mkdir(URL_IMG_VEICULOS_THUMBS, 777);
-				mkdir(URL_IMG_VEICULOS_ORIGIN, 777);
-			}
-
-
-			if(file_put_contents(URL_IMG_VEICULOS_THUMBS.$filename_no_ext.SUBNOME_THUMBS.FORMATO_THUMBS, $imagick) === false) {
-
-				throw new Exception("Could not put contents.");
-			}
-
-			return true;
-
-		}else{
-
-			throw new Exception("No valid image provided with {$img}.");
-		}
 	}
 
 	function index(){
@@ -114,10 +61,8 @@ class Veiculo {
 		$conf = $this->_render->getconfig($configuracoes);
 
 		$veiculosarray 	= $this->_consulta->getVeiculos();
-		$veiculos 		= $this->_render->getVeiculos($veiculosarray);
 
 		$mustache = array(
-			'{{veiculos}}' 		=> $veiculos,
 			'{{veiculosarray}}' => json_encode($veiculosarray)
 		);
 
@@ -129,6 +74,26 @@ class Veiculo {
 		}else{
 
 			echo $this->_cor->push('veiculo', 'veiculo', $mustache);
+			exit;
+		}
+	}
+
+	function imagem(){
+
+		$configuracoes = $this->_consulta->getConfig($_SESSION[CLIENTE]['login']);
+
+		$conf = $this->_render->getconfig($configuracoes);
+
+		$mustache = array();
+
+		if($this->_push === false){
+
+			echo $this->_cor->_visao($this->_cor->_layout('veiculo', 'imagem'), $mustache);
+			exit;
+
+		}else{
+
+			echo $this->_cor->push('veiculo', 'imagem', $mustache);
 			exit;
 		}
 	}
@@ -220,9 +185,9 @@ class Veiculo {
 					/* GERA THUMB */
 					try {
 
-						$this->generateThumbnail($destinoThumb);
+						$this->Imagick->generateThumbnail($destinoThumb);
 
-						$this->generateView($destinoThumb);
+						$this->Imagick->generateView($destinoThumb);
 						echo json_encode(array('res' => 'ok', 'info' => 'Thumbs salvo com sucesso!'));
 						exit;
 

@@ -3,7 +3,7 @@
 		<li class="list-group-header">
 			<input id="procuracliente" class="form-control" type="text" placeholder="procurar cliente">
 		</li>
-		<li id="renderTo"></li>
+		<li id="clientes-renderTo"></li>
 	</ul>
 </div>
 <div style="display: inline-block; vertical-align: top;" class="pane">
@@ -29,34 +29,15 @@
 				</div>
 			</li>`;
 
-			Render.execute(search, $('#renderTo'), mask, maskFirst);
+			Render.execute(search, $('#clientes-renderTo'), mask, maskFirst);
 	};
 
 	$(document).ready(function() {
 
 		$('#procuracliente').bind("keyup", function(){
-			var search = Render.searchFor($('#procuracliente').val(), clientes);
-
-			var maskFirst = `<li class="list-group-item"><div class="media-body"><p>encontramos {{total_resultados}} veiculo</p></div></li>`;
-			var mask = `
-			<li class="list-group-item">
-				<img class="img-circle media-object pull-left" src="/img/avatar2.png" width="32" height="32">
-				<div class="media-body">
-					<strong>{{nome}}</strong>
-					<p>{{sexo}} - {{cpf}} - {{descricao}} - {{telefone}}<span style="float: right;">
-		<button class="btn btn-secondary" data-push="push" onclick="xhr('/clientes/remover?id={{id}}')">Remover</button>
-		<button class="btn btn-primary" data-push="push" onclick="xhr('/clientes/editar?id={{id}}')">Editar</button>
-		<span></p>
-				</div>
-			</li>`;
-
-
-
-			Render.execute(search, $('#renderTo'), mask, maskFirst);
+			renderClientes();
 		});
 	});
-
-
 
 	$(document).ready(function(){
 

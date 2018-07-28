@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "07/06/2018",
 	"MODEL": "Consultas",
-	"LAST EDIT": "27/07/2018",
-	"VERSION":"0.0.6"
+	"LAST EDIT": "28/07/2018",
+	"VERSION":"0.0.7"
 }
 */
 class Model_Bancodados_Consultas {
@@ -39,13 +39,13 @@ class Model_Bancodados_Consultas {
 
 		$sql = $this->_conexao->prepare("
 			SELECT
-			id_veiculo,
-			nome,
-			modelo,
-			ano,
-			cor,
-			marca,
-			descricao,
+			id_veiculo::text,
+			nome::text,
+			modelo::text,
+			ano::text,
+			cor::text,
+			marca::text,
+			descricao::text,
 				CONCAT(quilometragem, ' Km') AS quilometragem,
 				CASE tipo
 					WHEN 1 THEN 'Novo'
@@ -74,7 +74,7 @@ class Model_Bancodados_Consultas {
 		}
 		$temp = $sql->fetchAll(PDO::FETCH_ASSOC);
 
-		$fetch = array();
+	/*	$fetch = array();
 		foreach ($temp as $key => $value){
 
 			$fetch[$key]['id_veiculo'] = (string) $value['id_veiculo'];
@@ -88,10 +88,10 @@ class Model_Bancodados_Consultas {
 			$fetch[$key]['tipo'] = (string) $value['tipo'];
 			$fetch[$key]['portas'] = (string) $value['portas'];
 			$fetch[$key]['publicado'] = (string) $value['publicado'];
-		}
+		}*/
 		$sql = null;
 
-		return $fetch;
+		return $temp;
 	}
 
 	function deleteSQL($tabela, $coluna, $id){
@@ -124,7 +124,22 @@ class Model_Bancodados_Consultas {
 	function getClientes(){
 
 		$sql = $this->_conexao->prepare('
-			SELECT *
+			SELECT
+				telefone,
+				whatsapp,
+				nascimento,
+				sexo,
+				nome,
+				tipo,
+				id_conta,
+				id,
+				est_codigo,
+				rg,
+				cpf,
+				cid_codigo,
+				celular,
+				bai_codigo,
+				descricao
 			FROM pessoas
 			WHERE tipo = 1
 			ORDER BY nome ASC
@@ -157,7 +172,7 @@ class Model_Bancodados_Consultas {
 			$fetch[$key]['cid_codigo'] = (string) $arr['cid_codigo'];
 			$fetch[$key]['celular'] = (string) $arr['celular'];
 			$fetch[$key]['bai_codigo'] = (string) $arr['bai_codigo'];
-			$fetch[$key]['descricao'] = $arr['descricao'];
+			$fetch[$key]['descricao'] = (string) $arr['descricao'];
 		}
 
 		$sql = null;

@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"CONFIG": "Setting",
-	"LAST EDIT": "22/07/2018",
-	"VERSION":"0.0.9"
+	"LAST EDIT": "28/07/2018",
+	"VERSION":"0.1.0"
 }
 */
 
@@ -89,6 +89,7 @@ define('HASH_PASSWORD', '123');
 
 $id_cliente = $_SESSION[CLIENTE]['login'] ?? 99;
 define('URL_DADOS', '../Dados/');
+define('URL_DADOS_CLIENTE', URL_DADOS.$id_cliente.'/');
 define('URL_IMG_VEICULOS', URL_DADOS.$id_cliente.'/veiculos/');
 define('URL_IMG_VEICULOS_THUMBS', URL_IMG_VEICULOS.'thumbs/');
 define('URL_IMG_VEICULOS_ORIGIN', URL_IMG_VEICULOS.'origin/');
@@ -98,3 +99,11 @@ define('HEIGHT_VIEW', 520);
 define('WIDTH_VIEW', 840);
 define('FORMATO_THUMBS', '.jpg');
 define('SUBNOME_THUMBS', '_thumb');
+
+if(!is_dir(URL_DADOS_CLIENTE)){
+	mkdir(URL_DADOS_CLIENTE);
+
+	mkdir(URL_DADOS_CLIENTE.'veiculos');
+	mkdir(URL_DADOS_CLIENTE.'/veiculos/thumbs');
+	mkdir(URL_DADOS_CLIENTE.'veiculos/origin');
+}

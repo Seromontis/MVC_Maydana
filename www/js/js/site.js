@@ -233,6 +233,8 @@ window.Render = {
 	searchFor: function(toSearch, objeto){
 
 		var results = [];
+
+		console.log(objeto);
 		
 		toSearch = this.trimString(toSearch);
 
