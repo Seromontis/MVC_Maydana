@@ -24,7 +24,7 @@ class Model_Bancodados_Consultas {
 
 	function __construct($conexao){
 
-		$this->id_conta = $_SESSION[CLIENTE]['login'];
+		$this->id_conta = $_SESSION[CLIENTE]['login'] ?? null;
 
 		$this->_conexao = $conexao->conexao();
 
