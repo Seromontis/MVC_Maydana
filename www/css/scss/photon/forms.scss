@@ -26,6 +26,7 @@ input[type="checkbox"] {
   display: inline-block;
   width: 100%;
   min-height: 25px;
+
   padding: $padding-less $padding;
   font-size: $font-size-default;
   line-height: $line-height-default;
@@ -89,6 +90,10 @@ textarea {
 }
 
 // Form actions
+.form-actions {
+  padding: 20px;
+  @include border-box;
+}
 .form-actions .btn {
   margin-right: 10px;
 
