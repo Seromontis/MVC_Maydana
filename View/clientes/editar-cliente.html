@@ -16,8 +16,17 @@
 		</div>
 
 		<div class="form-group">
-			<label>Cidade</label>
-			<input name="cid_codigo" type="text" class="form-control" id="editar-cidade" />
+			<div class="inline-block width-50 pd-right">
+				<label>Estado</label>
+				<select name="est_codigo" class="form-control" id="editar-estado">
+				</select>
+			</div>
+			<div class="inline-block width-50 pd-left">
+				<label>Cidade</label>
+				<select name="cid_codigo" class="form-control" id="editar-cidade">
+					<option value="">selecione</option>
+				</select>
+			</div>
 		</div>
 
 		<div class="form-group">
@@ -37,9 +46,64 @@
 <script>
 	window.editar_cliente = {{editar_cliente}};
 
+	window.editar_renderCidades = function(est_codigo, cid_codigo){
+
+		var selectedOption = cid_codigo;
+		var select = $('#editar-cidade');
+		if(select.prop) {
+		  var options = select.prop('options');
+		}
+		else {
+		  var options = select.attr('options');
+		}
+		$('option', select).remove();
+
+		cidades.sort(function(a, b){
+			return parseInt(a)- parseInt(b);
+		});
+		for(var x in cidades){
+
+			if(est_codigo == cidades[x].estado_id){
+
+		 		options[options.length] = new Option(cidades[x].nome, (Number(x) + 1));
+			}
+		}
+		
+		select.val(selectedOption);
+	};
+
+	window.editar_renderEstados = function(est_codigo){
+
+		var selectedOption = est_codigo;
+		var select = $('#editar-estado');
+		if(select.prop) {
+		  var options = select.prop('options');
+		}
+		else {
+		  var options = select.attr('options');
+		}
+		$('option', select).remove();
+
+		estados.sort(function(a, b){
+			return parseInt(a)- parseInt(b);
+		});
+		for(var x in estados){
+
+ 			options[options.length] = new Option(estados[x].sigla+' - '+estados[x].nome, (Number(x) + 1));
+		}
+
+		select.val(selectedOption);
+	};
+
 	window.editar_render = function(){
 
 		const cliente = editar_cliente;
+
+		MS.delay(function(){
+			editar_renderEstados(cliente.est_codigo);
+			editar_renderCidades(cliente.est_codigo, cliente.cid_codigo);
+		}, 200);
+
 
 		if(cliente.id_cliente){
 
@@ -49,6 +113,10 @@
 		if(cliente.cid_codigo){
 
 			$('#editar-cidade').val(cliente.cid_codigo);
+		}
+		if(cliente.est_codigo){
+
+			$('#editar-estado').val(cliente.est_codigo);
 		}
 		if(cliente.sexo){
 
@@ -109,6 +177,10 @@
 				boxFalse(res);
 			}
 		});
+	});
+
+	$("#editar-estado").bind('change', function() {
+		editar_renderCidades($("#editar-estado").val());
 	});
 
 	$("#resposta-ajax").bind('click', function() {

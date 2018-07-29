@@ -15,8 +15,18 @@
 		</div>
 
 		<div class="form-group">
-			<label>Cidade</label>
-			<input name="cidade" type="text" class="form-control" placeholder="cidade">
+			<div class="inline-block width-50 pd-right">
+				<label>Estado</label>
+				<select name="est_codigo" class="form-control" id="novo-estado">
+					<option value="">selecione</option>
+				</select>
+			</div>
+			<div class="inline-block width-50 pd-left">
+				<label>Cidade</label>
+				<select name="cid_codigo" class="form-control" id="novo-cidade">
+					<option value="">selecione</option>
+				</select>
+			</div>
 		</div>
 
 		<div class="form-group">
@@ -35,7 +45,61 @@
 	<span id="reload" class="icon icon-arrows-ccw text-center hidden"></span>
 </div>
 <script>
-	
+	window.novo_renderCidades = function(est_codigo){
+
+		var selectedOption = '';
+		var select = $('#novo-cidade');
+		if(select.prop) {
+		  var options = select.prop('options');
+		}
+		else {
+		  var options = select.attr('options');
+		}
+		$('option', select).remove();
+
+		cidades.sort(function(a, b){
+			return parseInt(a)- parseInt(b);
+		});
+
+		options[options.length] = new Option('selecione', '');
+
+		for(var x in cidades){
+
+			if(est_codigo == cidades[x].estado_id){
+
+		 		options[options.length] = new Option(cidades[x].nome, (Number(x) + 1));
+			}
+		}
+		
+		select.val(selectedOption);
+	};
+
+	window.novo_renderEstados = function(){
+
+		var selectedOption = '';
+		var select = $('#novo-estado');
+		if(select.prop) {
+		  var options = select.prop('options');
+		}
+		else {
+		  var options = select.attr('options');
+		}
+		$('option', select).remove();
+
+		estados.sort(function(a, b){
+			return parseInt(a)- parseInt(b);
+		});
+
+		options[options.length] = new Option('selecione', '');
+
+		for(var x in estados){
+
+ 			options[options.length] = new Option(estados[x].sigla+' - '+estados[x].nome, (Number(x) + 1));
+		}
+
+		select.val(selectedOption);
+	};
+
 	$(document).ready(function(){
 		$('#form-novo-cliente').submit(function(e) {
 			e.preventDefault();
@@ -80,9 +144,14 @@
 				}
 			});
 		});
-
 		$("#resposta-ajax").bind('click', function() {
 			closeResposta();
 		});
+
+		$("#novo-estado").bind('change', function() {
+			novo_renderCidades($("#novo-estado").val());
+		});
+
+		novo_renderEstados();
 	});
 </script>

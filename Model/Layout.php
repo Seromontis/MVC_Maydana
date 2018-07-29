@@ -101,7 +101,9 @@ class Model_Layout {
 					'{{nome_sistema}}' 	=> NOME_SISTEMA,
 					'{{header}}' 		=> $this->_headerHTML(),
 					'{{cache}}' 		=> $cache,
-					'{{id_login}}' 		=> $login
+					'{{id_login}}' 		=> $login,
+					'{{cidades}}' 		=> json_encode($this->_consulta->getCidades()),
+					'{{estados}}'		=> json_encode($this->_consulta->getEstados())
 				);
 
 				$layout = str_replace(array_keys($mustache), array_values($mustache), file_get_contents(DIR.'Layout/'.$layout.EXTENSAO_VISAO));
@@ -148,7 +150,7 @@ class Model_Layout {
 <meta name="msapplication-tap-highlight" content="no" />
 <meta name="format-detection" content="telephone=no" />
 <meta name="description" content="">
-<meta  name="robots"  content="index, follow"  />
+<meta  name="robots"  content="index, no-follow"  />
 {$noscript}
 <meta name="author" content="Matheus Maydana" />
 <link rel="shortcut icon" href="/img/site/caveira.png" type="image/x-icon">

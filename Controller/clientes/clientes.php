@@ -79,9 +79,10 @@ class Clientes {
 			$dados['nome'] 			= $this->_util->basico($_POST['nome'] ?? '');
 			$dados['sexo'] 			= $this->_util->basico($_POST['sexo'] ?? 1);
 			$dados['cid_codigo'] 	= $this->_util->basico($_POST['cid_codigo'] ?? null);
+			$dados['est_codigo'] 	= $this->_util->basico($_POST['est_codigo'] ?? null);
 			$dados['descricao'] 	= $this->_util->basico($_POST['descricao'] ?? '');
 			
-			$altera = $this->_consulta->updateSQL('pessoas', $dados, $_POST['id']);
+			$altera = $this->_consulta->updateSQL($dados, $_POST['id']);
 
 			switch ($altera){
 				case 2:
@@ -176,18 +177,20 @@ class Clientes {
 
 	function novo(){
 
-		if(isset($_POST['nome'], $_POST['sexo'], $_POST['cidade'], $_POST['descricao']) and !empty($_POST['nome'])){
+		if(isset($_POST['nome'], $_POST['sexo'], $_POST['cid_codigo'], $_POST['est_codigo'], $_POST['descricao']) and !empty($_POST['nome']) and !empty($_POST['sexo']) and !empty($_POST['descricao']) and !empty($_POST['est_codigo']) and !empty($_POST['cid_codigo'])){
 
 			$nome 		= $_POST['nome'] ?? null;
 			$sexo 		= $_POST['sexo'] ?? 0;
-			$cidade 	= $_POST['cidade'] ?? 0;
 			$descricao 	= $_POST['descricao'] ?? null;
+			$est_codigo	= $_POST['est_codigo'] ?? null;
+			$cid_codigo	= $_POST['cid_codigo'] ?? null;
 			$id_conta 	= $_SESSION[CLIENTE]['login'];
 
 			$dados[] = $nome;
 			$dados[] = $sexo;
-			$dados[] = $cidade;
 			$dados[] = $descricao;
+			$dados[] = $est_codigo;
+			$dados[] = $cid_codigo;
 			$dados[] = $id_conta;
 
 			$newPessoa = $this->foo->newPessoa($dados);

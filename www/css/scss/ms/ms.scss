@@ -12,7 +12,20 @@
 	z-index: 999999;
 	margin: auto;
 }
-
+.inline-block{
+	display: inline-block;
+}
+.width-50 {
+	width: 50%;
+}
+.pd-left{
+	padding-left: 10px;
+	@include border-box;
+}
+.pd-right{
+	padding-right: 10px;
+	@include border-box;
+}
 
 
 	

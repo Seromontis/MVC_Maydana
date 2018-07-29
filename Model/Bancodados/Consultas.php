@@ -39,6 +39,38 @@ class Model_Bancodados_Consultas {
 
 	}
 
+	function getEstados(){
+
+		$sql = $this->_conexao->prepare('
+			SELECT
+				id,
+				nome,
+				sigla
+			FROM estados
+		');
+		$sql->execute();
+		$fetch = $sql->fetchAll(PDO::FETCH_ASSOC);
+		$sql = null;
+
+		return $fetch;
+	}
+
+	function getCidades(){
+
+		$sql = $this->_conexao->prepare('
+			SELECT
+				id,
+				nome,
+				estado_id
+			FROM cidades
+		');
+		$sql->execute();
+		$fetch = $sql->fetchAll(PDO::FETCH_ASSOC);
+		$sql = null;
+
+		return $fetch;
+	}
+
 	function getCliente(int $id){
 
 		$sql = $this->_conexao->prepare('
@@ -138,7 +170,7 @@ class Model_Bancodados_Consultas {
 
 		return $temp;
 	}
-	function updateSQL($tabela, $params, $id){
+	function updateSQL($params, $id){
 
 		$monta_sql = '';
 		foreach ($params as $key => $value){
@@ -148,15 +180,12 @@ class Model_Bancodados_Consultas {
 
 		$monta_sql = trim($monta_sql, ', ');
 		$sql = $this->_conexao->prepare('
-			UPDATE pessoas SET 
-				'.$monta_sql.'
-			WHERE id = :id
+			UPDATE pessoas SET '.$monta_sql.' WHERE id = :id
 		');
 		foreach ($params as $key => &$value){
 
 			$sql->bindParam($key, $value);
 		}
-
 		$sql->bindParam(':id', $id);
 		$sql->execute();
 		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
@@ -396,28 +425,32 @@ class Model_Bancodados_Consultas {
 
 		$nome 		= $this->_util->basico($dados[0] ?? null);
 		$sexo 		= $this->_util->basico($dados[1] ?? 0);
-		$cidade 	= $this->_util->basico($dados[2] ?? 0);
-		$descricao 	= $this->_util->basico($dados[3] ?? null);
-		$id_conta 	= $this->_util->basico($dados[4] ?? null);
+		$descricao 	= $this->_util->basico($dados[2] ?? null);
+		$est_codigo	= $this->_util->basico($dados[3] ?? null);
+		$cid_codigo	= $this->_util->basico($dados[4] ?? null);
+		$id_conta	= $this->_util->basico($dados[5] ?? null);
 
 		$sql = $this->_conexao->prepare("INSERT INTO pessoas (
-			id_conta, 
-			nome, 
-			sexo, 
-			cid_codigo, 
-			descricao
+			nome,
+			sexo,
+			descricao,
+			est_codigo,
+			cid_codigo,
+			id_conta
 		) VALUES (
-			:id_conta,
 			:nome,
 			:sexo,
-			:cidade,
-			:descricao
+			:descricao,
+			:est_codigo,
+			:cid_codigo,
+			:id_conta
 		)");
-		$sql->bindParam(':id_conta', $id_conta);
 		$sql->bindParam(':nome', $nome);
 		$sql->bindParam(':sexo', $sexo);
-		$sql->bindParam(':cidade', $cidade);
 		$sql->bindParam(':descricao', $descricao);
+		$sql->bindParam(':est_codigo', $est_codigo);
+		$sql->bindParam(':cid_codigo', $cid_codigo);
+		$sql->bindParam(':id_conta', $id_conta);
 		$sql->execute();
 
 		if($sql->errorInfo()[0] !== '00000' and DEV !== true){

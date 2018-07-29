@@ -1917,6 +1917,28 @@ td {
   z-index: 999999;
   margin: auto; }
 
+.inline-block {
+  display: inline-block; }
+
+.width-50 {
+  width: 50%; }
+
+.pd-left {
+  padding-left: 10px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box; }
+
+.pd-right {
+  padding-right: 10px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box; }
+
 .hidden {
   margin-top: -9999px !important;
   top: 0px;
