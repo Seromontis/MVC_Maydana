@@ -16,7 +16,11 @@ CREATE TABLE public.veiculo
   opcionais json,
   publicado smallint NOT NULL DEFAULT 1, -- 1 = SIM...
   descricao text,
-  CONSTRAINT veiculo_pkey PRIMARY KEY (id_veiculo)
+  id_conta integer,
+  CONSTRAINT veiculo_pkey PRIMARY KEY (id_veiculo),
+  CONSTRAINT veiculo_id_conta_fkey FOREIGN KEY (id_conta)
+      REFERENCES public.conta (id_conta) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
@@ -31,3 +35,4 @@ COMMENT ON COLUMN public.veiculo.portas IS '1 = 2 portas
 2 = 4 portas';
 COMMENT ON COLUMN public.veiculo.publicado IS '1 = SIM
 2 = NÃO';
+

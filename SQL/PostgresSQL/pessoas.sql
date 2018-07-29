@@ -41,3 +41,4 @@ COMMENT ON COLUMN public.pessoas.bai_codigo IS 'codigo do bairro';
 COMMENT ON COLUMN public.pessoas.sexo IS '1 = masculino
 2 = feminino
 3 = outro';
+
