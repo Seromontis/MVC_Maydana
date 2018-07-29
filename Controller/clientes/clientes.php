@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "07/06/2018",
 		"CONTROLADOR": "Configuracao",
-		"LAST EDIT": "28/07/2018",
-		"VERSION":"0.0.7"
+		"LAST EDIT": "29/07/2018",
+		"VERSION":"0.0.8"
 	}
 */
 class Clientes {
@@ -20,6 +20,8 @@ class Clientes {
 
 	public $_cor;
 
+	public $_util;
+
 	private $_push = false;
 
 	public $foo;
@@ -33,6 +35,8 @@ class Clientes {
 		$this->_consulta = new Model_Bancodados_Consultas($this->_conexao);
 
 		$this->_render = new Model_Functions_Render;
+
+		$this->_util = new Model_Pluggs_Utilit;
 
 		$this->_cor = new Model_GOD;
 
@@ -68,13 +72,48 @@ class Clientes {
 		}
 	}
 
+	function editar_cliente(){
+
+		if(isset($_POST['id']) and is_numeric($_POST['id'])){
+
+			$dados['nome'] 			= $this->_util->basico($_POST['nome'] ?? '');
+			$dados['sexo'] 			= $this->_util->basico($_POST['sexo'] ?? 1);
+			$dados['cid_codigo'] 	= $this->_util->basico($_POST['cid_codigo'] ?? null);
+			$dados['descricao'] 	= $this->_util->basico($_POST['descricao'] ?? '');
+			
+			$altera = $this->_consulta->updateSQL('pessoas', $dados, $_POST['id']);
+
+			switch ($altera){
+				case 2:
+					echo json_encode(array('res' => 'no', 'info' => 'Ocorreu um erro, tente novamente mais tarde!'));
+					exit;
+					break;
+				
+				default:
+					# code...
+					echo json_encode(array('res' => 'ok', 'info' => 'Informações alteradas com sucesso!'));
+					exit;
+					break;
+			}
+			exit;
+			
+		}else{
+			$this->_cor->Erro404($this->_push);
+		}
+	}
+
 	function editar(){
 
 		if(isset($_GET['id']) and is_numeric($_GET['id'])){
 
 			$id = $_GET['id'] ?? null;
 
-			$mustache = array();
+			/* DADOS DO CLIENTE - PARA EDITAR */
+			$cliente = $this->foo->getCliente($id);
+
+			$mustache = array(
+				'{{editar_cliente}}' => json_encode($cliente)
+			);
 
 			if($this->_push === false){
 
@@ -82,7 +121,7 @@ class Clientes {
 
 			}else{
 
-				echo $this->_cor->push('clientes', 'editar-cliente');
+				echo $this->_cor->push('clientes', 'editar-cliente', $mustache);
 			}
 
 		}else{
@@ -143,11 +182,13 @@ class Clientes {
 			$sexo 		= $_POST['sexo'] ?? 0;
 			$cidade 	= $_POST['cidade'] ?? 0;
 			$descricao 	= $_POST['descricao'] ?? null;
+			$id_conta 	= $_SESSION[CLIENTE]['login'];
 
 			$dados[] = $nome;
 			$dados[] = $sexo;
 			$dados[] = $cidade;
 			$dados[] = $descricao;
+			$dados[] = $id_conta;
 
 			$newPessoa = $this->foo->newPessoa($dados);
 

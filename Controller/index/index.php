@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "09/04/2018",
 		"CONTROLADOR": "Index",
-		"LAST EDIT": "07/06/2018",
-		"VERSION":"0.0.5"
+		"LAST EDIT": "29/07/2018",
+		"VERSION":"0.0.6"
 	}
 */
 class Index {
@@ -38,7 +38,6 @@ class Index {
 		** @param = nome visão - STRING
 		** @param = nome bigode de gato {{exemplo}} - ARRAY ou STRING
 		**/
-
 
 		$mustache = array(
 			'{{id_login}}' 	=> $_SESSION[CLIENTE]['login']

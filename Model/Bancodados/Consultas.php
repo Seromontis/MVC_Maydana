@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "07/06/2018",
 	"MODEL": "Consultas",
-	"LAST EDIT": "28/07/2018",
-	"VERSION":"0.0.7"
+	"LAST EDIT": "29/07/2018",
+	"VERSION":"0.0.8"
 }
 */
 class Model_Bancodados_Consultas {
@@ -20,7 +20,11 @@ class Model_Bancodados_Consultas {
 
 	public $_ip = IP;
 
+	public $id_conta;
+
 	function __construct($conexao){
+
+		$this->id_conta = $_SESSION[CLIENTE]['login'];
 
 		$this->_conexao = $conexao->conexao();
 
@@ -33,6 +37,45 @@ class Model_Bancodados_Consultas {
 
 		$this->_util = null;
 
+	}
+
+	function getCliente(int $id){
+
+		$sql = $this->_conexao->prepare('
+			SELECT
+				telefone,
+				whatsapp,
+				nascimento,
+				sexo,
+				nome,
+				tipo,
+				id_conta,
+				id AS id_cliente,
+				est_codigo,
+				rg,
+				cpf,
+				cid_codigo,
+				celular,
+				bai_codigo,
+				descricao
+			FROM pessoas
+			WHERE id = :id
+			ORDER BY nome ASC
+		');
+		$sql->bindParam(':id', $id);
+		$sql->execute();
+
+		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+			
+			$this->saveLogs($sql->errorInfo());
+		}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+			new de($sql->errorInfo());
+		}
+		$fetch = $sql->fetch(PDO::FETCH_ASSOC);
+		$sql = null;
+
+		return $fetch;
 	}
 
 	function getVeiculos(){
@@ -61,8 +104,10 @@ class Model_Bancodados_Consultas {
 					ELSE 'Não publicado'
 				END AS publicado
 			FROM veiculo
+			WHERE id_conta = :id_conta
 			ORDER BY nome ASC
 		");
+		$sql->bindParam(':id_conta', $this->id_conta);
 		$sql->execute();
 
 		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
@@ -93,6 +138,49 @@ class Model_Bancodados_Consultas {
 
 		return $temp;
 	}
+	function updateSQL($tabela, $params, $id){
+
+		$monta_sql = '';
+		foreach ($params as $key => $value){
+
+			$monta_sql .= $key." = :".$key.", ";
+		}
+
+		$monta_sql = trim($monta_sql, ', ');
+		$sql = $this->_conexao->prepare('
+			UPDATE pessoas SET 
+				'.$monta_sql.'
+			WHERE id = :id
+		');
+		foreach ($params as $key => &$value){
+
+			$sql->bindParam($key, $value);
+		}
+
+		$sql->bindParam(':id', $id);
+		$sql->execute();
+		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+			
+			$this->saveLogs($sql->errorInfo());
+		}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+			new de($sql->errorInfo());
+		}
+		$fetch = $sql->fetch(PDO::FETCH_ASSOC);
+		$sql = null;
+
+		/* SUCESSO */
+		$return = 1;
+
+		if($fetch === false){
+
+			/* FALHA */
+			$return = 2;
+		}
+
+		return $return;
+	}
+
 
 	function deleteSQL($tabela, $coluna, $id){
 
@@ -123,6 +211,7 @@ class Model_Bancodados_Consultas {
 
 	function getClientes(){
 
+		/* BUSCA TODOS OS CLIENTES */
 		$sql = $this->_conexao->prepare('
 			SELECT
 				telefone,
@@ -141,9 +230,10 @@ class Model_Bancodados_Consultas {
 				bai_codigo,
 				descricao
 			FROM pessoas
-			WHERE tipo = 1
+			WHERE id_conta = :id_conta AND tipo = 1
 			ORDER BY nome ASC
 		');
+		$sql->bindParam(':id_conta', $this->id_conta);
 		$sql->execute();
 
 		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
@@ -192,8 +282,10 @@ class Model_Bancodados_Consultas {
 		$portas			= $this->_util->basico($dados[7]) ?? 1;
 		$descricao 		= $this->_util->basico($dados[8]) ?? '-';
 		$quilometragem 	= $this->_util->basico($dados[9]) ?? 0;
+		$id_conta 		= $this->_util->basico($dados[10]) ?? 0;
 
 		$sql = $this->_conexao->prepare("INSERT INTO veiculo (
+			id_conta,
 			nome,
 			ano,
 			modelo,
@@ -204,6 +296,7 @@ class Model_Bancodados_Consultas {
 			portas,
 			quilometragem
 		) VALUES (
+			:id_conta,
 			:nome,
 			:ano,
 			:modelo,
@@ -214,6 +307,7 @@ class Model_Bancodados_Consultas {
 			:portas,
 			:quilometragem
 		)");
+		$sql->bindParam(':id_conta', $id_conta);
 		$sql->bindParam(':nome', $nome);
 		$sql->bindParam(':ano', $ano);
 		$sql->bindParam(':modelo', $modelo);
@@ -304,18 +398,22 @@ class Model_Bancodados_Consultas {
 		$sexo 		= $this->_util->basico($dados[1] ?? 0);
 		$cidade 	= $this->_util->basico($dados[2] ?? 0);
 		$descricao 	= $this->_util->basico($dados[3] ?? null);
+		$id_conta 	= $this->_util->basico($dados[4] ?? null);
 
 		$sql = $this->_conexao->prepare("INSERT INTO pessoas (
+			id_conta, 
 			nome, 
 			sexo, 
 			cid_codigo, 
 			descricao
 		) VALUES (
+			:id_conta,
 			:nome,
 			:sexo,
 			:cidade,
 			:descricao
 		)");
+		$sql->bindParam(':id_conta', $id_conta);
 		$sql->bindParam(':nome', $nome);
 		$sql->bindParam(':sexo', $sexo);
 		$sql->bindParam(':cidade', $cidade);

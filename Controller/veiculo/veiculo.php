@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "15/07/2018",
 		"CONTROLADOR": "Veiculo",
-		"LAST EDIT": "28/07/2018",
-		"VERSION":"0.0.4"
+		"LAST EDIT": "29/07/2018",
+		"VERSION":"0.0.5"
 	}
 */
 class Veiculo {
@@ -224,7 +224,8 @@ class Veiculo {
 			$marca 			= $_POST['marca'] ?? 0;
 			$portas			= $_POST['portas'] ?? 1;
 			$descricao 		= $_POST['descricao'] ?? '-';
-			$quilometragem 	= $_FILES['quilometragem'] ?? 0;
+			$quilometragem 	= $_POST['quilometragem'] ?? 0;
+			$id_conta	 	= $_SESSION[CLIENTE]['login'];
 
 			$dados[] = $publicar;
 			$dados[] = $tipo;
@@ -236,6 +237,7 @@ class Veiculo {
 			$dados[] = $portas;
 			$dados[] = $descricao;
 			$dados[] = $quilometragem;
+			$dados[] = $id_conta;
 
 			$newVeiculo = $this->foo->newVeiculo($dados);
 

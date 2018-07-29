@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "04/07/2018",
 	"MODEL": "Exception",
-	"LAST EDIT": "22/07/2018",
-	"VERSION":"0.0.3"
+	"LAST EDIT": "29/07/2018",
+	"VERSION":"0.0.4"
 }
 */
 class Model_Functions_Exception extends Exception{
@@ -19,6 +19,23 @@ class Model_Functions_Exception extends Exception{
 		$this->_conexao = $conexao;
 
 		$this->_consulta = new Model_Bancodados_Consultas($this->_conexao);
+	}
+
+
+	function getCliente(int $id) {
+
+		try {
+
+			return $this->_consulta->getCliente($id);
+
+		}catch (Exception $e) {
+
+			return 85;
+
+		}catch(Error $e){
+
+			return 85;
+		}
 	}
 
 	function newVeiculo($dados) {

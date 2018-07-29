@@ -13,6 +13,42 @@
 	/* TESTE */
 	window.clientes = {{clientesarray}};
 
+	window.removeCliente = function(){
+		/* AINDA NÃO FUNCIONA */
+		$.ajax({
+			url: '/clientes/editar_cliente',
+			dataType: 'json',
+			type: 'POST',
+			data: serializeDados,
+			beforeSend: function() {
+
+			},
+			complete: function() {
+
+			},
+			success: function(data, textStatus) {
+
+				$('.form-actions').removeClass('hidden');
+				if(data.res == 'ok'){
+
+					boxTrue(res);
+					res.html('<span class="icon icon-check"></span> '+data.info);
+					xhr('/clientes');
+
+				}else{
+
+					boxFalse(res);
+					res.html('<span class="icon icon-cancel"></span> '+data.info);
+					$('#input-email').focus();
+				}
+			},
+			error: function(xhr,er) {
+
+				boxFalse(res);
+			}
+		});
+	};
+
 	window.renderClientes = function(){
 
 			var search = Render.searchFor($('#procuracliente').val(), clientes);
@@ -37,6 +73,10 @@
 		$('#procuracliente').bind("keyup", function(){
 			renderClientes();
 		});
+	});
+
+	$("#resposta-ajax").bind('click', function() {
+		closeResposta();
 	});
 
 	$(document).ready(function(){

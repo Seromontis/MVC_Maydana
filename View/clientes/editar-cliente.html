@@ -1,14 +1,15 @@
 <div class="pane">
 	<h2 class="text-center">Editar Cliente</h2>
-	<form id="form-novo-cliente" action="/{{nome_sistema}}" name="form-login" method="post" novalidate="novalidate">
+	<form id="form-editar-cliente" action="/{{nome_sistema}}" name="form-login" method="post" novalidate="novalidate">
+		<input type="hidden" name="id" id="editar-id_cliente" value=""/>
 		<div class="form-group">
 			<label>Nome completo</label>
-			<input type="text" name="nome" class="form-control" placeholder="nome completo">
+			<input type="text" name="nome" class="form-control" value="" id="editar-nome" />
 		</div>
 
 		<div class="form-group">
 			<label>Sexo</label>
-			<select name="sexo" class="form-control">
+			<select name="sexo" class="form-control" id="editar-sexo">
 				<option value="1">Masculino</option>
 				<option value="2">Feminino</option>
 			</select>
@@ -16,18 +17,17 @@
 
 		<div class="form-group">
 			<label>Cidade</label>
-			<input name="cidade" type="text" class="form-control" placeholder="cidade">
+			<input name="cid_codigo" type="text" class="form-control" id="editar-cidade" />
 		</div>
 
 		<div class="form-group">
 			<label>Descrição</label>
-			<textarea name="descricao" class="form-control" rows="3"></textarea>
+			<textarea name="descricao" class="form-control" id="editar-descricao" rows="3"></textarea>
 		</div>
 
 		<div class="form-actions">
 
-			<input type="submit" class="btn btn-large btn-positive" value="Entrar" />
-			<button type="button" class="btn btn-form btn-primary">OK</button>
+			<input type="submit" class="btn btn-large btn-positive" value="Atualizar" />
 			<button type="submit" class="btn btn-form btn-default">Cancel</button>
 		</div>
 	</form>
@@ -35,65 +35,88 @@
 	<span id="reload" class="icon icon-arrows-ccw text-center hidden"></span>
 </div>
 <script>
-	
-	$(document).ready(function(){
-		$('#form-novo-cliente').submit(function(e) {
-			e.preventDefault();
-			var serializeDados = $('#form-novo-cliente').serialize();
-			var res = $('#resposta-ajax');
-			var reload = document.getElementById('reload');
-			$('.form-actions').addClass('hidden');
+	window.editar_cliente = {{editar_cliente}};
 
-			res.html('Aguarde...');
-			res.removeClass('hidden');
-			boxNeutro(res);
-			$.ajax({
-				url: '/clientes/novo',
-				dataType: 'json',
-				type: 'POST',
-				data: serializeDados,
-				beforeSend: function() {
+	window.editar_render = function(){
 
-				},
-				complete: function() {
+		const cliente = editar_cliente;
 
-				},
-				success: function(data, textStatus) {
+		if(cliente.id_cliente){
 
-					$('.form-actions').removeClass('hidden');
-					if(data.res == 'ok'){
+			$('#editar-id_cliente').val(cliente.id_cliente);
+		}
 
-						boxTrue(res);
-						res.html('<span class="icon icon-check"></span> '+data.info);
-						xhr('/clientes');
+		if(cliente.cid_codigo){
 
-					}else{
+			$('#editar-cidade').val(cliente.cid_codigo);
+		}
+		if(cliente.sexo){
 
-						boxFalse(res);
-						res.html('<span class="icon icon-cancel"></span> '+data.info);
-						$('#input-email').focus();
-					}
-				},
-				error: function(xhr,er) {
+			$('#editar-sexo').val(cliente.sexo);
+		}
+		
+		if(cliente.descricao !== ''){
+
+			$('#editar-descricao').val(cliente.descricao);
+		}
+
+		if(cliente.nome !== ''){
+
+			$('#editar-nome').val(cliente.nome);
+		}
+
+	};
+
+	$('#form-editar-cliente').submit(function(e) {
+		e.preventDefault();
+		var serializeDados = $('#form-editar-cliente').serialize();
+		var res = $('#resposta-ajax');
+		var reload = document.getElementById('reload');
+		$('.form-actions').addClass('hidden');
+
+		res.html('Aguarde...');
+		res.removeClass('hidden');
+		boxNeutro(res);
+		$.ajax({
+			url: '/clientes/editar_cliente',
+			dataType: 'json',
+			type: 'POST',
+			data: serializeDados,
+			beforeSend: function() {
+
+			},
+			complete: function() {
+
+			},
+			success: function(data, textStatus) {
+
+				$('.form-actions').removeClass('hidden');
+				if(data.res == 'ok'){
+
+					boxTrue(res);
+					res.html('<span class="icon icon-check"></span> '+data.info);
+					xhr('/clientes');
+
+				}else{
 
 					boxFalse(res);
+					res.html('<span class="icon icon-cancel"></span> '+data.info);
+					$('#input-email').focus();
 				}
-			});
-		});
+			},
+			error: function(xhr,er) {
 
-		$("#resposta-ajax").bind('click', function() {
-
-			$('.toolbar-header').removeClass('header-false');
-			$('.toolbar-header').removeClass('header-neutro');
-			$('.toolbar-header').removeClass('header-true');
-
-			$('.toolbar-footer').removeClass('footer-false');
-			$('.toolbar-footer').removeClass('footer-neutro');
-			$('.toolbar-footer').removeClass('footer-true');
-			$('#resposta-ajax').addClass('hidden');
+				boxFalse(res);
+			}
 		});
 	});
 
+	$("#resposta-ajax").bind('click', function() {
+		closeResposta();
+	});
 
+	$(document).ready(function(){
 
+		editar_render();
+	});
 </script>
