@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "07/06/2018",
 	"MODEL": "Consultas",
-	"LAST EDIT": "29/07/2018",
-	"VERSION":"0.0.8"
+	"LAST EDIT": "30/07/2018",
+	"VERSION":"0.0.9"
 }
 */
 class Model_Bancodados_Consultas {
@@ -75,28 +75,31 @@ class Model_Bancodados_Consultas {
 
 		$sql = $this->_conexao->prepare('
 			SELECT
-				telefone,
-				whatsapp,
-				nascimento,
-				sexo,
-				nome,
-				tipo,
-				id_conta,
-				id AS id_cliente,
-				est_codigo,
-				rg,
-				cpf,
-				cid_codigo,
-				celular,
-				bai_codigo,
-				descricao
-			FROM pessoas
-			WHERE id = :id
-			ORDER BY nome ASC
+				pes.id AS id_cliente,
+				est.nome AS estado,
+				cid.nome AS cidade,
+				pes.telefone,
+				pes.whatsapp,
+				pes.nascimento,
+				pes.sexo,
+				pes.nome,
+				pes.tipo,
+				pes.id_conta,
+				pes.est_codigo,
+				pes.cid_codigo,
+				pes.rg,
+				pes.cpf,
+				pes.celular,
+				pes.bai_codigo,
+				pes.descricao
+			FROM pessoas AS pes
+			LEFT JOIN cidades AS cid ON cid.id = pes.cid_codigo
+			LEFT JOIN estados AS est ON est.id = cid.estado_id
+			WHERE pes.id = :id AND pes.tipo = 1
+			ORDER BY pes.nome ASC
 		');
 		$sql->bindParam(':id', $id);
 		$sql->execute();
-
 		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
 			
 			$this->saveLogs($sql->errorInfo());
@@ -243,24 +246,32 @@ class Model_Bancodados_Consultas {
 		/* BUSCA TODOS OS CLIENTES */
 		$sql = $this->_conexao->prepare('
 			SELECT
-				telefone,
-				whatsapp,
-				nascimento,
-				sexo,
-				nome,
-				tipo,
-				id_conta,
-				id,
-				est_codigo,
-				rg,
-				cpf,
-				cid_codigo,
-				celular,
-				bai_codigo,
-				descricao
-			FROM pessoas
-			WHERE id_conta = :id_conta AND tipo = 1
-			ORDER BY nome ASC
+				pes.id AS id,
+				est.nome AS estado,
+				cid.nome AS cidade,
+				pes.telefone,
+				pes.whatsapp,
+				pes.nascimento,
+				pes.sexo,
+				pes.nome,
+				pes.tipo,
+				pes.id_conta,
+				pes.est_codigo,
+				pes.cid_codigo,
+				pes.rg,
+				pes.cpf,
+				pes.celular,
+				pes.bai_codigo,
+				pes.descricao,
+				CASE pes.sexo
+					WHEN 1 THEN \'Masculino\'
+					ELSE \'Feminino\'
+				END AS sexo
+			FROM pessoas AS pes
+			LEFT JOIN cidades AS cid ON cid.id = pes.cid_codigo
+			LEFT JOIN estados AS est ON est.id = cid.estado_id
+			WHERE pes.id_conta = :id_conta AND pes.tipo = 1
+			ORDER BY pes.nome ASC
 		');
 		$sql->bindParam(':id_conta', $this->id_conta);
 		$sql->execute();
@@ -286,6 +297,8 @@ class Model_Bancodados_Consultas {
 			$fetch[$key]['id_conta'] = (string) $arr['id_conta'];
 			$fetch[$key]['id'] = (string) $arr['id'];
 			$fetch[$key]['est_codigo'] = (string) $arr['est_codigo'];
+			$fetch[$key]['estado'] = (string) $arr['estado'];
+			$fetch[$key]['cidade'] = (string) $arr['cidade'];
 			$fetch[$key]['rg'] = (string) $arr['rg'];
 			$fetch[$key]['cpf'] = (string) $arr['cpf'];
 			$fetch[$key]['cid_codigo'] = (string) $arr['cid_codigo'];
