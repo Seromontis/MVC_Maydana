@@ -1,0 +1,2 @@
+Options -Indexes
+ErrorDocument 403 http://mvc_maydana.local

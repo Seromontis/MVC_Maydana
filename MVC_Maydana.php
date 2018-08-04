@@ -51,7 +51,7 @@ class MVC_Maydana {
 
 			try{
 
-				require_once ('Controller/index/index.php');
+				require_once (DIR.'Controller/index/index.php');
 
 			}catch(PDOException $e){
 
@@ -142,7 +142,7 @@ class MVC_Maydana {
 
 		try{
 
-			require_once ('Controller/erro404/erro404'.EXTENSAO_CONTROLADOR);
+			require_once (DIR.'Controller/erro404/erro404'.EXTENSAO_CONTROLADOR);
 
 		}catch(PDOException $e){
 

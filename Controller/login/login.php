@@ -22,6 +22,8 @@ class Login {
 
 	private $_push = false;
 
+	private $_validacao;
+
 	function __construct(){
 
 		$this->_conexao = new Model_Bancodados_Conexao;
@@ -30,10 +32,14 @@ class Login {
 
 		$this->_util = new Model_Pluggs_Utilit;
 
+		$this->_validacao = new Model_Pluggs_Validacao;
+
 		/* Function noLogin não permite entrar no controlador login com Login.. kk*/
 		$this->_util->noLogin();
 
 		$this->_cor = new Model_GOD;
+
+		$this->_url = new Model_Pluggs_Url;
 
 		if(isset($_POST['push']) and $_POST['push'] == 'push'){
 			$this->_push = true;
@@ -59,12 +65,24 @@ class Login {
 		** @param = nome visão - STRING
 		** @param = nome bigode de gato {{exemplo}} - ARRAY ou STRING
 		**/
-		/* GERA TOKEN */
-		$seguranca = $this->_cor->_token();
-		$url = URL_SITE;
+
+		$url = $this->_url->url();
+		$url = explode('?', $url[1]);
+
+		$email = '';
+		$senha = '';
+		if(isset($url[1])){
+			$email = str_replace('email=', '', $url[1]);
+		}
+
+		if(isset($url[2])){
+			$senha = str_replace('senha=', '', $url[2]);
+		}
 
 		$mustache = array(
-			'{{url}}'	=> $seguranca['url']
+			'{{token}}' => $this->_cor->_TokenForm('entrar_login'),
+			'{{senha}}' => $senha,
+			'{{email}}' => $email
 		);
 
 		if($this->_push === false){
@@ -84,8 +102,7 @@ class Login {
 		$url = URL_SITE;
 
 		$mustache = array(
-			'{{token}}' => $seguranca['token'],
-			'{{url}}'	=> $seguranca['url']
+			'{{token}}' => $this->_cor->_TokenForm('novo_login')
 		);
 
 		if($this->_push === false){
@@ -100,47 +117,64 @@ class Login {
 
 	function novo(){
 
+		$token = $this->_cor->_verificaToken('novo_login', $_POST['token']);
+
 		/* SE EXISTER CONTA, SENHA E TOKEN VÁLIDO, ENTÃO FAÇA O CADASTRO */
-		if(isset($_POST['email'], $_POST['token']) and !empty($_POST['email']) and !empty($_POST['nome']) and $_POST['url'] == URL_SITE){
+		if(isset($_POST['email'], $_POST['token']) and !empty($_POST['token'])){
 
-			$email = $this->_util->basico($_POST['email']);
-			$nome = $this->_util->basico($_POST['nome']);
-			$senha = $this->_util->basico($_POST['senha']);
-			$token = $this->_util->basico($_POST['token']);
+			if($token === true){
 
-			/* COLOCA OS DADOS TRATATOS NUM ARRAY*/
-			$dados['email'] = $email;
-			$dados['nome'] = $nome;
-			$dados['senha'] = $senha;
-			$dados['token'] = $token;
+				$email 	= $this->_util->basico($_POST['email']);
+				$nome 	= $this->_util->basico($_POST['nome']);
+				$senha 	= $this->_util->basico($_POST['senha']);
 
-			/* COLOCA DOS DADOS NA FUNÇÃO PARA CRIAR CONTA */
-			$criar = $this->_consulta->newAccount($dados);
+				/* COLOCA OS DADOS TRATATOS NUM ARRAY*/
+				$dados['email'] = $email;
+				$dados['nome'] 	= $nome;
+				$dados['senha'] = $senha;
 
-			switch ($criar) {
-				case 2:
+				$validacao = $this->_validacao->_criarLogin($dados);
 
-					/* SQL FAIL */
-					echo json_encode(array('res' => 'no', 'info' => 'Algo de errado não está certo'));
-					break;
+				/* CASO NÃO PASSE PELA VALIDAÇÃO */
+				if($validacao !== true){
 
-				case 3:
+					echo json_encode(array('res' => 'no', 'info' => $validacao));
+					exit;
+				}
 
-					/* ACCOUNT EXIST */
-					echo json_encode(array('res' => 'no', 'info' => 'Já existe um cadastro com esse e-mail'));
-					break;
+				/* COLOCA DOS DADOS NA FUNÇÃO PARA CRIAR CONTA */
+				$criar = $this->_consulta->newAccount($dados);
 
-				case 4:
+				switch ($criar) {
+					case 2:
 
-					/* DADOS INVÁLIDOS */
-					echo json_encode(array('res' => 'no', 'info' => 'Preencha os dados conforme solicitado'));
-					break;
-				
-				default:
+						/* SQL FAIL */
+						echo json_encode(array('res' => 'no', 'info' => 'Algo de errado não está certo'));
+						break;
+
+					case 3:
+
+						/* ACCOUNT EXIST */
+						echo json_encode(array('res' => 'no', 'info' => 'Alguem já se registrou com esse e-mail, tenta outro!'));
+						break;
+
+					case 4:
+
+						/* DADOS INVÁLIDOS */
+						echo json_encode(array('res' => 'no', 'info' => 'Informe os dados principais!'));
+						break;
+					
+					default:
 
 					/* CRIADO COM SUCESSO */
-					echo json_encode(array('res' => 'ok', 'info' => 'Sua conta foi criada com sucesso!'));
+					echo json_encode(array('res' => 'ok', 'info' => 'Sua conta foi criada com sucesso!', 'email' => $email, 'senha' => $senha));
 					break;
+				}
+			}else{
+
+
+				echo json_encode(array('res' => 'no', 'info' => 'Seu nome por acaso, é Robo ? kk'));
+				exit;
 			}
 
 		}else{
@@ -149,42 +183,51 @@ class Login {
 			echo json_encode(array('res' => 'no', 'info' => 'Informe os dados'));
 			exit;
 		}
-
 	}
 
 	function entrar(){
 
+		$token = $this->_cor->_verificaToken('entrar_login', $_POST['token']);
+
 		/* SE EXISTER CONTA, SENHA E TOKEN VÁLIDO, ENTÃO FAÇA O CADASTRO */
-		if(isset($_POST['email']) and !empty($_POST['email']) and $_POST['url'] == URL_SITE){
+		if(isset($_POST['email'], $_POST['token']) and !empty($_POST['token'])){
 
-			$email = $this->_util->basico($_POST['email']);
-			$senha = $this->_util->basico($_POST['senha']);
+			if($token === true){
 
-			/* COLOCA OS DADOS TRATATOS NUM ARRAY*/
-			$dados['email'] = $email;
-			$dados['senha'] = $senha;
+				$email = $this->_util->basico($_POST['email']);
+				$senha = $this->_util->basico($_POST['senha']);
 
-			/* COLOCA DOS DADOS NA FUNÇÃO PARA FAZER O LOGIN */
-			$login = $this->_consulta->login($dados);
+				/* COLOCA OS DADOS TRATATOS NUM ARRAY*/
+				$dados['email'] = $email;
+				$dados['senha'] = $senha;
 
-			switch ($login) {
-				case 3:
+				/* COLOCA DOS DADOS NA FUNÇÃO PARA FAZER O LOGIN */
+				$login = $this->_consulta->login($dados);
 
-					/* SENHA ERRADA*/
-					echo json_encode(array('res' => 'no', 'info' => 'E-mail ou senha incorreto!'));
-					exit;
+				switch ($login) {
+					case 3:
 
-				case 4:
+						/* SENHA ERRADA*/
+						echo json_encode(array('res' => 'no', 'info' => 'E-mail ou senha incorreto!'));
+						exit;
 
-					/* DADOS INVÁLIDOS */
-					echo json_encode(array('res' => 'no', 'info' => 'Preencha os dados conforme solicitado'));
-					exit;
-				
-				default:
+					case 4:
+
+						/* DADOS INVÁLIDOS */
+						echo json_encode(array('res' => 'no', 'info' => 'Preencha os dados conforme solicitado'));
+						exit;
+					
+					default:
 
 					/* LOGADO COM SUCESSO */
 					echo json_encode(array('res' => 'ok', 'info' => 'Login efetuado com sucesso!'));
 					exit;
+				}
+
+			}else{
+
+				echo json_encode(array('res' => 'no', 'info' => 'Seu nome por acaso, é Robo ? kk'));
+				exit;
 			}
 		}
 		/* INFORME OS DADOS CORRETO */

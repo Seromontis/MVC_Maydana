@@ -14,19 +14,22 @@ class Model_Functions_Exception extends Exception{
 	
 	public $_consulta;
 
+	public $_validacao;
+
 	function __construct($conexao){
 
 		$this->_conexao = $conexao;
 
+		$this->_validacao = new Model_Pluggs_Validacao;
+
 		$this->_consulta = new Model_Bancodados_Consultas($this->_conexao);
 	}
 
-
-	function getCliente(int $id) {
+	function getVeiculo(int $dados) {
 
 		try {
 
-			return $this->_consulta->getCliente($id);
+			return $this->_consulta->getVeiculo($dados);
 
 		}catch (Exception $e) {
 
@@ -38,7 +41,39 @@ class Model_Functions_Exception extends Exception{
 		}
 	}
 
-	function newVeiculo($dados) {
+	function getCliente(int $dados) {
+
+		try {
+
+			return $this->_consulta->getCliente($dados);
+
+		}catch (Exception $e) {
+
+			return 85;
+
+		}catch(Error $e){
+
+			return 85;
+		}
+	}
+
+	function _criarLogin(array $dados) {
+
+		try {
+
+			return $this->_validacao->_criarLogin($dados);
+
+		}catch (Exception $e) {
+
+			return 85;
+
+		}catch(Error $e){
+
+			return 85;
+		}
+	}
+
+	function newVeiculo(array $dados) {
 
 		try {
 
@@ -54,7 +89,7 @@ class Model_Functions_Exception extends Exception{
 		}
 	}
 
-	function newPessoa($dados) {
+	function newPessoa(array $dados) {
 
 		try {
 

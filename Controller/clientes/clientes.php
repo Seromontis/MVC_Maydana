@@ -52,7 +52,7 @@ class Clientes {
 
 	function index(){
 
-		$configuracoes = $this->_consulta->getConfig($_SESSION[CLIENTE]['login']);
+		$configuracoes = $this->_consulta->getConfig(key($_SESSION[CLIENTE]['login']));
 
 		$conf = $this->_render->getconfig($configuracoes);
 
@@ -82,7 +82,7 @@ class Clientes {
 			$dados['est_codigo'] 	= $this->_util->basico($_POST['est_codigo'] ?? null);
 			$dados['descricao'] 	= $this->_util->basico($_POST['descricao'] ?? '');
 			
-			$altera = $this->_consulta->updateSQL($dados, $_POST['id']);
+			$altera = $this->_consulta->updateSQL('pessoas', $dados, 'id', $_POST['id']);
 
 			switch ($altera){
 				case 2:
@@ -119,10 +119,11 @@ class Clientes {
 			if($this->_push === false){
 
 				echo $this->_cor->_visao($this->_cor->_layout('clientes', 'editar-cliente'), $mustache);
-
+				exit;
 			}else{
 
 				echo $this->_cor->push('clientes', 'editar-cliente', $mustache);
+				exit;
 			}
 
 		}else{
@@ -133,9 +134,9 @@ class Clientes {
 
 	function remover(){
 
-		if(isset($_GET['id']) and is_numeric($_GET['id'])){
+		if(isset($_POST['id_cliente']) and is_numeric($_POST['id_cliente'])){
 
-			$id = $_GET['id'] ?? null;
+			$id = $_POST['id_cliente'] ?? null;
 			$deleteCliente = $this->_consulta->deleteSQL('pessoas', 'id', $id);
 
 			switch ($deleteCliente) {
@@ -147,8 +148,8 @@ class Clientes {
 
 				default:
 
-					echo json_encode(array('res' => 'ok', 'info' => 'O cliente foi removido com sucesso!'));
-					break;
+				echo json_encode(array('res' => 'ok', 'info' => 'O cliente foi removido com sucesso!'));
+				break;
 			}
 
 		}else{
@@ -159,7 +160,7 @@ class Clientes {
 
 	function novocliente(){
 
-		$configuracoes = $this->_consulta->getConfig($_SESSION[CLIENTE]['login']);
+		$configuracoes = $this->_consulta->getConfig(key($_SESSION[CLIENTE]['login']));
 
 		$conf = $this->_render->getconfig($configuracoes);
 
@@ -177,14 +178,14 @@ class Clientes {
 
 	function novo(){
 
-		if(isset($_POST['nome'], $_POST['sexo'], $_POST['cid_codigo'], $_POST['est_codigo'], $_POST['descricao']) and !empty($_POST['nome']) and !empty($_POST['sexo']) and !empty($_POST['descricao']) and !empty($_POST['est_codigo']) and !empty($_POST['cid_codigo'])){
+		if(isset($_POST['nome'], $_POST['sexo'], $_POST['cid_codigo'], $_POST['est_codigo'], $_POST['descricao']) and !empty($_POST['nome']) and !empty($_POST['sexo']) and !empty($_POST['est_codigo']) and !empty($_POST['cid_codigo'])){
 
 			$nome 		= $_POST['nome'] ?? null;
 			$sexo 		= $_POST['sexo'] ?? 0;
 			$descricao 	= $_POST['descricao'] ?? null;
 			$est_codigo	= $_POST['est_codigo'] ?? null;
 			$cid_codigo	= $_POST['cid_codigo'] ?? null;
-			$id_conta 	= $_SESSION[CLIENTE]['login'];
+			$id_conta 	= key($_SESSION[CLIENTE]['login']);
 
 			$dados[] = $nome;
 			$dados[] = $sexo;

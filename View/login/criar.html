@@ -1,5 +1,6 @@
 <form id="form-criar" action="/{{nome_sistema}}" name="form-criar" method="post" style="max-width: 460px; margin: auto;" novalidate="novalidate">
 
+	<input type="hidden" name="token" value="{{token}}">
 	<h2>Criar</h2>	
 	<div class="form-group">
 		<label>Nome</label>
@@ -20,8 +21,6 @@
 			Já tenho login
 		</a>
 	</div>
-	<input type="hidden" name="token" value="{{token}}">
-	<input type="hidden" name="url" value="{{url}}">
 </form>
 <p id="resposta-ajax"></p>
 <span id="reload" class="icon icon-arrows-ccw text-center hidden"></span>
@@ -53,15 +52,15 @@
 					$('.toolbar-actions').removeClass('hidden');
 
 					if(data.res == 'ok'){
+
 						boxTrue(res);
 						res.html('<span class="icon icon-check"></span> '+data.info);
-						$(location).attr('href', '/login');
-
+						$(location).attr('href', '/login?email='+data.email+'?senha='+data.senha);
 					}else{
 
 						boxFalse(res);
 						res.html('<span class="icon icon-cancel"></span> '+data.info);
-						$('#input-email').focus();
+						$('#input-nome').focus();
 					}
 				},
 				error: function(xhr,er) {
@@ -69,11 +68,6 @@
 					boxFalse(res);
 				}
 			});
-		});
-
-		$("#resposta-ajax").bind('click', function() {
-
-			$('#resposta-ajax').addClass('hidden');
 		});
 	});
 </script>

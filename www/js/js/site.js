@@ -192,7 +192,7 @@ window.Render = {
 
 		return matches;
 	},
-	execute: function(result, renderTo, mascara, maskFirst, limit = 15){
+	execute: function(result, renderTo, mascara, maskFirst, maskLast, masEmpty, limit = 15){
 
 		if(result.length !== 0){
 

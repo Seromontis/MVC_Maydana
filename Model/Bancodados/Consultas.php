@@ -24,7 +24,13 @@ class Model_Bancodados_Consultas {
 
 	function __construct($conexao){
 
-		$this->id_conta = $_SESSION[CLIENTE]['login'] ?? null;
+		$id_cliente = null;
+		$array = $_SESSION[CLIENTE]['login'] ?? array();
+		foreach ($array as $id_conta => $info_conta){
+			$id_cliente = $id_conta;
+		}
+
+		$this->id_conta = $id_cliente;
 
 		$this->_conexao = $conexao->conexao();
 
@@ -37,6 +43,54 @@ class Model_Bancodados_Consultas {
 
 		$this->_util = null;
 
+	}
+
+	function _saveLimbo($form){
+
+		/* BUSCA NO DB SE EXISTE ALGUM REGISTRO COM O MESMO IP */
+		$sql = $this->_conexao->prepare('
+			SELECT 
+				acc.id_conta
+			FROM conta AS acc
+			LEFT JOIN pessoas AS pes ON pes.id_conta = acc.id_conta
+			WHERE ip_ultimo_login = :ip_ultimo_login OR ip_criacao = :ip_criacao AND pes.nome IS NOT NULL
+			');
+		$sql->bindParam(':ip_ultimo_login', $this->_ip);
+		$sql->bindParam(':ip_criacao', $this->_ip);
+		$sql->execute();
+		$temp = $sql->fetchAll(PDO::FETCH_ASSOC);
+		$sql = null;
+
+		foreach ($temp as $value){
+
+			/* SE EXISTIR, BUSCA O ID E O NOME DO USUARIO */
+			$sql = $this->_conexao->prepare('
+				INSERT INTO saveLimbo (
+					data,
+					hora,
+					ip,
+					user_relacionado,
+					nome_form
+				) VALUES (
+					:data,
+					:hora,
+					:ip,
+					:user_relacionado,
+					:nome_form
+				)
+			');
+			$sql->bindParam(':data', $this->_hoje);
+			$sql->bindParam(':hora', $this->_agora);
+			$sql->bindParam(':ip', $this->ip);
+			$sql->bindParam(':user_relacionado', $id_conta);
+			$sql->bindParam(':nome_form', $form);
+			$sql->execute();
+			$fetch = $sql->fetchAll(PDO::FETCH_ASSOC);
+			$sql = null;
+		}
+
+		$fetch = null;
+		$sql = null;
 	}
 
 	function getEstados(){
@@ -94,7 +148,7 @@ class Model_Bancodados_Consultas {
 				pes.descricao
 			FROM pessoas AS pes
 			LEFT JOIN cidades AS cid ON cid.id = pes.cid_codigo
-			LEFT JOIN estados AS est ON est.id = cid.estado_id
+			LEFT JOIN estados AS est ON est.id = pes.est_codigo
 			WHERE pes.id = :id AND pes.tipo = 1
 			ORDER BY pes.nome ASC
 		');
@@ -173,9 +227,52 @@ class Model_Bancodados_Consultas {
 
 		return $temp;
 	}
-	function updateSQL($params, $id){
 
+	function _getVeiculo($id_veiculo){
+
+		$sql = $this->_conexao->prepare("
+			SELECT
+			id_veiculo::text,
+			nome::text,
+			modelo::text,
+			ano::text,
+			cor::text,
+			marca::text,
+			descricao::text,
+			publicado::text,
+			tipo::text,
+			portas::text,
+				CONCAT(quilometragem, ' Km') AS quilometragem
+			FROM veiculo
+			WHERE id_veiculo = :id_veiculo AND id_conta = :id_conta
+			ORDER BY nome ASC
+		");
+		$sql->bindParam(':id_veiculo', $id_veiculo);
+		$sql->bindParam(':id_conta', $this->id_conta);
+		$sql->execute();
+
+		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+			
+			$this->saveLogs($sql->errorInfo());
+		}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+			new de($sql->errorInfo());
+		}
+		$temp = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+		$sql = null;
+
+		return $temp;
+	}
+
+	function updateSQL($tabela, $params, $where, $id){
+
+		$id = (int) $id;
 		$monta_sql = '';
+		if(isset($params['quilometragem'])){
+
+			$params['quilometragem'] = (int) $params['quilometragem'];
+		}
 		foreach ($params as $key => $value){
 
 			$monta_sql .= $key." = :".$key.", ";
@@ -183,7 +280,7 @@ class Model_Bancodados_Consultas {
 
 		$monta_sql = trim($monta_sql, ', ');
 		$sql = $this->_conexao->prepare('
-			UPDATE pessoas SET '.$monta_sql.' WHERE id = :id
+			UPDATE '.$tabela.' SET '.$monta_sql.' WHERE '.$where.' = :id
 		');
 		foreach ($params as $key => &$value){
 
@@ -191,6 +288,7 @@ class Model_Bancodados_Consultas {
 		}
 		$sql->bindParam(':id', $id);
 		$sql->execute();
+
 		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
 			
 			$this->saveLogs($sql->errorInfo());
@@ -268,9 +366,9 @@ class Model_Bancodados_Consultas {
 					ELSE \'Feminino\'
 				END AS sexo
 			FROM pessoas AS pes
+			LEFT JOIN estados AS est ON est.id = pes.est_codigo
 			LEFT JOIN cidades AS cid ON cid.id = pes.cid_codigo
-			LEFT JOIN estados AS est ON est.id = cid.estado_id
-			WHERE pes.id_conta = :id_conta AND pes.tipo = 1
+			WHERE pes.id_conta = :id_conta AND pes.nome IS NOT NULL AND pes.tipo = 1
 			ORDER BY pes.nome ASC
 		');
 		$sql->bindParam(':id_conta', $this->id_conta);
@@ -305,6 +403,7 @@ class Model_Bancodados_Consultas {
 			$fetch[$key]['celular'] = (string) $arr['celular'];
 			$fetch[$key]['bai_codigo'] = (string) $arr['bai_codigo'];
 			$fetch[$key]['descricao'] = (string) $arr['descricao'];
+
 		}
 
 		$sql = null;
@@ -389,7 +488,7 @@ class Model_Bancodados_Consultas {
 		$tipo_postgres 		= $erro[1] ?? 0;
 		$descricao 			= $erro[2] ?? '-';
 		$arrayzao 			= implode(' - ', $erro);
-		$usu_codigo 		= $_SESSION[CLIENTE]['login'] ?? 0;
+		$usu_codigo 		= key($_SESSION[CLIENTE]['login']) ?? 0;
 
 		$sql = $this->_conexao->prepare("INSERT INTO erro_logs (
 			descricao,
@@ -489,18 +588,28 @@ class Model_Bancodados_Consultas {
 		return $return;
 	}
 
+	private function HASH($string){
+
+		/**
+		** @see NUNCA !!!!
+		** @see NUNCA, JAMAIS, ALTERE O VALOR DA VARIÁVEL $salt
+		**/
+		$string = (string) $string;
+		$salt = '31256578196*&%@#*(!$!+_%$(_+!%anpadfbahidpqwm,ksdpoqww[pqwṕqw[';
+
+		return sha1(substr(md5($salt.$string), 5,25));
+	}
+
 	function newAccount($dados){
 
 		if(is_array($dados) and !empty($dados) and count($dados) > 0){
 
-			$email 	= $this->_util->basico($dados['email']);
-			$nome 	= $this->_util->basico($dados['nome']);
-			$senha 	= $this->_util->basico($dados['senha']);
-			$token 	= $this->_util->basico($dados['token']);
+			$email 	= $dados['email'];
+			$nome 	= $dados['nome'];
+			$senha 	= $this->HASH($dados['senha']);
 
-			$sql = $this->_conexao->prepare('SELECT acesso FROM conta WHERE email = :email or nome = :nome');
+			$sql = $this->_conexao->prepare('SELECT acesso FROM conta WHERE email = :email');
 			$sql->bindParam(':email', $email);
-			$sql->bindParam(':nome', $nome);
 			$sql->execute();
 			$temp = $sql->fetch(PDO::FETCH_ASSOC);
 			$sql = null;
@@ -511,7 +620,6 @@ class Model_Bancodados_Consultas {
 					nome,
 					email,
 					senha,
-					token,
 					ip_criacao,
 					data_criacao,
 					hora_criacao
@@ -519,7 +627,6 @@ class Model_Bancodados_Consultas {
 					:nome,
 					:email,
 					:senha,
-					:token,
 					:ip,
 					:hoje,
 					:agora
@@ -528,7 +635,6 @@ class Model_Bancodados_Consultas {
 				$sql->bindParam(':nome', $nome);
 				$sql->bindParam(':email', $email);
 				$sql->bindParam(':senha', $senha);
-				$sql->bindParam(':token', $token);
 				$sql->bindParam(':ip', $this->_ip);
 				$sql->bindParam(':hoje', $this->_hoje);
 				$sql->bindParam(':agora', $this->_agora);
@@ -554,11 +660,13 @@ class Model_Bancodados_Consultas {
 			}else{
 
 				/* JÁ existe um registro com essa conta */
+				sleep(1);
 				return 3;
 			}
 		}else{
 
 			/* VOCÊ ESTÁ NO LUGAR ERRADO*/
+			sleep(3);
 			return 4;
 		}
 	}
@@ -567,8 +675,8 @@ class Model_Bancodados_Consultas {
 
 		if(is_array($dados) and !empty($dados) and count($dados) > 0){
 
-			$email = $this->_util->basico($dados['email']);
-			$senha = $this->_util->basico($dados['senha']);
+			$email = $dados['email'];
+			$senha = $this->HASH($dados['senha']);
 
 			$sql = $this->_conexao->prepare('SELECT acesso, id_conta FROM conta WHERE email = :email AND senha = :senha');
 			$sql->bindParam(':email', $email);
@@ -594,11 +702,13 @@ class Model_Bancodados_Consultas {
 			}else{
 
 				/* SENHA ERRADA */
+				sleep(2);
 				return 3;
 			}
 		}else{
 
 			/* VOCÊ ESTÁ NO LUGAR ERRADO*/
+			sleep(3);
 			return 4;
 		}
 	}
@@ -662,7 +772,11 @@ class Model_Bancodados_Consultas {
 
 		if(!isset($_SESSION[CLIENTE]['login']) || empty($_SESSION[CLIENTE]['login'])){
 
-			$_SESSION[CLIENTE]['login'] = $id_conta;
+			$informacoesLogin[$id_conta]['acesso'] 	= $this->getInfoCliente('acesso', $id_conta);
+			$informacoesLogin[$id_conta]['nome'] 	= $this->getInfoCliente('nome', $id_conta);
+			$informacoesLogin[$id_conta]['email'] 	= $this->getInfoCliente('email', $id_conta);
+
+			$_SESSION[CLIENTE]['login'] = $informacoesLogin;
 		}
 	}
 
@@ -815,5 +929,92 @@ class Model_Bancodados_Consultas {
 		}
 
 		return false;
+	}
+
+
+
+
+
+
+	/* MAYDANA SYSTEM */
+	function Maydana_usuarios(){
+
+		/* BUSCA TODOS OS CLIENTES */
+		$sql = $this->_conexao->prepare('
+			SELECT
+				pes.id AS id,
+				est.id AS estado,
+				est.sigla AS sigla,
+				cid.nome AS cidade,
+				pes.telefone,
+				pes.whatsapp,
+				pes.nascimento,
+				pes.sexo,
+				pes.nome,
+				pes.tipo,
+				pes.id_conta,
+				pes.est_codigo,
+				pes.cid_codigo,
+				pes.rg,
+				pes.cpf,
+				pes.celular,
+				pes.bai_codigo,
+				pes.descricao,
+				acc.nome,
+				CASE acc.status
+					WHEN 0 THEN \'Inativo\'
+					WHEN 1 THEN \'Ativo\'
+					WHEN 2 THEN \'Offline\'
+					ELSE \'Online\'
+				END AS status,
+				CASE pes.sexo
+					WHEN 1 THEN \'Masculino\'
+					ELSE \'Feminino\'
+				END AS sexo
+			FROM pessoas AS pes
+			LEFT JOIN conta AS acc ON acc.id_conta = pes.id_conta
+			LEFT JOIN estados AS est ON est.id = pes.est_codigo
+			LEFT JOIN cidades AS cid ON cid.id = pes.cid_codigo
+			WHERE pes.nome IS NOT NULL AND pes.tipo = 1
+			ORDER BY pes.nome ASC
+		');
+		$sql->execute();
+
+		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
+			
+			$this->saveLogs($sql->errorInfo());
+		}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
+
+			new de($sql->errorInfo());
+		}
+		$temp = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+		$fetch = array();
+		foreach ($temp as $key => $arr){
+
+			$fetch[$key]['telefone'] = (string) $arr['telefone'];
+			$fetch[$key]['whatsapp'] = (string) $arr['whatsapp'];
+			$fetch[$key]['nascimento'] = (string) $arr['nascimento'];
+			$fetch[$key]['sexo'] = (string) $arr['sexo'];
+			$fetch[$key]['nome'] = (string) $arr['nome'];
+			$fetch[$key]['tipo'] = (string) $arr['tipo'];
+			$fetch[$key]['id_conta'] = (string) $arr['id_conta'];
+			$fetch[$key]['id'] = (string) $arr['id'];
+			$fetch[$key]['est_codigo'] = (string) $arr['est_codigo'];
+			$fetch[$key]['estado'] = (string) $arr['estado'];
+			$fetch[$key]['sigla'] = (string) $arr['sigla'];
+			$fetch[$key]['cidade'] = (string) $arr['cidade'];
+			$fetch[$key]['rg'] = (string) $arr['rg'];
+			$fetch[$key]['cpf'] = (string) $arr['cpf'];
+			$fetch[$key]['status'] = (string) $arr['status'];
+			$fetch[$key]['cid_codigo'] = (string) $arr['cid_codigo'];
+			$fetch[$key]['celular'] = (string) $arr['celular'];
+			$fetch[$key]['bai_codigo'] = (string) $arr['bai_codigo'];
+			$fetch[$key]['descricao'] = (string) $arr['descricao'];
+		}
+
+		$sql = null;
+
+		return $fetch;
 	}
 }

@@ -1,16 +1,18 @@
 <div class="pane">
 	<h2 class="text-center">Editar Veículo</h2>
-	<form id="form-novo-veiculo" action="/{{nome_sistema}}" name="form-login" method="post" enctype="multipart/form-data" novalidate="novalidate">
+	<form id="form-editar-veiculo" action="/{{nome_sistema}}" name="form-login" method="post" enctype="multipart/form-data" novalidate="novalidate">
+		<input type="hidden" name="id_veiculo" id="id_veiculo" value="">
+		<input type="hidden" name="token" value="{{token}}">
 		<div class="form-group">
 			<label>Publicar</label>
-			<select name="publicado" class="form-control">
+			<select name="publicado" id="publicado" class="form-control">
 				<option value="1">Sim</option>
 				<option value="2">Não</option>
 			</select>
 		</div>
 		<div class="form-group">
 			<label>Tipo</label>
-			<select name="tipo" class="form-control">
+			<select name="tipo" id="tipo" class="form-control">
 				<option value="2">Usado</option>
 				<option value="1">Novo</option>
 				<option value="3">Semi-novo</option>
@@ -18,21 +20,21 @@
 		</div>
 		<div class="form-group">
 			<label>Ano</label>
-			<select name="ano" class="form-control">
+			<select name="ano" id="ano" class="form-control">
 				{{select_ano}}
 			</select>
 		</div>
 		<div class="form-group">
 			<label>Nome</label>
-			<input type="text" name="nome" class="form-control" placeholder="nome">
+			<input type="text" name="nome" id="nome" class="form-control" placeholder="nome">
 		</div>
 		<div class="form-group">
 			<label>Modelo</label>
-			<input type="text" name="modelo" class="form-control" placeholder="Modelo">
+			<input type="text" name="modelo" id="modelo" class="form-control" placeholder="Modelo">
 		</div>
 		<div class="form-group">
 			<label>Cor</label>
-			<select name="cor" class="form-control">
+			<select name="cor" id="cor" class="form-control">
 				<option value="1">Preto</option>
 				<option value="2">Branco</option>
 				<option value="3">Vermelho</option>
@@ -42,7 +44,7 @@
 		</div>
 		<div class="form-group">
 			<label>Marca</label>
-			<select name="marca" class="form-control">
+			<select name="marca" id="marca" class="form-control">
 				<option value="1">Honda</option>
 				<option value="2">Renaut</option>
 				<option value="3">BMW</option>
@@ -50,33 +52,60 @@
 		</div>
 		<div class="form-group">
 			<label>Portas</label>
-			<select name="portas" class="form-control">
+			<select name="portas" id="portas" class="form-control">
 				<option value="1">2 Portas</option>
 				<option value="2">4 Portas</option>
 			</select>
 		</div>
 		<div class="form-group">
 			<label>Quilometragem</label>
-			<input type="text" name="quilometragem" class="form-control" placeholder="quilometragem">
+			<input type="number" id="quilometragem" name="quilometragem" class="form-control" placeholder="quilometragem">
 		</div>
 		<div class="form-group">
 			<label>Description</label>
-			<textarea name="descricao" class="form-control" rows="3"></textarea>
+			<textarea name="descricao" id="descricao" class="form-control" rows="3"></textarea>
 		</div>
 		<div class="form-actions">
-			<input type="submit" cclass="btn btn-form btn-default" value="Cancel">
+			<input type="submit" class="btn btn-form btn-default" value="Cancel">
 			<button type="submit" class="btn btn-form btn-primary">OK</button>
 		</div>
 	</form>
 	<p id="resposta-ajax"></p>
 </div>
 <script>
+
+	window.editar_veiculo = {{editar-veiculos}};
+
+	window.editar_renderVeiculo = function(){
+
+
+		for(var x in editar_veiculo){
+
+			var i = editar_veiculo[x];
+			var id_veiculo = Number(i.id_veiculo);
+
+			$('#id_veiculo').val(id_veiculo);
+			$('#publicado').val(i.publicado);
+			$('#tipo').val(i.tipo);
+			$('#ano').val(i.ano);
+			$('#nome').val(i.nome);
+			$('#modelo').val(i.modelo);
+			$('#cor').val(i.cor);
+			$('#marca').val(i.marca);
+			$('#portas').val(i.portas);
+			$('#quilometragem').val(i.quilometragem);
+			$('#descricao').val(i.descricao);
+		}
+	};
+
 	$(document).ready(function(){
-		$('#form-novo-veiculo').submit(function(e) {
+
+		editar_renderVeiculo();
+
+		$('#form-editar-veiculo').submit(function(e) {
 			e.preventDefault();
-			var serializeDados = $('#form-novo-veiculo').serialize();
+			var serializeDados = $('#form-editar-veiculo').serialize();
 			var res = $('#resposta-ajax');
-			var reload = document.getElementById('reload');
 			$('.form-actions').addClass('hidden');
 
 			res.html('Aguarde...');
@@ -85,7 +114,7 @@
 
 			$.ajax({
 				cache: false,
-				url: '/veiculo/novo',
+				url: '/veiculo/editar_veiculo',
 				dataType: 'json',
 				type: 'POST',
 				data: serializeDados,
@@ -103,7 +132,7 @@
 
 						boxTrue(res);
 						res.html('<span class="icon icon-check"></span> '+data.info);
-						xhr('/veiculo/imagem'); 
+						xhr('/veiculo/imagem/id=ESTÁ EM DESENVOLVIMENTO, AGUARDA AE'); 
 
 					}else{
 

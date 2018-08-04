@@ -44,12 +44,12 @@ class Configuracao {
 
 	function index(){
 
-		$configuracoes = $this->_consulta->getConfig($_SESSION[CLIENTE]['login']);
+		$configuracoes = $this->_consulta->getConfig(key($_SESSION[CLIENTE]['login']));
 
 		$conf = $this->_render->getconfig($configuracoes);
 
 		$mustache = array(
-			'{{id_login}}' 	=> $_SESSION[CLIENTE]['login'],
+			'{{id_login}}' 	=> key($_SESSION[CLIENTE]['login']),
 			'{{configuracao}}' => $conf
 		);
 

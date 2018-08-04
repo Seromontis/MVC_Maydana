@@ -60,7 +60,7 @@ conf;
 		**
 		**/
 
-		if(is_array($pg) and count($pg) > 0 and $pg['id_conta'] == $_SESSION[CLIENTE]['login']){
+		if(is_array($pg) and count($pg) > 0 and $pg['id_conta'] == key($_SESSION[CLIENTE]['login'])){
 
 			$var = array();
 			foreach ($pg as $key => $value){

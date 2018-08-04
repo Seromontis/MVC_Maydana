@@ -82,7 +82,7 @@ class Model_Layout {
 				if(isset($_SESSION[CLIENTE]['login'])){
 
 					/* ESSA VARIAVEL VAI JOGAR NO LAYOUT O NOME DO CLIENTE - PAGINA QUEM SOMOS */
-					$cliente = $this->_consulta->getInfoCliente('nome', $_SESSION[CLIENTE]['login']);
+					$cliente = $this->_consulta->getInfoCliente('nome', key($_SESSION[CLIENTE]['login']));
 				}
 
 				/* COLOCAR CACHE NOS ARQUIVOS STATICOS QUANDO NÃO ESTÁ EM PRODUÇÃO */
@@ -93,16 +93,21 @@ class Model_Layout {
 					$cache = '?cache='.$random;
 				}
 
-				$login = $_SESSION[CLIENTE]['login'] ?? '';
+				$id_cliente = null;
+				$array = $_SESSION[CLIENTE]['login'] ?? array();
+				foreach ($array as $id_conta => $info_conta){
+					$id_cliente = $id_conta;
+				}
+				$login = $id_cliente;
 
 				$mustache = array(
-					'{{cliente}}' 		=> $cliente,
+					'{{navagation}}' 	=> $this->_navi(),
 					'{{static}}' 		=> URL_STATIC,
 					'{{nome_sistema}}' 	=> NOME_SISTEMA,
 					'{{header}}' 		=> $this->_headerHTML(),
 					'{{cache}}' 		=> $cache,
 					'{{id_login}}' 		=> $login,
-					'{{cidades}}' 		=> json_encode($this->_consulta->getCidades()),
+					'{{cidades}}'		=> json_encode($this->_consulta->getCidades()),
 					'{{estados}}'		=> json_encode($this->_consulta->getEstados())
 				);
 
@@ -138,7 +143,7 @@ class Model_Layout {
 		$cliente = '';
 		if(isset($_SESSION[CLIENTE]['login'])){
 
-			$cliente = $this->_consulta->getInfoCliente('nome', $_SESSION[CLIENTE]['login']);
+			$cliente = $this->_consulta->getInfoCliente('nome', key($_SESSION[CLIENTE]['login']));
 			$cliente = '- '.$cliente;
 		}
 
@@ -152,7 +157,14 @@ class Model_Layout {
 <meta name="description" content="">
 <meta  name="robots"  content="index, no-follow"  />
 {$noscript}
+<meta name="msapplication-tap-highlight" content="no"/>
+<meta name="apple-mobile-web-app-title" content="Maydana System"/>
+<meta name="application-name" content="Maydana System"/>
+<meta name="msapplication-TileImage" content="/img/caveira.png"/>
+<meta name="msapplication-TileColor" content="#e8e6e8"/>
+<meta name="theme-color" content="#1c5f8e"/>
 <meta name="author" content="Matheus Maydana" />
+<link rel="manifest" href="/manifest.json"/>
 <link rel="shortcut icon" href="/img/site/caveira.png" type="image/x-icon">
 <link rel="icon" href="/img/site/caveira.png" type="image/x-icon">	
 php;
@@ -161,38 +173,65 @@ php;
 	}
 
 
-	function navi(){
+	protected function _navi(){
 
+		$id_cliente = null;
+		$array = $_SESSION[CLIENTE]['login'] ?? array();
+		foreach ($array as $id_conta => $info_conta){
+			$id_cliente = $id_conta;
+		}
+		$clienteNome =  $this->_consulta->getInfoCliente('nome', $id_cliente);
+
+		/* Nível de acesso do usuario logado */
+		$acesso = $this->_consulta->getInfoCliente('acesso', $id_cliente);
+
+		$ms = '';
+		if($acesso === 6){
+			$ms = '
+			<a class="nav-group-item" href="/maydana">
+				<span class="icon icon-cog"></span>
+				Maydana System
+			</a>';
+		}
 		$var = <<<nav
-<div class="pane-sm sidebar">
-	<nav class="nav-group">
-		<h5 class="nav-group-title">Favorites</h5>
-		<a href="/" class="nav-group-item active">
-			<span class="icon icon-home"></span>
-			início
-		</a>
-		<a href="/conta" class="nav-group-item">
-			<span class="icon icon-user"></span>
-			conta
-		</a>
-		<span class="nav-group-item">
-			<span class="icon icon-folder"></span>
-			Documents
-		</span>
-		<span class="nav-group-item">
-			<span class="icon icon-signal"></span>
-			AirPlay
-		</span>
-		<span class="nav-group-item">
-			<span class="icon icon-print"></span>
-			Applications
-		</span>
-		<span class="nav-group-item">
-			<span class="icon icon-cloud"></span>
-			Desktop
-		</span>
-	</nav>
-</div>
+<nav class="nav-group">
+	<h5 class="nav-group-title">{$clienteNome}</h5>
+	<a class="nav-group-item active" href="/">
+		<span class="icon icon-home"></span>
+		início
+	</a>
+	<a class="nav-group-item" href="/clientes">
+		<span class="icon icon-user"></span>
+		Clientes
+	</a>
+	<a class="nav-group-item" href="/veiculo">
+		<span class="icon icon-basket"></span>
+		Veiculos
+	</a>
+	<span class="nav-group-item">
+		<span class="icon icon-signal"></span>
+		AirPlay
+	</span>
+	<span class="nav-group-item">
+		<span class="icon icon-mail"></span>
+		E-mail
+	</span>
+	<span class="nav-group-item">
+		<span class="icon icon-chart-bar"></span>
+		Relatórios
+	</span>
+	<a class="nav-group-item" href="/configuracao">
+		<span class="icon icon-cog"></span>
+		Configuração
+	</a>
+	{$ms}
+	<a class="nav-group-item" data-push="false" href="/login/sair/?usr={$id_cliente}">
+		<span class="icon icon-logout"></span>
+		Sair
+	</a>
+</nav>
 nav;
+
+		return $var;
 	}
 }

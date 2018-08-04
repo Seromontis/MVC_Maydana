@@ -28,6 +28,34 @@ class Model_Functions_Functions {
 
 	}
 
+	/* GERA TOKEN DE SEGURAÇA NOS FORMULÁRIO */
+	function _TokenForm($formulario){
+
+		$token = $this->HASH(md5(uniqid(microtime(), true)));
+
+		$_SESSION[CLIENTE][$formulario.'_token'] = $token;
+
+		return $token;
+	}
+
+	function _verificaToken($formulario, $send){
+
+		/* $send = $_POST ou $_GET */
+		if(!isset($_SESSION[CLIENTE][$formulario.'_token'])){
+			return false;
+		}
+
+		if(!isset($send) or empty($send)){
+			return false;
+		}
+
+		if(isset($_SESSION[CLIENTE][$formulario.'_token']) and $_SESSION[CLIENTE][$formulario.'_token'] !== $send){
+			return false;
+		}
+
+		return true;
+	}
+
 	function _token(){
 
 		$token = $this->HASH(md5(sha1(uniqid(time()))));
@@ -68,6 +96,21 @@ class Model_Functions_Functions {
 		return sha1(substr(md5($salt.$string), 5,25));
 	}
 
+	function checkPermission(){
+
+		$id_cliente = null;
+		$array = $_SESSION[CLIENTE]['login'] ?? array();
+		foreach ($array as $id_conta => $info_conta){
+			$id_cliente = $id_conta;
+		}
+
+		if($_SESSION[CLIENTE]['login'][$id_cliente]['acesso'] !== 6){
+
+			/* Não tem permissão para acessar */
+			header('location: /erro404');	
+		};
+	}
+
 	function checkLogin(){
 
 		/* SE NÃO TIVER SESSAO LOGIN, CAI FORA */
@@ -80,7 +123,7 @@ class Model_Functions_Functions {
 		/* SE EXISTIR A SESSÃO, VERIFICA SE EXISTE O DADO NO DB, SE NÃO TIVER LIMPA A SESSION */
 		if(isset($_SESSION[CLIENTE]['login'])){
 
-			$cliente = $this->_consulta->getInfoCliente('nome', $_SESSION[CLIENTE]['login']);
+			$cliente = $this->_consulta->getInfoCliente('nome', key($_SESSION[CLIENTE]['login']));
 
 			if($cliente === null){
 				unset($_SESSION[CLIENTE]['login']);

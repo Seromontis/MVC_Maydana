@@ -7,6 +7,7 @@
 		<link rel="stylesheet" href="{{static}}css/site.min.css{{cache}}">
 	</head>
 	<body>
+		<div id="resposta-ajax"></div>
 		<div class="window">
 			<header class="toolbar toolbar-header">
 				<h1 class="title">{{nome_sistema}}</h1>
@@ -14,43 +15,7 @@
 			<div class="window-content">
 				<div class="pane-group">
 					<div class="pane pane-sm sidebar">
-						<nav class="nav-group">
-							<h5 class="nav-group-title">{{cliente}}</h5>
-							<a class="nav-group-item active" href="/">
-								<span class="icon icon-home"></span>
-								início
-							</a>
-							<a class="nav-group-item" href="/clientes">
-								<span class="icon icon-user"></span>
-								Clientes
-							</a>
-							<a class="nav-group-item" href="/veiculo">
-								<span class="icon icon-basket"></span>
-								Veiculos
-							</a>
-							<span class="nav-group-item">
-								<span class="icon icon-signal"></span>
-								AirPlay
-							</span>
-							<span class="nav-group-item">
-								<span class="icon icon-mail"></span>
-								E-mail
-							</span>
-							<span class="nav-group-item">
-								<span class="icon icon-chart-bar"></span>
-								Relatórios
-							</span>
-							<a class="nav-group-item" href="/configuracao">
-								<span class="icon icon-cog"></span>
-								Configuração
-							</a>
-							<a class="nav-group-item" data-push="false" href="/login/sair/?usr={{id_login}}">
-								<span class="icon icon-logout"></span>
-								Sair
-							</a>
-						</nav>
-
-
+						{{navagation}}
 						<nav class="nav-group">
 							<h5 class="nav-group-title"><span class="icon icon-globe"></span> Site 	</h5>
 							<a class="nav-group-item" href="#">

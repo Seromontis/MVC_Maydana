@@ -30,7 +30,6 @@ class Index {
 	}
 
 	function index(){
-
 		/**
 		** _controller(param1, param2, param3)
 		** @param = nome layout/template - STRING
@@ -40,7 +39,7 @@ class Index {
 		**/
 
 		$mustache = array(
-			'{{id_login}}' 	=> $_SESSION[CLIENTE]['login']
+			'{{id_login}}' 	=> key($_SESSION[CLIENTE]['login'])
 		);
 
 		if($this->_push === false){

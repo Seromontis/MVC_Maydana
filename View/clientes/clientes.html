@@ -13,13 +13,18 @@
 	/* TESTE */
 	window.clientes = {{clientesarray}};
 
-	window.removeCliente = function(){
-		/* AINDA NÃO FUNCIONA */
+	window.removeCliente = function(id_cliente){
+
+		var res = $('#resposta-ajax');
+		res.html('Aguarde...');
+		res.removeClass('hidden');
+
+		boxNeutro(res);
 		$.ajax({
-			url: '/clientes/editar_cliente',
+			url: '/clientes/remover',
 			dataType: 'json',
 			type: 'POST',
-			data: serializeDados,
+			data: {id_cliente: id_cliente},
 			beforeSend: function() {
 
 			},
@@ -28,11 +33,11 @@
 			},
 			success: function(data, textStatus) {
 
-				$('.form-actions').removeClass('hidden');
 				if(data.res == 'ok'){
 
 					boxTrue(res);
 					res.html('<span class="icon icon-check"></span> '+data.info);
+					
 					xhr('/clientes');
 
 				}else{
@@ -52,20 +57,22 @@
 	window.renderClientes = function(){
 
 			var search = Render.searchFor($('#procuracliente').val(), clientes);
-			var maskFirst = `<li class="list-group-item"><div class="media-body"><p>encontramos {{total_resultados}} veiculo</p></div></li>`;
+			var maskFirst = `<li class="list-group-item"><div class="media-body"><p>encontramos {{total_resultados}} clientes</p></div></li>`;
+			var maskLast 	= '';
+			var maskEmpty 	= `<p class="text-center">nenhum resultado encontrado</p>`;
 			var mask = `
 			<li class="list-group-item">
 				<img class="img-circle media-object pull-left" src="/img/avatar2.png" width="32" height="32">
 				<div class="media-body">
 					<strong>{{nome}}</strong>
 					<p>{{sexo}} - {{cpf}} - {{descricao}} - {{telefone}} - {{estado}} - {{cidade}}-<span style="float: right;">
-		<button class="btn btn-secondary" data-push="push" onclick="xhr('/clientes/remover?id={{id}}')">Remover</button>
+		<button class="btn btn-secondary" data-push="push" onclick="removeCliente({{id}})">Remover</button>
 		<button class="btn btn-primary" data-push="push" onclick="xhr('/clientes/editar?id={{id}}')">Editar</button>
 		<span></p>
 				</div>
 			</li>`;
 
-			Render.execute(search, $('#clientes-renderTo'), mask, maskFirst);
+			Render.execute(search, $('#clientes-renderTo'), mask, maskFirst, maskLast, maskEmpty);
 	};
 
 	$(document).ready(function() {

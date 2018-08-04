@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"CONFIG": "Setting",
-	"LAST EDIT": "28/07/2018",
-	"VERSION":"0.1.0"
+	"LAST EDIT": "22/07/2018",
+	"VERSION":"0.0.9"
 }
 */
 
@@ -14,7 +14,7 @@
 TRUE = DESENVOLVIMENTO
 FALSE = PRODUCAO (saveLogs);
 **/
-define('DEV', true);
+define('DEV', false);
 
 /**
 ** CONFIGURAÇÕES DO MVC
@@ -24,16 +24,14 @@ define('DIR', '../');
 define('SAVE_SESSIONS', 'Sessions');
 
 // É NECESSÁRIO QUE A SESSÃO/COOKIE SEJA A MESMA DO SITE
-session_save_path('../Sessions');
+session_save_path(DIR.'Sessions');
 session_set_cookie_params(9999999, '/', $_SERVER['SERVER_NAME']);
-
-session_start();
 
 /* USANDO HOST-VIRTUAL url é só /, no windows é ../mvc_maydana/ */
 define('URL_STATIC', '/');
 
 // Usado somente no windows - xampp /* USADO PELO CONTROLE DE MVCs que eu criei em casa */
-define('DIRETORIO_PROJETO', '../MVC_Maydana/');		// diretório
+define('DIRETORIO_PROJETO', DIR);		// diretório
 
 /**
 ** CONFIGURAÇÕES
@@ -55,7 +53,7 @@ define('PRODUCAO', false);
 /* NOME CLIENTE */
 define('CLIENTE', 'Prosdocimo');
 
-define('URL_SITE', 'http://sistema.local/');
+define('URL_SITE', 'https://ff8c297e.ngrok.io/');
 
 define('HOJE', date('d/m/Y'));
 
@@ -86,9 +84,14 @@ define('HASH_PASSWORD', '123');
 /**
 ** CONFIGURAÇÕES IMAGEMS
 **/
+session_start();
 
-$id_cliente = $_SESSION[CLIENTE]['login'] ?? 99;
-define('URL_DADOS', '../Dados/');
+$id_cliente = null;
+$array = $_SESSION[CLIENTE]['login'] ?? array();
+foreach ($array as $id_conta => $info_conta){
+	$id_cliente = $id_conta;
+}
+define('URL_DADOS', DIR.'/Dados/');
 define('URL_DADOS_CLIENTE', URL_DADOS.$id_cliente.'/');
 define('URL_IMG_VEICULOS', URL_DADOS.$id_cliente.'/veiculos/');
 define('URL_IMG_VEICULOS_THUMBS', URL_IMG_VEICULOS.'thumbs/');
@@ -99,6 +102,7 @@ define('HEIGHT_VIEW', 520);
 define('WIDTH_VIEW', 840);
 define('FORMATO_THUMBS', '.jpg');
 define('SUBNOME_THUMBS', '_thumb');
+
 
 if(!is_dir(URL_DADOS_CLIENTE)){
 	mkdir(URL_DADOS_CLIENTE);

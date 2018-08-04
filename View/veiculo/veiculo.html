@@ -13,25 +13,66 @@
 	/* teste remove comentario */
 	window.veiculos = {{veiculosarray}};
 
+	window.removeVeiculo = function(id_veiculo){
+
+		var res = $('#resposta-ajax');
+		res.html('Aguarde...');
+		res.removeClass('hidden');
+
+		boxNeutro(res);
+		$.ajax({
+			url: '/veiculo/remover',
+			dataType: 'json',
+			type: 'POST',
+			data: {id_veiculo: id_veiculo},
+			beforeSend: function() {
+
+			},
+			complete: function() {
+
+			},
+			success: function(data, textStatus) {
+
+				if(data.res == 'ok'){
+
+					boxTrue(res);
+					res.html('<span class="icon icon-check"></span> '+data.info);
+					xhr('/veiculo');
+
+				}else{
+
+					boxFalse(res);
+					res.html('<span class="icon icon-cancel"></span> '+data.info);
+					$('#input-email').focus();
+				}
+			},
+			error: function(xhr,er) {
+
+				boxFalse(res);
+			}
+		});
+	};
+
 	window.renderVeiculos = function(){
+
 		var search = Render.searchFor($('#procuraveiculo').val(), veiculos);
 
-		var maskFirst = `<li class="list-group-item"><div class="media-body"><p>encontramos {{total_resultados}} veiculo</p></div></li>`;
-		var mask = `
+		var maskFirst 	= `<li class="list-group-item"><div class="media-body"><p>encontramos {{total_resultados}} veiculo</p></div></li>`;
+		var maskLast 	= '';
+		var maskEmpty 	= `<p class="text-center">nenhum resultado encontrado</p>`;
+		var mask 		= `
 		<li class="list-group-item">
 			<img class="img-circle media-object pull-left" src="/img/avatar2.png" width="32" height="32">
 			<div class="media-body">
 				<strong>{{nome}}</strong>
 				<p>{{ano}} - {{modelo}} - {{cor}} - {{marca}}<span style="float: right;">
-	<button class="btn btn-secondary" data-push="push" onclick="xhr('/veiculos/remover?id={{id}}')">Remover</button>
-	<button class="btn btn-primary" data-push="push" onclick="xhr('/veiculos/editar?id={{id}}')">Editar</button>
+	<button class="btn btn-secondary" data-push="push" onclick="removeVeiculo({{id_veiculo}});">Remover</button>
+	<button class="btn btn-primary" data-push="push" onclick="xhr('/veiculo/editar?id={{id_veiculo}}')">Editar</button>
 	<span></p>
 			</div>
 		</li>`;
 
-
-
-		Render.execute(search, $('#veiculo-renderTo'), mask, maskFirst);
+		Render.execute(search, $('#veiculo-renderTo'), mask, maskFirst, maskLast, maskEmpty);
 	};
 
 	$(document).ready(function() {

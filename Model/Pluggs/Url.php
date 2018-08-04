@@ -29,7 +29,7 @@ class Model_Pluggs_Url {
 
 		foreach ($array as $key => $value) {
 
-			$temp[$key] = preg_replace('/\?.*$|\!.*$|#.*$|\'.*$|\@.*$|\$.*$|&.*$|\*.*$|-.*$|\+.*$|\..*$/', '', $value);
+			$temp[$key] = preg_replace('/\!.*$|#.*$|\'.*$|\$.*$|&.*$|\*.*$|-.*$|\+.*$|/', '', $value);
 		}
 		
 		return $temp;

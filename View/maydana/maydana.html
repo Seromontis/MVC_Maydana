@@ -1,3 +1,63 @@
-<h1>MVC - Maydana</h1>
-<p>Se você está vendo isso, algo de errado não está certo!</p>
-{{define}}
+<div class="pane sidebar">
+	<input type="text" id="procurausuario" placeholder="Buscar" />
+	<table class="table-striped">
+		<thead>
+			<tr>
+				<th>Nome</th>
+				<th>Sexo</th>
+				<th>Cidade</th>
+				<th>Estado</th>
+				<th>Acesso</th>
+				<th>Status</th>
+				<th>Descrição</th>
+			</tr>
+		</thead>
+		<tbody id="usuarios-renderTo">
+			<tr>
+				<td>photon.css</td>
+				<td>CSS</td>
+				<td>28K</td>
+				<td>28K</td>
+				<td>28K</td>
+				<td>28K</td>
+				<td>28K</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<script>
+	window.usuariosLogado = {{usuarios}};
+
+	window.renderClientes = function(){
+
+		var search = Render.searchFor($('#procurausuario').val(), usuariosLogado);
+		var maskFirst = `<tr><td colspan="7">encontramos {{total_resultados}} clientes</td></tr>`;
+		var maskLast = ``;
+		var maskEmpty = `<tr><td colspan="7" class="text-center">Nenhum resultado encontrado</td></tr>`;
+		var mask = `
+			<tr>
+				<td>{{nome}}</td>
+				<td>{{sexo}}</td>
+				<td>{{cidade}}</td>
+				<td>{{sigla}}</td>
+				<td>{{tipo}}</td>
+				<td>{{status}}</td>
+				<td>{{descricao}}</td>
+			</tr>
+		`;
+
+		Render.execute(search, $('#usuarios-renderTo'), mask, maskFirst, maskLast, maskEmpty);
+	};
+
+	$('#procurausuario').keyup(function(){
+
+		renderClientes();
+	});
+
+	$(document).ready(function(){
+
+
+		renderClientes();
+		
+	});
+</script>

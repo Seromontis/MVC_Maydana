@@ -14,9 +14,24 @@ class maydana {
 
 	private $_push = false;
 
+	private $_func;
+
+	private $_conexao;
+
+	private $_consulta;
+
 	function __construct(){
 
+		$this->_func = new Model_Functions_Functions;
+
+		/* Verifica se o usuario logado tem permissão para ver a pagina (permitido 6) */
+		$this->_func->checkPermission();
+
 		$this->_cor = new Model_GOD;
+
+		$this->_conexao = new Model_Bancodados_Conexao;
+
+		$this->_consulta = new Model_Bancodados_Consultas($this->_conexao);
 
 		if(isset($_POST['push']) and $_POST['push'] == 'push'){
 			$this->_push = true;
@@ -35,7 +50,7 @@ class maydana {
 		**/
 
 		$mustache = array(
-			'{{define}}' => $define
+			'{{usuarios}}' => json_encode($this->_consulta->Maydana_usuarios())
 		);
 
 		if($this->_push === false){
@@ -44,7 +59,7 @@ class maydana {
 
 		}else{
 
-			echo $this->_cor->push('maydana', 'maydana');
+			echo $this->_cor->push('maydana', 'maydana', $mustache);
 		}
 	}
 }

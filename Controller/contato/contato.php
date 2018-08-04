@@ -65,7 +65,7 @@ class Contato {
 		**/
 
 		/* PEGA OS DADOS DA PAGINA CONTATO NO BANCO DE DADOS */
-		$pg = $this->_consulta->siteContato($_SESSION[CLIENTE]['login']);
+		$pg = $this->_consulta->siteContato(key($_SESSION[CLIENTE]['login']));
 
 		/* RENDER _ PREPARA OS DADOS */
 		$pg = $this->_render->conteudo($pg);

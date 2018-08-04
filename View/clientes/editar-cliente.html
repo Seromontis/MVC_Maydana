@@ -37,7 +37,7 @@
 		<div class="form-actions">
 
 			<input type="submit" class="btn btn-large btn-positive" value="Atualizar" />
-			<button type="submit" class="btn btn-form btn-default">Cancel</button>
+			<button type="button" onclick="xhr('/clientes');" class="btn btn-form btn-default">Cancel</button>
 		</div>
 	</form>
 	<p id="resposta-ajax"></p>
@@ -58,14 +58,13 @@
 		}
 		$('option', select).remove();
 
-		cidades.sort(function(a, b){
-			return parseInt(a)- parseInt(b);
-		});
+		var cid_id = null;
 		for(var x in cidades){
 
 			if(est_codigo == cidades[x].estado_id){
 
-		 		options[options.length] = new Option(cidades[x].nome, (Number(x) + 1));
+				cid_id = Number(cidades[x].id);
+		 		options[options.length] = new Option(cidades[x].nome, cid_id);
 			}
 		}
 		
@@ -84,9 +83,6 @@
 		}
 		$('option', select).remove();
 
-		estados.sort(function(a, b){
-			return parseInt(a)- parseInt(b);
-		});
 		for(var x in estados){
 
  			options[options.length] = new Option(estados[x].sigla+' - '+estados[x].nome, (Number(x) + 1));
