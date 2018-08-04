@@ -28,6 +28,9 @@ audio:not([controls]) {
 // active/hover state.
 //
 
+a{
+  cursor: pointer;
+}
 a:active,
 a:hover {
   outline: 0;

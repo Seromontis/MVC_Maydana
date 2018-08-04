@@ -8,6 +8,9 @@ video {
 audio:not([controls]) {
   display: none; }
 
+a {
+  cursor: pointer; }
+
 a:active,
 a:hover {
   outline: 0; }
@@ -253,7 +256,7 @@ h6 {
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
-  cursor: default;
+  cursor: pointer;
   background-image: none;
   border: 1px solid transparent;
   border-radius: 4px;
@@ -1907,8 +1910,9 @@ td {
   display: block;
   position: fixed;
   width: 100%;
-  top: -10px;
-  left: 0; }
+  top: 0;
+  left: 0;
+  z-index: 9999; }
 
 #ms-aviso-box {
   position: absolute;

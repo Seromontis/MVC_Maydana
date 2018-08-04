@@ -2,8 +2,9 @@
 	display: block;
     position: fixed;
     width: 100%;
-    top: -10px;
+    top: 0;
     left: 0;
+    z-index: 9999;
 }
 #ms-aviso-box{
 	position: absolute;

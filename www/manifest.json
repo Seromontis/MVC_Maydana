@@ -1,0 +1,36 @@
+{
+	"name": "Maydana System",
+	"short_name": "Maydana System",
+	"lang": "pt-BR",
+	"start_url": "/",
+	"display": "fullscreen",
+	"gcm_sender_id": "155902245009",
+	"icons": [{
+			"src": "http://90ff8196.ngrok.io/icone.png",
+			"sizes": "64x64",
+			"type": "image/png"
+		}, {
+			"src": "http://90ff8196.ngrok.io/icone.png",
+			"sizes": "64x64",
+			"type": "image/png"
+		}, {
+			"src": "http://90ff8196.ngrok.io/icone.png",
+			"sizes": "128x128",
+			"density": 2,
+			"type": "image/png"
+		}],
+	"splash_screens": [{
+		"src": "http://90ff8196.ngrok.io/img/site/caveira.png",
+			"sizes": "320x240",
+			"type": "image/png"
+		}, {
+		"src": "http://90ff8196.ngrok.io/img/site/caveira.png",
+			"sizes": "1334x750",
+			"type": "image/png"
+		}, {
+		"src": "http://90ff8196.ngrok.io/img/site/caveira.png",
+			"sizes": "1920x1080",
+			"density": 3,
+			"type": "image/png"
+		}]
+}
