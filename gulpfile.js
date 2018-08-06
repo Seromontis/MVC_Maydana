@@ -65,9 +65,50 @@ const contate_site = [
   'js/js/Form/Form.js'
 ];
 
+const contate_photon = [
+  'js/js/Photon/tabs.js',
+  'js/js/Photon/segment.js',
+  'js/js/Photon/frame-list.js',
+  'js/js/Photon/dialog.js',
+  'js/js/Photon/range.js',
+  'js/js/Photon/progress-circle.js',
+  'js/js/Photon/circular-slider.js',
+  'js/js/Photon/pane-size.js',
+  'js/js/Photon/input.js'
+];
+
+
 /**
 ** FUNÇÕES
 **/
+
+gulp.task('Photon_producao', function(cb){
+  // Função compila o Photon.JS SEM Map para produção
+  return gulp.src(contate_photon)
+    .pipe(uglify())
+    .pipe(rename('photon.min.js'))
+    .pipe(gulp.dest('js'))
+    .on('error', function(err) {
+        notify().write(err);
+        this.emit('end');
+    })
+    .pipe(notify({ title:projeto+' - Produção', message: msg }));
+});
+
+gulp.task('Photon', function(cb){
+  // Função compila o jQuery.JS com Map para Debugar
+  return gulp.src(contate_photon)
+    .pipe(sourcemaps.init())
+    .pipe(rename('photon.min.js'))
+    .pipe(sourcemaps.write('./map'))
+    .pipe(gulp.dest('js'))
+    .on('error', function(err) {
+        notify().write(err);
+        this.emit('end');
+    })
+    .pipe(notify({ title:projeto+' - Desenvolvimento', message: msg }));
+});
+
 gulp.task('scss_producao', function(){
   // Função compila o SCSS SEM Map para produção
   var sassFiles = 'css/scss/main.scss',
@@ -82,114 +123,6 @@ gulp.task('scss_producao', function(){
           this.emit('end');
       })
       .pipe(notify({ title:projeto+' - Produção', message: msg }));
-});
-
-gulp.task('MS_producao', function(cb){
-  // Função compila o MS.JS SEM Map para produção
-  return gulp.src('js/js/MS/MS.js')
-    .pipe(uglify())
-    .pipe(rename('MS.min.js'))
-    .pipe(gulp.dest('js'))
-    .on('error', function(err) {
-        notify().write(err);
-        this.emit('end');
-    })
-    .pipe(notify({ title:projeto+' - Produção', message: msg }));
-});
-
-gulp.task('jQuery_producao', function(cb){
-  // Função compila o MS.JS SEM Map para produção
-  return gulp.src('js/js/jQuery/jQuery.js')
-    .pipe(uglify())
-    .pipe(rename('jQuery.min.js'))
-    .pipe(gulp.dest('js'))
-    .on('error', function(err) {
-        notify().write(err);
-        this.emit('end');
-    })
-    .pipe(notify({ title:projeto+' - Produção', message: msg }));
-});
-
-gulp.task('Form_producao', function(cb){
-  // Função compila o MS.JS SEM Map para produção
-  return gulp.src('js/js/Form/Form.js')
-    .pipe(uglify())
-    .pipe(rename('Form.min.js'))
-    .pipe(gulp.dest('js'))
-    .on('error', function(err) {
-        notify().write(err);
-        this.emit('end');
-    })
-    .pipe(notify({ title:projeto+' - Produção', message: msg }));
-});
-
-gulp.task('site_producao', function(cb){
-  // Função compila o SITE.JS SEM Map para produção
-  return gulp.src(contate_site)
-    .pipe(concat('site.min.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest('js'))
-    .on('error', function(err) {
-        notify().write(err);
-        this.emit('end');
-    })
-    .pipe(notify({ title:projeto+' - Produção', message: msg }));
-});
-
-gulp.task('jQuery', function(cb){
-  // Função compila o jQuery.JS com Map para Debugar
-  return gulp.src('js/js/jQuery/jQuery.js')
-    .pipe(sourcemaps.init())
-    .pipe(rename('jQuery.min.js'))
-    .pipe(sourcemaps.write('./map'))
-    .pipe(gulp.dest('js'))
-    .on('error', function(err) {
-        notify().write(err);
-        this.emit('end');
-    })
-    .pipe(notify({ title:projeto+' - Desenvolvimento', message: msg }));
-});
-
-gulp.task('Form', function(cb){
-  // Função compila o jQuery.JS com Map para Debugar
-  return gulp.src('js/js/Form/Form.js')
-    .pipe(sourcemaps.init())
-    .pipe(rename('Form.min.js'))
-    .pipe(sourcemaps.write('./map'))
-    .pipe(gulp.dest('js'))
-    .on('error', function(err) {
-        notify().write(err);
-        this.emit('end');
-    })
-    .pipe(notify({ title:projeto+' - Desenvolvimento', message: msg }));
-});
-
-gulp.task('MS', function(cb){
-  // Função compila o MS.JS com Map para Debugar
-  return gulp.src('js/js/MS/MS.js')
-    .pipe(sourcemaps.init())
-    .pipe(rename('MS.min.js'))
-    .pipe(sourcemaps.write('./map'))
-    .pipe(gulp.dest('js'))
-    .on('error', function(err) {
-        notify().write(err);
-        this.emit('end');
-    })
-    .pipe(notify({ title:projeto+' - Desenvolvimento', message: msg }));
-});
-
-gulp.task('site', function(cb){
-  // Função compila o SITE.JS com Map para Debugar
-  return gulp.src(contate_site)
-    .pipe(sourcemaps.init())
-    .pipe(concat('site.min.js'))
-    .pipe(sourcemaps.write('./map'))
-    .on('error', function(err) {
-        notify().write(err);
-        this.emit('end');
-    })
-    .pipe(notify({ title:projeto+' - Desenvolvimento', message: msg}))
-    .pipe(gulp.dest('js'));
 });
 
 gulp.task('scss', function(){
@@ -221,10 +154,7 @@ gulp.task('scss', function(){
 **/
 gulp.task('default', function() {
     gulp.watch(['css/scss/**/*.scss'],['scss']);
-    gulp.watch('js/js/MS/MS.js', ['MS']);
-    gulp.watch('js/js/jQuery/jQuery.js', ['jQuery']);
-    gulp.watch('js/js/Form/Form.js', ['Form']);
-    gulp.watch('js/js/**.js', ['site']);
+    gulp.watch('js/js/Photon/*.js', ['Photon']);
 });
 
 gulp.task('css', function() {
@@ -232,16 +162,10 @@ gulp.task('css', function() {
 });
 
 gulp.task('js', function() {
-  gulp.watch('js/js/jQuery/jQuery.js', ['jQuery']);
-  gulp.watch('js/js/Form/Form.js', ['Form']);
-  gulp.watch('js/js/MS/MS.js', ['MS']);
-  gulp.watch('js/js/**.js', ['site']);
+  gulp.watch('js/js/Photon/*.js', ['Photon']);
 });
 
 gulp.task('producao', function() {
   gulp.watch('css/scss/**/*.scss',['scss_producao']);
-  gulp.watch('js/js/MS/MS.js', ['MS_producao']);
-  gulp.watch('js/js/jQuery/jQuery.js', ['jQuery_producao']);
-  gulp.watch('js/js/Form/Form.js', ['Form_producao']);
-  gulp.watch('js/js/**.js', ['site_producao']);
+  gulp.watch('js/js/Photon/*.js', ['Photon']);
 });

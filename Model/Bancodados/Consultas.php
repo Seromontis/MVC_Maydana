@@ -960,6 +960,7 @@ class Model_Bancodados_Consultas {
 				pes.celular,
 				pes.bai_codigo,
 				pes.descricao,
+				acc.email,
 				acc.nome,
 				CASE acc.status
 					WHEN 0 THEN \'Inativo\'
@@ -975,8 +976,8 @@ class Model_Bancodados_Consultas {
 			LEFT JOIN conta AS acc ON acc.id_conta = pes.id_conta
 			LEFT JOIN estados AS est ON est.id = pes.est_codigo
 			LEFT JOIN cidades AS cid ON cid.id = pes.cid_codigo
-			WHERE pes.nome IS NOT NULL AND pes.tipo = 1
-			ORDER BY pes.nome ASC
+			WHERE acc.email IS NOT NULL AND pes.tipo = 1
+			ORDER BY acc.data_criacao DESC, pes.nome ASC
 		');
 		$sql->execute();
 
@@ -992,6 +993,7 @@ class Model_Bancodados_Consultas {
 		$fetch = array();
 		foreach ($temp as $key => $arr){
 
+			$fetch[$key]['email'] = (string) $arr['email'];
 			$fetch[$key]['telefone'] = (string) $arr['telefone'];
 			$fetch[$key]['whatsapp'] = (string) $arr['whatsapp'];
 			$fetch[$key]['nascimento'] = (string) $arr['nascimento'];

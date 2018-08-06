@@ -3,6 +3,7 @@
 	<table class="table-striped">
 		<thead>
 			<tr>
+				<th>E-mail</th>
 				<th>Nome</th>
 				<th>Sexo</th>
 				<th>Cidade</th>
@@ -14,13 +15,14 @@
 		</thead>
 		<tbody id="usuarios-renderTo">
 			<tr>
-				<td>photon.css</td>
-				<td>CSS</td>
-				<td>28K</td>
-				<td>28K</td>
-				<td>28K</td>
-				<td>28K</td>
-				<td>28K</td>
+				<td>-</td>
+				<td>-</td>
+				<td>-</td>
+				<td>-</td>
+				<td>-</td>
+				<td>-</td>
+				<td>-</td>
+				<td>-</td>
 			</tr>
 		</tbody>
 	</table>
@@ -36,6 +38,7 @@
 		var maskEmpty = `<tr><td colspan="7" class="text-center">Nenhum resultado encontrado</td></tr>`;
 		var mask = `
 			<tr>
+				<td>{{email}}</td>
 				<td>{{nome}}</td>
 				<td>{{sexo}}</td>
 				<td>{{cidade}}</td>

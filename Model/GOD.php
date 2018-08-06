@@ -101,14 +101,14 @@ class Model_God extends Model_Functions_Functions{
 	**/
 	function comprimeHTML($html){
 
-		$html = preg_replace(array("/\/\*(.*?)\*\//", "/<!--(.*?)-->/", "/\t+/"), ' ', $html);
+		/*$html = preg_replace(array("/\/\*(.*?)\*\//", "/<!--(.*?)-->/", "/\t+/"), ' ', $html);
 		$html = str_replace(array("\t", " ", PHP_EOL), ' ', $html);
 		$html = str_replace(PHP_EOL, ' ', $html);
 		$html = str_replace('> <', '><', $html);
 		$html = str_replace('  ', ' ', $html);
 		$html = str_replace('   ', ' ', $html);
 		$html = str_replace('    ', ' ', $html);
-		$html = str_replace('> <', '><', $html);
+		$html = str_replace('> <', '><', $html);*/
 		
 		return str_replace('NAOENTER', PHP_EOL, $html);
 	}

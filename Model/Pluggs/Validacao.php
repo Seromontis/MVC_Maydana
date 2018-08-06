@@ -28,12 +28,12 @@ class Model_Pluggs_Validacao {
 			$error = 1;
 			$mensagem = 'Informe seu nome, ou você não tem!?';
 
-		}elseif(!preg_match('/[A-Z][a-z]* [A-Z][a-z]*/', $nome)){
+		}/*elseif(!preg_match('/[A-Z][a-z]* [A-Z][a-z]', $nome)){
 
 			$error = 1;
 			$mensagem = 'Informe seu nome completo e correto!';
 
-		}elseif(strlen($nome) < 6){
+		}*/elseif(strlen($nome) < 6){
 
 			$error = 1;
 			$mensagem = 'Informe seu nome completo!';

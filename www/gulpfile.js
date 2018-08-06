@@ -64,9 +64,26 @@ const contate_site = [
   'js/js/site.js',
 ];
 
+const contate_photon = [
+  'js/js/Photon/*.js'
+];
 /**
 ** FUNÇÕES
 **/
+
+gulp.task('photon_producao', function(cb){
+  // Função compila o MS.JS SEM Map para produção
+  return gulp.src(contate_site)
+    .pipe(uglify())
+    .pipe(rename('photon.min.js'))
+    .pipe(gulp.dest('js'))
+    .on('error', function(err) {
+        notify().write(err);
+        this.emit('end');
+    })
+    .pipe(notify({ title:projeto+' - Produção', message: msg }));
+});
+
 gulp.task('scss_producao', function(){
   // Função compila o SCSS SEM Map para produção
   var sassFiles = 'css/scss/main.scss',
@@ -96,11 +113,11 @@ gulp.task('MS_producao', function(cb){
     .pipe(notify({ title:projeto+' - Produção', message: msg }));
 });
 
-gulp.task('jQuery_producao', function(cb){
+gulp.task('Boss_producao', function(cb){
   // Função compila o MS.JS SEM Map para produção
-  return gulp.src('js/js/jQuery/jQuery.js')
+  return gulp.src('js/js/Boss/Boss.js')
     .pipe(uglify())
-    .pipe(rename('jQuery.min.js'))
+    .pipe(rename('Boss.min.js'))
     .pipe(gulp.dest('js'))
     .on('error', function(err) {
         notify().write(err);
@@ -122,19 +139,6 @@ gulp.task('site_producao', function(cb){
     .pipe(notify({ title:projeto+' - Produção', message: msg }));
 });
 
-gulp.task('jQuery', function(cb){
-  // Função compila o MS.JS com Map para Debugar
-  return gulp.src('js/js/jQuery/jQuery.js')
-    .pipe(sourcemaps.init())
-    .pipe(rename('jQuery.min.js'))
-    .pipe(sourcemaps.write('./map'))
-    .pipe(gulp.dest('js'))
-    .on('error', function(err) {
-        notify().write(err);
-        this.emit('end');
-    })
-    .pipe(notify({ title:projeto+' - Desenvolvimento', message: msg }));
-});
 gulp.task('MS', function(cb){
   // Função compila o MS.JS com Map para Debugar
   return gulp.src('js/js/MS/MS.js')
@@ -149,6 +153,33 @@ gulp.task('MS', function(cb){
     .pipe(notify({ title:projeto+' - Desenvolvimento', message: msg }));
 });
 
+gulp.task('Boss', function(cb){
+  // Função compila o MS.JS com Map para Debugar
+  return gulp.src('js/js/Boss/Boss.js')
+    .pipe(sourcemaps.init())
+    .pipe(rename('Boss.min.js'))
+    .pipe(sourcemaps.write('./map'))
+    .pipe(gulp.dest('js'))
+    .on('error', function(err) {
+        notify().write(err);
+        this.emit('end');
+    })
+    .pipe(notify({ title:projeto+' - Desenvolvimento', message: msg }));
+});
+
+gulp.task('photon', function(cb){
+  // Função compila o SITE.JS com Map para Debugar
+  return gulp.src(contate_photon)
+    .pipe(sourcemaps.init())
+    .pipe(concat('photon.min.js'))
+    .pipe(sourcemaps.write('./map'))
+    .on('error', function(err) {
+        notify().write(err);
+        this.emit('end');
+    })
+    .pipe(notify({ title:projeto+' - Desenvolvimento', message: msg}))
+    .pipe(gulp.dest('js'));
+});
 gulp.task('site', function(cb){
   // Função compila o SITE.JS com Map para Debugar
   return gulp.src(contate_site)
@@ -193,8 +224,9 @@ gulp.task('scss', function(){
 gulp.task('default', function() {
     gulp.watch(['css/scss/**/*.scss'],['scss']);
     gulp.watch('js/js/MS/MS.js', ['MS']);
-    gulp.watch('js/js/jQuery/jQuery.js', ['jQuery']);
+    gulp.watch('js/js/Boss/Boss.js', ['Boss']);
     gulp.watch('js/js/**.js', ['site']);
+    gulp.watch('js/js/Photon/**.js', ['photon']);
 });
 
 gulp.task('css', function() {
@@ -203,13 +235,15 @@ gulp.task('css', function() {
 
 gulp.task('js', function() {
   gulp.watch('js/js/MS/MS.js', ['MS']);
-  gulp.watch('js/js/jQuery/jQuery.js', ['jQuery']);
+  gulp.watch('js/js/Boss/Boss.js', ['Boss']);
   gulp.watch('js/js/**.js', ['site']);
+  gulp.watch('js/js/Photon/**.js', ['photon']);
 });
 
 gulp.task('producao', function() {
   gulp.watch('css/scss/**/*.scss',['scss_producao']);
   gulp.watch('js/js/MS/MS.js', ['MS_producao']);
-  gulp.watch('js/js/jQuery/jQuery.js', ['jQuery_producao']);
+  gulp.watch('js/js/Boss/Boss.js', ['Boss_producao']);
   gulp.watch('js/js/**.js', ['site_producao']);
+  gulp.watch('js/js/Photon/**.js', ['photon_producao']);
 });

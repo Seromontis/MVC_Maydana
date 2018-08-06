@@ -19,7 +19,7 @@ define('DEV', false);
 /**
 ** CONFIGURAÇÕES DO MVC
 **/
-define('DIR', '../');
+define('DIR', '/home/MVC_Maydana/MVC_Maydana/');
 
 define('SAVE_SESSIONS', 'Sessions');
 
