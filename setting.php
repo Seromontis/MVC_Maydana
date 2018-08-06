@@ -19,7 +19,7 @@ define('DEV', false);
 /**
 ** CONFIGURAÇÕES DO MVC
 **/
-define('DIR', '/home/MVC_Maydana/MVC_Maydana/');
+define('DIR', '../');
 
 define('SAVE_SESSIONS', 'Sessions');
 
@@ -91,6 +91,7 @@ $array = $_SESSION[CLIENTE]['login'] ?? array();
 foreach ($array as $id_conta => $info_conta){
 	$id_cliente = $id_conta;
 }
+
 define('URL_DADOS', DIR.'/Dados/');
 define('URL_DADOS_CLIENTE', URL_DADOS.$id_cliente.'/');
 define('URL_IMG_VEICULOS', URL_DADOS.$id_cliente.'/veiculos/');

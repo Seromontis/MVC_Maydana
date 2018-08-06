@@ -1,0 +1,202 @@
+<section class="content content_h content_v content_m maxwidth480">
+	<h1 class="title-fornecedor">Quero ser um fornecedor</h1>
+	<div class="site-space-30"></div>
+	<form method="post" action="/contato/limbo" id="form-fornecedor" name="form-fornecedor" novalidate="novalidate">
+		<input type="hidden" id="h-xhr" name="xhr" value="" />
+		<input type="hidden" id="type-form" name="type-form" value="" />
+
+		<h4>Tipo de Serviço</h4>
+		<div class="boss-input-text width-100">
+			 <input name="servico" type="text" placeholder="tipo de serviço" />
+		</div>
+		<div class="block width-50 pd-right-10">
+			<h4>Nome Empresa</h4>
+			<div class="boss-input-text width-100">
+				 <input name="empresa" type="text" placeholder="nome completo empresa" />
+			</div>
+			<h4>Nome Responsável</h4>
+			<div class="boss-input-text width-100">
+				 <input name="responsavel" type="text" placeholder="nome completo responsavel" />
+			</div>
+		</div>
+		<div class="block width-50 pd-left-10">
+			<h4>Telefone</h4>
+			<div class="boss-input-text width-100">
+				<input name="telefone" type="tel" placeholder="telefone para contato" />
+			</div>
+			<h4>E-mail</h4>
+			<div class="boss-input-text width-100">
+				<input name="email" type="email" placeholder="e-mail para contato" />
+			</div>
+		</div>
+		<h4>Descrição</h4>
+		<div class="boss-input-textarea width-100">
+			<textarea id="id-mensagem" name="mensagem" placeholder="descreva o serviço prestado" ></textarea>
+		</div>
+		<p><button id="button-submit" type="submit" class="btn btn-site">Enviar <i class="fas fa-paper-plane"></i></button></p>
+	</form>
+		<p id="ux-env-feedback" class="large text-center hidden"></p>
+		<p class="large text-center">
+			<button id="again" type="button" class="btn btn-site hidden"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> OK !</button>
+		</p>
+</section>
+
+<script>
+	Boss.validate.init({
+		'config': {
+			'formId': 'form-fornecedor',
+			'okMessage': 'Enviando...',
+			'errorMessage': 'Tivemos um problema para enviar, tente novamente em alguns minutos.',
+			'lockPushState': false
+		},
+		'fields': {
+			'empresa': {
+				'rules': {
+					'empty': {'error': 'Informe o nome completo da empresa!'}
+				},
+				'classError': 'error-field',
+				'classOk': 'ok-field'
+			},
+			'responsavel': {
+				'rules': {
+					'empty': {'error': 'Informe o nome completo do responsável!'}
+				},
+				'classError': 'error-field',
+				'classOk': 'ok-field'
+			},
+			'servico': {
+				'rules': {
+					'empty': {'error': 'Informe o tipo do serviço !'}
+				},
+				'classError': 'error-field',
+				'classOk': 'ok-field'
+			},
+			'telefone': {
+				'rules': {
+					'empty': {'error': 'Informe um telefone para contato!'},
+					'tel': {'error': '  Telefone inválido!'}
+				},
+				'mask': 'tel',
+				'classError': 'error-field',
+				'classOk': 'ok-field'
+			},
+			'email': {
+				'rules': {
+					'email': {'error': 'E-mail inválido!'},
+					'empty': {'error': 'Informe um email para contato!'},
+				},
+				'classError': 'error-field',
+				'classOk': 'ok-field'
+			},
+			'mensagem': {
+				'rules': {
+					'empty': {'error': 'Escreva a descrição do serviço'}
+				},
+				'classError': 'error-field',
+				'classOk': 'ok-field'
+			}
+		},
+		'send': function(){
+
+			var form_fornecedor = Boss.getById('form-fornecedor');
+			form_fornecedor.classList.add('hidden');
+
+			Boss.getById('button-submit').classList.add('hidden');
+			var ux_env_feedback = Boss.getById('ux-env-feedback');
+
+			var pushLoader = Boss.getById('pre-loader');
+				pushLoader.classList.add('loader-active');
+
+			ux_env_feedback.classList.remove('hidden');
+			ux_env_feedback.innerHTML = 'Enviando...';
+
+			Boss.getById('h-xhr').value = "xhr";
+			Boss.getById('type-form').value = "form-fornecedor";
+
+			var sc = Boss.positionAtTop(Boss.getById('content'));
+			window.scrollTo(0, sc);
+			
+			Boss.ajax({
+				'url': '/contato/fornecedorcontato',
+				'data': Boss.serializer('form-fornecedor'),
+				'dataType': 'json',
+				'done': function(rtn){
+
+					if(rtn.r == 'ok'){
+
+						if(rtn.info == 'Sua solicitação foi enviada!'){
+
+							ux_env_feedback.textContent = rtn.info;
+							form_fornecedor.style.display = 'none';
+							pushLoader.classList.remove('loader-active');
+
+						}else{
+
+							Boss.getById('again').classList.remove('hidden');
+							ux_env_feedback.textContent = rtn.info;
+							form_fornecedor.style.display = 'none';
+							pushLoader.classList.remove('loader-active');
+
+						}	
+
+					}else if(rtn.r == 'no' && rtn.info != ''){
+
+						Boss.getById('again').classList.remove('hidden');
+						ux_env_feedback.textContent = rtn.info;
+						form_fornecedor.style.display = 'none';
+						pushLoader.classList.remove('loader-active');
+
+					}
+				},
+				error: function(rtn){
+					Boss.confirm({
+						message: 'Falha ao enviar, ente novamente em alguns segundos!',
+						'ok': 'Ok',
+						'no': false,
+						'okFunction': function(){
+						},
+						'noFunction': function(){
+						}
+					});
+				}
+			});
+		},
+		'fail': function(){
+			Boss.getById('form-fornecedor').classList.remove('hidden');
+			Boss.getById('button-submit').classList.remove('hidden');
+			Boss.warning({message: 'Tivemos um problema para enviar, tente novamente em alguns minutos.'});
+		}
+	});
+	function alturaInfoInter(){
+
+		var mensagem = Boss.getById('id-mensagem');
+		mensagem.style.overflow = 'hidden';
+		mensagem.style.height = 'auto';
+		mensagem.style.height = mensagem.scrollHeight+'px';
+	}	
+	function resetarForm(){
+		Boss.getById('again').classList.add('hidden');
+		Boss.getById('ux-env-feedback').classList.add('hidden');
+		Boss.getById('pre-loader').classList.remove('loader-active');
+		Boss.getById('form-fornecedor').style.display = 'block';
+		Boss.getById('form-fornecedor').classList.remove('hidden');
+		Boss.getById('button-submit').classList.remove('hidden');
+		Boss.getById('h-xhr').value = "";
+		Boss.getById('type-form').value = "";
+	}
+	Boss.evts.add('click', Boss.getById('again'), function(evt){
+		resetarForm();
+	});
+	Boss.evts.add('keyup', Boss.getById('id-mensagem'), function(evt){
+		alturaInfoInter();
+	});
+	Boss.evts.add('mouseup', Boss.getById('id-mensagem'), function(evt){
+		alturaInfoInter();
+	});
+	Boss.evts.add('paste', Boss.getById('id-mensagem'), function(evt){
+		alturaInfoInter();
+	});
+	Boss.evts.add('cut', Boss.getById('id-mensagem'), function(evt){
+		alturaInfoInter();
+	});
+</script>
